@@ -4,6 +4,7 @@ import { getProjects } from "@/lib/supabase/projects";
 import DeleteProjectButton from "@/components/projects/DeleteProjectButton";
 import { getTasks } from "@/lib/supabase/tasks";
 import { getReviews } from "@/lib/supabase/reviews";
+import { getFiles } from "@/lib/supabase/files";
 
 export default async function ProjectPage({
   params,
@@ -24,6 +25,7 @@ export default async function ProjectPage({
 
   const tasks = await getTasks(project.id);
   const reviews = await getReviews(project.id);
+const files = await getFiles(project.id);
 
   const pendingReviews = reviews.filter(
     (review) => review.status === "Pending"
@@ -74,6 +76,12 @@ export default async function ProjectPage({
               className="rounded-lg border border-gray-200 px-4 py-2 text-sm font-medium text-gray-700 transition hover:bg-gray-50"
             >
               View Reviews
+            </Link>
+            <Link
+              href={`/projects/${project.id}/files`}
+              className="rounded-lg border border-gray-200 px-4 py-2 text-sm font-medium text-gray-700 transition hover:bg-gray-50"
+            >
+              View Files
             </Link>
             <Link
               href={`/projects/${project.id}/edit`}
@@ -181,23 +189,43 @@ export default async function ProjectPage({
             </p>
           </div>
           <div className="rounded-xl border border-gray-200 bg-white p-5">
+            <p className="text-sm text-gray-500">
+              Reviews
+            </p>
+
+            <p className="mt-2 text-2xl font-bold text-gray-900">
+              {reviews.length}
+            </p>
+
+            <p className="mt-1 text-sm text-gray-500">
+              {pendingReviews.length} pending
+            </p>
+
+            <Link
+              href={`/projects/${project.id}/reviews`}
+              className="mt-3 inline-block text-sm font-medium text-gray-700 hover:text-gray-900"
+            >
+              View Reviews →
+            </Link>
+          </div>
+          <div className="rounded-xl border border-gray-200 bg-white p-5">
   <p className="text-sm text-gray-500">
-    Reviews
+    Files
   </p>
 
   <p className="mt-2 text-2xl font-bold text-gray-900">
-    {reviews.length}
+    {files.length}
   </p>
 
   <p className="mt-1 text-sm text-gray-500">
-    {pendingReviews.length} pending
+    Project files
   </p>
 
   <Link
-    href={`/projects/${project.id}/reviews`}
+    href={`/projects/${project.id}/files`}
     className="mt-3 inline-block text-sm font-medium text-gray-700 hover:text-gray-900"
   >
-    View Reviews →
+    View Files →
   </Link>
 </div>
         </div>

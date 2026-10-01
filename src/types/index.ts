@@ -18,3 +18,8 @@ export type {
   Review,
   ReviewStatus,
 } from "./review";
+
+export type {
+  ProjectFile,
+  FileType,
+} from "./file";
