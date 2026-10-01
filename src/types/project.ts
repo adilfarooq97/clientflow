@@ -5,10 +5,12 @@ export type ProjectStatus =
   | "Completed";
 
 export type Project = {
-  id: number;
+  id: string;
+  owner_id: string;
   name: string;
   description: string;
   progress: number;
   status: ProjectStatus;
-  deadline: string;
+  deadline: string | null;
+  created_at: string;
 };

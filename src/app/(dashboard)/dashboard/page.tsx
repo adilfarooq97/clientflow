@@ -1,14 +1,10 @@
 import StatCard from "@/components/dashboard/StatCard";
 import ProjectCard from "@/components/dashboard/ProjectCard";
-import Button from "@/components/ui/Button";
-import type { Project } from "@/types/project";
+import { getProjects } from "@/lib/supabase/projects";
+import Link from "next/link";
 import ActivityItem from "@/components/dashboard/ActivityItem";
 
 const stats = [
-  {
-    title: "Active Projects",
-    value: "3",
-  },
   {
     title: "Pending Reviews",
     value: "2",
@@ -16,25 +12,6 @@ const stats = [
   {
     title: "Revenue",
     value: "$4,250",
-  },
-];
-
-const projects: Project[] = [
-  {
-    id: 1,
-    name: "Acme Website",
-    description: "Website redesign for Acme Corporation",
-    progress: 78,
-    status: "In Progress",
-    deadline: "Oct 12",
-  },
-  {
-    id: 2,
-    name: "Mobile App",
-    description: "React Native application for startup",
-    progress: 42,
-    status: "In Progress",
-    deadline: "Oct 20",
   },
 ];
 
@@ -59,7 +36,20 @@ const activities = [
   },
 ];
 
-export default function Dashboard() {
+export default async function Dashboard() {
+  const projects = await getProjects();
+  const activeProjects = projects.filter(
+    (project) => project.status !== "Completed"
+  );
+
+  const dashboardStats = [
+    {
+      title: "Active Projects",
+      value: activeProjects.length.toString(),
+    },
+    ...stats,
+  ];
+
   return (
     <div className="p-8">
       <h1 className="text-2xl font-bold text-gray-900">
@@ -70,7 +60,7 @@ export default function Dashboard() {
       </p>
 
       <div className="mt-8 grid gap-4 md:grid-cols-3">
-        {stats.map((stat) => (
+        {dashboardStats.map((stat) => (
           <StatCard
             key={stat.title}
             title={stat.title}
@@ -80,7 +70,7 @@ export default function Dashboard() {
       </div>
 
       <section className="mt-10">
-        <div className="flex items-center justify-between">
+        <div className="flex items-center justify-between gap-4">
           <div>
             <h2 className="text-lg font-semibold text-gray-900">
               Active Projects
@@ -90,13 +80,20 @@ export default function Dashboard() {
               Track the progress of your current projects.
             </p>
           </div>
+
+          <Link
+            href="/projects/new"
+            className="rounded-lg bg-gray-900 px-4 py-2 text-sm font-medium text-white transition hover:bg-gray-800"
+          >
+            + New Project
+          </Link>
         </div>
 
         <div className="mt-4 grid gap-4 lg:grid-cols-2">
           {projects.map((project) => (
             <ProjectCard
               key={project.id}
-              project={project} 
+              project={project}
             />
           ))}
         </div>
