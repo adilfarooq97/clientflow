@@ -5,6 +5,7 @@ import DeleteProjectButton from "@/components/projects/DeleteProjectButton";
 import { getTasks } from "@/lib/supabase/tasks";
 import { getReviews } from "@/lib/supabase/reviews";
 import { getFiles } from "@/lib/supabase/files";
+import { getMessages } from "@/lib/supabase/messages";
 
 export default async function ProjectPage({
   params,
@@ -26,14 +27,15 @@ export default async function ProjectPage({
   const tasks = await getTasks(project.id);
   const reviews = await getReviews(project.id);
   const files = await getFiles(project.id);
+  const messages = await getMessages(project.id);
 
   const imageFiles = files.filter(
-  (file) => file.file_type === "image"
-).length;
+    (file) => file.file_type === "image"
+  ).length;
 
-const documentFiles = files.filter(
-  (file) => file.file_type === "document"
-).length;
+  const documentFiles = files.filter(
+    (file) => file.file_type === "document"
+  ).length;
 
   const pendingReviews = reviews.filter(
     (review) => review.status === "Pending"
@@ -90,6 +92,12 @@ const documentFiles = files.filter(
               className="rounded-lg border border-gray-200 px-4 py-2 text-sm font-medium text-gray-700 transition hover:bg-gray-50"
             >
               View Files
+            </Link>
+            <Link
+              href={`/projects/${project.id}/messages`}
+              className="rounded-lg border border-gray-200 px-4 py-2 text-sm font-medium text-gray-700 transition hover:bg-gray-50"
+            >
+              View Messages
             </Link>
             <Link
               href={`/projects/${project.id}/edit`}
@@ -216,38 +224,66 @@ const documentFiles = files.filter(
               View Reviews →
             </Link>
           </div>
-         <div className="rounded-xl border border-gray-200 bg-white p-5">
-  <p className="text-sm text-gray-500">
-    Files
-  </p>
+          <div className="rounded-xl border border-gray-200 bg-white p-5">
+            <p className="text-sm text-gray-500">
+              Files
+            </p>
 
-  <p className="mt-2 text-2xl font-bold text-gray-900">
-    {files.length}
-  </p>
+            <p className="mt-2 text-2xl font-bold text-gray-900">
+              {files.length}
+            </p>
 
-  <p className="mt-1 text-sm text-gray-500">
-    {files.length === 1
-      ? "1 project file"
-      : `${files.length} project files`}
-  </p>
+            <p className="mt-1 text-sm text-gray-500">
+              {files.length === 1
+                ? "1 project file"
+                : `${files.length} project files`}
+            </p>
 
-  <div className="mt-4 flex gap-4 text-xs text-gray-500">
-    <span>
-      Images: {imageFiles}
-    </span>
+            <div className="mt-4 flex gap-4 text-xs text-gray-500">
+              <span>
+                Images: {imageFiles}
+              </span>
 
-    <span>
-      Documents: {documentFiles}
+              <span>
+                Documents: {documentFiles}
+              </span>
+            </div>
+
+            <Link
+              href={`/projects/${project.id}/files`}
+              className="mt-3 inline-block text-sm font-medium text-gray-700 hover:text-gray-900"
+            >
+              View Files →
+            </Link>
+          </div>
+          <Link
+  href={`/projects/${project.id}/messages`}
+  className="group rounded-xl border border-gray-200 bg-white p-5 transition hover:border-gray-300 hover:shadow-sm"
+>
+  <div className="flex items-center justify-between">
+    <div>
+      <p className="font-semibold text-gray-900">
+        Messages
+      </p>
+
+      <p className="mt-1 text-sm text-gray-500">
+        Communicate about this project
+      </p>
+    </div>
+
+    <span className="text-sm font-medium text-gray-500 transition group-hover:text-gray-900">
+      Open →
     </span>
   </div>
 
-  <Link
-    href={`/projects/${project.id}/files`}
-    className="mt-3 inline-block text-sm font-medium text-gray-700 hover:text-gray-900"
-  >
-    View Files →
-  </Link>
-</div>
+  <p className="mt-4 text-2xl font-bold text-gray-900">
+    {messages.length}
+  </p>
+
+  <p className="text-xs text-gray-500">
+    {messages.length === 1 ? "message" : "messages"}
+  </p>
+</Link>
         </div>
       </div>
       <div className="mt-4 rounded-xl border border-gray-200 bg-white p-5">

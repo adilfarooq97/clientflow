@@ -6,6 +6,7 @@ import ActivityItem from "@/components/dashboard/ActivityItem";
 import { getTasks } from "@/lib/supabase/tasks";
 import { getReviews } from "@/lib/supabase/reviews";
 import { getFiles } from "@/lib/supabase/files";
+import { getMessages } from "@/lib/supabase/messages";
 
 const stats = [
   {
@@ -45,6 +46,10 @@ export default async function Dashboard() {
   const reviewGroups = await Promise.all(
     projects.map((project) => getReviews(project.id))
   );
+  const messageGroups = await Promise.all(
+    projects.map((project) => getMessages(project.id))
+  );
+  const messages = messageGroups.flat();
 
   const fileGroups = await Promise.all(
     projects.map((project) => getFiles(project.id))
@@ -93,6 +98,10 @@ export default async function Dashboard() {
     {
       title: "Project Files",
       value: files.length.toString(),
+    },
+    {
+      title: "Messages",
+      value: messages.length.toString(),
     },
     ...stats,
   ];

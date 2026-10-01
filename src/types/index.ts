@@ -23,3 +23,5 @@ export type {
   ProjectFile,
   FileType,
 } from "./file";
+
+export type { Message } from "./message";
