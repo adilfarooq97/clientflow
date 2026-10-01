@@ -5,6 +5,7 @@ import Link from "next/link";
 import ActivityItem from "@/components/dashboard/ActivityItem";
 import { getTasks } from "@/lib/supabase/tasks";
 import { getReviews } from "@/lib/supabase/reviews";
+import { getFiles } from "@/lib/supabase/files";
 
 const stats = [
   {
@@ -45,6 +46,12 @@ export default async function Dashboard() {
     projects.map((project) => getReviews(project.id))
   );
 
+  const fileGroups = await Promise.all(
+    projects.map((project) => getFiles(project.id))
+  );
+
+  const files = fileGroups.flat();
+
   const reviews = reviewGroups.flat();
 
   const pendingReviews = reviews.filter(
@@ -82,6 +89,10 @@ export default async function Dashboard() {
     {
       title: "Pending Reviews",
       value: pendingReviews.length.toString(),
+    },
+    {
+      title: "Project Files",
+      value: files.length.toString(),
     },
     ...stats,
   ];

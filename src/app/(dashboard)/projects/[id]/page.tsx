@@ -25,7 +25,15 @@ export default async function ProjectPage({
 
   const tasks = await getTasks(project.id);
   const reviews = await getReviews(project.id);
-const files = await getFiles(project.id);
+  const files = await getFiles(project.id);
+
+  const imageFiles = files.filter(
+  (file) => file.file_type === "image"
+).length;
+
+const documentFiles = files.filter(
+  (file) => file.file_type === "document"
+).length;
 
   const pendingReviews = reviews.filter(
     (review) => review.status === "Pending"
@@ -208,7 +216,7 @@ const files = await getFiles(project.id);
               View Reviews →
             </Link>
           </div>
-          <div className="rounded-xl border border-gray-200 bg-white p-5">
+         <div className="rounded-xl border border-gray-200 bg-white p-5">
   <p className="text-sm text-gray-500">
     Files
   </p>
@@ -218,8 +226,20 @@ const files = await getFiles(project.id);
   </p>
 
   <p className="mt-1 text-sm text-gray-500">
-    Project files
+    {files.length === 1
+      ? "1 project file"
+      : `${files.length} project files`}
   </p>
+
+  <div className="mt-4 flex gap-4 text-xs text-gray-500">
+    <span>
+      Images: {imageFiles}
+    </span>
+
+    <span>
+      Documents: {documentFiles}
+    </span>
+  </div>
 
   <Link
     href={`/projects/${project.id}/files`}

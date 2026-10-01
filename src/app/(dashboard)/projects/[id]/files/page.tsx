@@ -43,7 +43,10 @@ export default async function FilesPage({
           </h1>
 
           <p className="mt-1 text-sm text-gray-500">
-            {project.name}
+            {project.name} ·{" "}
+            {files.length === 1
+              ? "1 file"
+              : `${files.length} files`}
           </p>
         </div>
 

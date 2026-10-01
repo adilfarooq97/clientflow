@@ -1,15 +1,9 @@
 import type { ProjectFile } from "@/types";
 import DeleteFileButton from "@/components/files/DeleteFileButton";
+import FileTypeBadge from "@/components/files/FileTypeBadge";
 
 type FileCardProps = {
   file: ProjectFile;
-};
-
-const fileTypeStyles: Record<ProjectFile["file_type"], string> = {
-  image: "bg-blue-100 text-blue-700",
-  document: "bg-purple-100 text-purple-700",
-  video: "bg-red-100 text-red-700",
-  other: "bg-gray-100 text-gray-700",
 };
 
 export default function FileCard({ file }: FileCardProps) {
@@ -27,11 +21,7 @@ export default function FileCard({ file }: FileCardProps) {
           </p>
         </div>
 
-        <span
-          className={`shrink-0 rounded-full px-2 py-1 text-xs font-medium ${fileTypeStyles[file.file_type]}`}
-        >
-          {file.file_type}
-        </span>
+        <FileTypeBadge type={file.file_type} />
       </div>
 
       <div className="mt-4 flex items-center gap-3">
