@@ -3,6 +3,7 @@ import { notFound } from "next/navigation";
 import { getProjects } from "@/lib/supabase/projects";
 import DeleteProjectButton from "@/components/projects/DeleteProjectButton";
 import { getTasks } from "@/lib/supabase/tasks";
+import { getReviews } from "@/lib/supabase/reviews";
 
 export default async function ProjectPage({
   params,
@@ -22,6 +23,11 @@ export default async function ProjectPage({
   }
 
   const tasks = await getTasks(project.id);
+  const reviews = await getReviews(project.id);
+
+const pendingReviews = reviews.filter(
+  (review) => review.status === "Pending"
+);
   const completedTasks = tasks.filter(
   (task) => task.status === "Done"
 ).length;
@@ -168,6 +174,22 @@ const taskProgress =
         {remainingTasks}
       </p>
     </div>
+    <div className="rounded-xl border border-gray-200 bg-white p-5">
+  <p className="text-sm text-gray-500">
+    Pending Reviews
+  </p>
+
+  <p className="mt-2 text-2xl font-bold text-gray-900">
+    {pendingReviews.length}
+  </p>
+
+  <Link
+    href={`/projects/${project.id}/reviews`}
+    className="mt-3 inline-block text-sm font-medium text-gray-700 hover:text-gray-900"
+  >
+    View Reviews →
+  </Link>
+</div>
   </div>
 </div>
 <div className="mt-4 rounded-xl border border-gray-200 bg-white p-5">

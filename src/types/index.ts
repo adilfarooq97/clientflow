@@ -13,3 +13,8 @@ export type {
   TaskPriority,
   TaskStatus,
 } from "./task";
+
+export type {
+  Review,
+  ReviewStatus,
+} from "./review";
