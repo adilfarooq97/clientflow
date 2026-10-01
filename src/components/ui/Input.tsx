@@ -9,6 +9,7 @@ type InputProps = {
   value?: string;
   onChange?: (event: React.ChangeEvent<HTMLInputElement>) => void;
   id?: string;
+  disabled?: boolean;
 };
 
 export default function Input({
@@ -18,6 +19,7 @@ export default function Input({
   value,
   onChange,
   id,
+  disabled = false,
 }: InputProps) {
   const [showPassword, setShowPassword] = useState(false);
   return (
@@ -38,6 +40,7 @@ export default function Input({
           }
           placeholder={placeholder}
           value={value}
+          disabled={disabled}
           onChange={onChange}
           className="w-full rounded-lg border border-gray-300 px-3 py-2 pr-20 text-sm outline-none transition focus:border-gray-900 focus:ring-2 focus:ring-gray-200"
         />
