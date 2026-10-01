@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { getProjects } from "@/lib/supabase/projects";
-import { getFiles } from "@/lib/supabase/files";
+import { getFiles, getFileUrl } from "@/lib/supabase/files";
 import FileCard from "@/components/files/FileCard";
 
 export default async function FilesPage({
@@ -19,6 +19,13 @@ export default async function FilesPage({
   }
 
   const files = await getFiles(project.id);
+
+  const filesWithUrls = await Promise.all(
+    files.map(async (file) => ({
+      file,
+      signedUrl: await getFileUrl(file.file_url),
+    }))
+  );
 
   return (
     <div className="space-y-6">
@@ -67,8 +74,14 @@ export default async function FilesPage({
         </div>
       ) : (
         <div className="grid gap-4 sm:grid-cols-2">
-          {files.map((file) => (
-            <FileCard key={file.id} file={file} />
+          {filesWithUrls.map(({ file, signedUrl }) => (
+            <FileCard
+              key={file.id}
+              file={{
+                ...file,
+                file_url: signedUrl,
+              }}
+            />
           ))}
         </div>
       )}
