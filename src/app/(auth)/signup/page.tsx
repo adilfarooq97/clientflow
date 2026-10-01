@@ -7,6 +7,7 @@ import AuthHeader from "@/components/auth/AuthHeader";
 import AuthCard from "@/components/auth/AuthCard";
 import FormField from "@/components/ui/FormField";
 import type { UserRole } from "@/types";
+import { supabase } from "@/lib/supabase/client";
 
 export default function SignupPage() {
   const [name, setName] = useState("");
@@ -14,18 +15,37 @@ export default function SignupPage() {
   const [password, setPassword] = useState("");
   const [role, setRole] = useState<UserRole>("freelancer");
 
-  const handleSubmit = (
-    event: React.FormEvent<HTMLFormElement>
-  ) => {
-    event.preventDefault();
+  const handleSubmit = async (
+  event: React.FormEvent<HTMLFormElement>
+) => {
+  event.preventDefault();
 
-    console.log("Signup submitted:", {
-      name,
-      email,
-      password,
+  if (!name || !email || !password) {
+    return;
+  }
+
+  const { data, error } = await supabase.auth.signUp({
+    email,
+    password,
+    options: {
+    data: {
+      full_name: name,
       role,
-    });
-  };
+    },
+  },
+  });
+
+  if (error) {
+    console.error("Signup error:", error);
+    return;
+  }
+
+  console.log("Signup successful:", data);
+  console.log("User profile data:", {
+    name,
+    role,
+  });
+};
 
   return (
     <div className="flex min-h-screen items-center justify-center p-6">

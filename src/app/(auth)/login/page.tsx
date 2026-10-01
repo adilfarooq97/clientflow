@@ -2,14 +2,17 @@
 
 import { useState } from "react";
 import Button from "@/components/ui/Button";
-import Input from "@/components/ui/Input";
 import Link from "next/link";
 import AuthHeader from "@/components/auth/AuthHeader";
 import AuthCard from "@/components/auth/AuthCard";
 import FormField from "@/components/ui/FormField";
+import { supabase } from "@/lib/supabase/client";
+import { useRouter } from "next/navigation";
 
 
 export default function LoginPage() {
+  const router = useRouter();
+
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [emailError, setEmailError] = useState("");
@@ -17,49 +20,54 @@ export default function LoginPage() {
   const [isLoading, setIsLoading] = useState(false);
   const [rememberMe, setRememberMe] = useState(false);
 
-  const handleSubmit = (
-      event: React.FormEvent<HTMLFormElement>
-    ) => {
-      event.preventDefault();
+  const handleSubmit = async (
+  event: React.FormEvent<HTMLFormElement>
+) => {
+  event.preventDefault();
 
-      setEmailError("");
-      setPasswordError("");
+  setEmailError("");
+  setPasswordError("");
 
-      let isValid = true;
+  let hasError = false;
 
-      if (!email) {
-        setEmailError("Email is required.");
-        isValid = false;
-      }else if (!email.includes("@")) {
-        setEmailError("Please enter a valid email address.");
-        isValid = false;
-      }
+  if (!email) {
+    setEmailError("Email is required.");
+    hasError = true;
+  } else if (!email.includes("@")) {
+    setEmailError("Please enter a valid email.");
+    hasError = true;
+  }
 
-      if (!password) {
-        setPasswordError("Password is required.");
-        isValid = false;
-      }else if (password.length < 6) {
-        setPasswordError(
-          "Password must be at least 6 characters."
-        );
-        isValid = false;
-      }
+  if (!password) {
+    setPasswordError("Password is required.");
+    hasError = true;
+  } else if (password.length < 6) {
+    setPasswordError(
+      "Password must be at least 6 characters."
+    );
+    hasError = true;
+  }
 
-      if (!isValid) {
-        return;
-      }
+  if (hasError) {
+    return;
+  }
 
-      setIsLoading(true);
+  setIsLoading(true);
 
-      setTimeout(() => {
-        console.log("Login submitted:", {
-          email,
-          password,
-        });
+  const { error } = await supabase.auth.signInWithPassword({
+    email,
+    password,
+  });
 
-        setIsLoading(false);
-      }, 1500);
-    };
+  setIsLoading(false);
+
+  if (error) {
+    console.error("Login error:", error);
+    return;
+  }
+
+  router.push("/dashboard");
+};
   return (
     <div className="flex min-h-screen items-center justify-center p-6">
       <AuthCard>
