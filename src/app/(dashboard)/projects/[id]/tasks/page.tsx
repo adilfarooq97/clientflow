@@ -4,13 +4,8 @@ import { getProjects } from "@/lib/supabase/projects";
 import { getTasks } from "@/lib/supabase/tasks";
 import type { TaskStatus } from "@/types";
 import TaskCard from "@/components/tasks/TaskCard";
+import KanbanBoardWrapper from "@/components/tasks/KanbanBoardWrapper";
 
-const columns: TaskStatus[] = [
-  "Todo",
-  "In Progress",
-  "Review",
-  "Done",
-];
 
 export default async function ProjectTasksPage({
   params,
@@ -57,42 +52,7 @@ export default async function ProjectTasksPage({
         </div>
       </div>
 
-      <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
-        {columns.map((column) => {
-          const columnTasks = tasks.filter(
-            (task) => task.status === column
-          );
-
-          return (
-            <div
-              key={column}
-              className="min-h-64 rounded-xl border border-gray-200 bg-gray-50 p-4"
-            >
-              <div className="mb-4 flex items-center justify-between">
-                <h2 className="font-semibold text-gray-900">
-                  {column}
-                </h2>
-
-                <span className="rounded-full bg-white px-2 py-1 text-xs font-medium text-gray-500">
-                  {columnTasks.length}
-                </span>
-              </div>
-
-              <div className="space-y-3">
-                {columnTasks.map((task) => (
-                  <TaskCard key={task.id} task={task} />
-                ))}
-
-                {columnTasks.length === 0 && (
-                  <p className="py-6 text-center text-sm text-gray-400">
-                    No tasks
-                  </p>
-                )}
-              </div>
-            </div>
-          );
-        })}
-      </div>
+      <KanbanBoardWrapper tasks={tasks} />
     </div>
   );
 }

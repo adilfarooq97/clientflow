@@ -3,6 +3,7 @@ import ProjectCard from "@/components/dashboard/ProjectCard";
 import { getProjects } from "@/lib/supabase/projects";
 import Link from "next/link";
 import ActivityItem from "@/components/dashboard/ActivityItem";
+import { getTasks } from "@/lib/supabase/tasks";
 
 const stats = [
   {
@@ -38,6 +39,17 @@ const activities = [
 
 export default async function Dashboard() {
   const projects = await getProjects();
+  const taskGroups = await Promise.all(
+    projects.map((project) => getTasks(project.id))
+  );
+
+  const tasks = taskGroups.flat();
+
+  const completedTasks = tasks.filter(
+    (task) => task.status === "Done"
+  ).length;
+
+  const activeTasks = tasks.length - completedTasks;
   const activeProjects = projects.filter(
     (project) => project.status !== "Completed"
   );
@@ -46,6 +58,14 @@ export default async function Dashboard() {
     {
       title: "Active Projects",
       value: activeProjects.length.toString(),
+    },
+    {
+      title: "Active Tasks",
+      value: activeTasks.toString(),
+    },
+    {
+      title: "Completed Tasks",
+      value: completedTasks.toString(),
     },
     ...stats,
   ];
