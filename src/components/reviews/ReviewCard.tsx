@@ -1,16 +1,13 @@
 import Link from "next/link";
 import type { Review } from "@/types";
+import ReviewBadge from "@/components/reviews/ReviewBadge";
 
 type ReviewCardProps = {
   review: Review;
   projectId: string;
 };
 
-const statusStyles: Record<Review["status"], string> = {
-  Pending: "bg-yellow-100 text-yellow-700",
-  Approved: "bg-green-100 text-green-700",
-  "Changes Requested": "bg-red-100 text-red-700",
-};
+
 
 export default function ReviewCard({
   review,
@@ -31,11 +28,7 @@ export default function ReviewCard({
           )}
         </div>
 
-        <span
-          className={`w-fit rounded-full px-3 py-1 text-xs font-medium ${statusStyles[review.status]}`}
-        >
-          {review.status}
-        </span>
+       <ReviewBadge status={review.status} />
       </div>
 
       {review.client_comment && (

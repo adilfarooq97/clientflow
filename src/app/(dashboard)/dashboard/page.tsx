@@ -4,12 +4,9 @@ import { getProjects } from "@/lib/supabase/projects";
 import Link from "next/link";
 import ActivityItem from "@/components/dashboard/ActivityItem";
 import { getTasks } from "@/lib/supabase/tasks";
+import { getReviews } from "@/lib/supabase/reviews";
 
 const stats = [
-  {
-    title: "Pending Reviews",
-    value: "2",
-  },
   {
     title: "Revenue",
     value: "$4,250",
@@ -44,7 +41,22 @@ export default async function Dashboard() {
   );
 
   const tasks = taskGroups.flat();
+  const reviewGroups = await Promise.all(
+    projects.map((project) => getReviews(project.id))
+  );
 
+  const reviews = reviewGroups.flat();
+
+  const pendingReviews = reviews.filter(
+    (review) => review.status === "Pending"
+  );
+  const approvedReviews = reviews.filter(
+    (review) => review.status === "Approved"
+  );
+
+  const changesRequestedReviews = reviews.filter(
+    (review) => review.status === "Changes Requested"
+  );
   const completedTasks = tasks.filter(
     (task) => task.status === "Done"
   ).length;
@@ -66,6 +78,10 @@ export default async function Dashboard() {
     {
       title: "Completed Tasks",
       value: completedTasks.toString(),
+    },
+    {
+      title: "Pending Reviews",
+      value: pendingReviews.length.toString(),
     },
     ...stats,
   ];
@@ -89,6 +105,58 @@ export default async function Dashboard() {
         ))}
       </div>
 
+      <div className="rounded-xl border border-gray-200 bg-white p-6 mt-8">
+        <div className="flex items-center justify-between ">
+          <div>
+            <h2 className="font-semibold text-gray-900">
+              Review Overview
+            </h2>
+
+            <p className="mt-1 text-sm text-gray-500">
+              Current status of your project reviews.
+            </p>
+          </div>
+
+          <Link
+            href="/projects"
+            className="text-sm font-medium text-gray-700 hover:text-gray-900"
+          >
+            View Projects →
+          </Link>
+        </div>
+
+        <div className="mt-6 grid gap-4 sm:grid-cols-3">
+          <div className="rounded-lg bg-yellow-50 p-4">
+            <p className="text-sm text-yellow-700">
+              Pending
+            </p>
+
+            <p className="mt-1 text-2xl font-bold text-yellow-900">
+              {pendingReviews.length}
+            </p>
+          </div>
+
+          <div className="rounded-lg bg-green-50 p-4">
+            <p className="text-sm text-green-700">
+              Approved
+            </p>
+
+            <p className="mt-1 text-2xl font-bold text-green-900">
+              {approvedReviews.length}
+            </p>
+          </div>
+
+          <div className="rounded-lg bg-red-50 p-4">
+            <p className="text-sm text-red-700">
+              Changes Requested
+            </p>
+
+            <p className="mt-1 text-2xl font-bold text-red-900">
+              {changesRequestedReviews.length}
+            </p>
+          </div>
+        </div>
+      </div>
       <section className="mt-10">
         <div className="flex items-center justify-between gap-4">
           <div>
@@ -108,6 +176,8 @@ export default async function Dashboard() {
             + New Project
           </Link>
         </div>
+
+
 
         <div className="mt-4 grid gap-4 lg:grid-cols-2">
           {projects.map((project) => (
