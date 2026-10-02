@@ -6,6 +6,10 @@ import { getTasks } from "@/lib/supabase/tasks";
 import { getReviews } from "@/lib/supabase/reviews";
 import { getFiles } from "@/lib/supabase/files";
 import { getMessages } from "@/lib/supabase/messages";
+import { getProjectMembers } from "@/lib/supabase/project-members";
+import ProjectMembers from "@/components/projects/ProjectMembers";
+import AddProjectClientForm from "@/components/projects/AddProjectClientForm";
+import { getMemberProfiles } from "@/lib/supabase/users";
 
 export default async function ProjectPage({
   params,
@@ -15,6 +19,7 @@ export default async function ProjectPage({
   const { id } = await params;
 
   const projects = await getProjects();
+
 
   const project = projects.find(
     (item) => item.id === id
@@ -28,6 +33,11 @@ export default async function ProjectPage({
   const reviews = await getReviews(project.id);
   const files = await getFiles(project.id);
   const messages = await getMessages(project.id);
+  const members = await getProjectMembers(project.id);
+
+  const memberProfiles = await getMemberProfiles(
+  members.map((member) => member.user_id)
+);
 
   const imageFiles = files.filter(
     (file) => file.file_type === "image"
@@ -152,6 +162,27 @@ export default async function ProjectPage({
               ).toLocaleDateString()}
             </p>
           </div>
+
+        </div>
+
+      </div>
+      <div className="grid gap-6 lg:grid-cols-2 mt-8">
+        <ProjectMembers members={members} />
+
+        <div className="rounded-xl border border-gray-200 bg-white p-5">
+          <div className="mb-5">
+            <h2 className="font-semibold text-gray-900">
+              Add Client
+            </h2>
+
+            <p className="mt-1 text-sm text-gray-500">
+              Give an existing client access to this project.
+            </p>
+          </div>
+
+          <AddProjectClientForm
+            projectId={project.id}
+          />
         </div>
       </div>
       <div className="mt-8">
@@ -257,33 +288,33 @@ export default async function ProjectPage({
             </Link>
           </div>
           <Link
-  href={`/projects/${project.id}/messages`}
-  className="group rounded-xl border border-gray-200 bg-white p-5 transition hover:border-gray-300 hover:shadow-sm"
->
-  <div className="flex items-center justify-between">
-    <div>
-      <p className="font-semibold text-gray-900">
-        Messages
-      </p>
+            href={`/projects/${project.id}/messages`}
+            className="group rounded-xl border border-gray-200 bg-white p-5 transition hover:border-gray-300 hover:shadow-sm"
+          >
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="font-semibold text-gray-900">
+                  Messages
+                </p>
 
-      <p className="mt-1 text-sm text-gray-500">
-        Communicate about this project
-      </p>
-    </div>
+                <p className="mt-1 text-sm text-gray-500">
+                  Communicate about this project
+                </p>
+              </div>
 
-    <span className="text-sm font-medium text-gray-500 transition group-hover:text-gray-900">
-      Open →
-    </span>
-  </div>
+              <span className="text-sm font-medium text-gray-500 transition group-hover:text-gray-900">
+                Open →
+              </span>
+            </div>
 
-  <p className="mt-4 text-2xl font-bold text-gray-900">
-    {messages.length}
-  </p>
+            <p className="mt-4 text-2xl font-bold text-gray-900">
+              {messages.length}
+            </p>
 
-  <p className="text-xs text-gray-500">
-    {messages.length === 1 ? "message" : "messages"}
-  </p>
-</Link>
+            <p className="text-xs text-gray-500">
+              {messages.length === 1 ? "message" : "messages"}
+            </p>
+          </Link>
         </div>
       </div>
       <div className="mt-4 rounded-xl border border-gray-200 bg-white p-5">

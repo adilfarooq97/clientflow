@@ -25,3 +25,8 @@ export type {
 } from "./file";
 
 export type { Message } from "./message";
+
+export type {
+  ProjectMember,
+  ProjectMemberRole,
+} from "./project-member";
