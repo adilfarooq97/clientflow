@@ -135,7 +135,7 @@ const greeting =
       ];
 
   return (
-    <div className="p-8">
+    <div className="p-4 sm:p-6 lg:p-8">
       <h1 className="text-2xl font-bold text-gray-900">
         {greeting} 👋
       </h1>
@@ -226,7 +226,7 @@ const greeting =
         </div>
       </div>
       <section className="mt-10">
-        <div className="flex items-center justify-between gap-4">
+        <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
           <div>
             <h2 className="text-lg font-semibold text-gray-900">
               Recent Projects
