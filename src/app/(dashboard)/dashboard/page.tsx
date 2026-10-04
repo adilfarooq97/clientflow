@@ -136,7 +136,7 @@ const greeting =
 
   return (
     <div className="p-4 sm:p-6 lg:p-8">
-      <h1 className="text-2xl font-bold text-gray-900">
+      <h1 className="text-2xl font-bold tracking-tight text-gray-900">
         {greeting} 👋
       </h1>
       {userProfile && (
@@ -144,7 +144,7 @@ const greeting =
           Welcome back, {userProfile.full_name}
         </p>
       )}
-      <p className="mt-1 text-sm text-gray-500">
+      <p className="mt-2 text-sm leading-6 text-gray-500">
         {userProfile?.role === "freelancer"
           ? "Manage your projects and keep client work moving."
           : "Track your projects, tasks, reviews, and conversations."}
@@ -228,11 +228,11 @@ const greeting =
       <section className="mt-10">
         <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
           <div>
-            <h2 className="text-lg font-semibold text-gray-900">
-              Recent Projects
-            </h2>
+            <h2 className="text-xl font-semibold tracking-tight text-gray-900">
+  Recent Projects
+</h2>
 
-            <p className="mt-1 text-sm text-gray-500">
+            <p className="mt-1 text-sm leading-6 text-gray-500">
               {userProfile?.role === "freelancer"
                 ? "Keep track of your active client work."
                 : "View the projects you are currently working on."}
@@ -292,11 +292,11 @@ const greeting =
 
       <section className="mt-10">
         <div>
-          <h2 className="text-lg font-semibold text-gray-900">
-            Recent Activity
-          </h2>
+          <h2 className="text-xl font-semibold tracking-tight text-gray-900">
+  Recent Activity
+</h2>
 
-          <p className="mt-1 text-sm text-gray-500">
+          <p className="mt-1 text-sm leading-6 text-gray-500">
             Stay up to date with your latest activity.
           </p>
         </div>
