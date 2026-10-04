@@ -26,29 +26,29 @@ export default async function EditProjectPage({
 
   const profile = await getCurrentUserProfile();
 
-if (!profile) {
-  redirect("/login");
-}
+  if (!profile) {
+    redirect("/login");
+  }
 
-if (profile.role !== "freelancer") {
-  redirect("/dashboard");
-}
+  if (profile.role !== "freelancer") {
+    redirect("/dashboard");
+  }
 
   return (
     <div className="mx-auto max-w-2xl">
       <div className="mb-6">
         <Link
           href={`/projects/${project.id}`}
-          className="text-sm text-gray-500 hover:text-gray-900"
+          className="text-sm font-medium text-gray-500 transition-colors hover:text-gray-900"
         >
           ← Back to project
         </Link>
 
-        <h1 className="mt-4 text-2xl font-bold text-gray-900">
+        <h1 className="mt-4 text-2xl font-bold tracking-tight text-gray-900">
           Edit project
         </h1>
 
-        <p className="mt-2 text-sm text-gray-500">
+        <p className="mt-2 text-sm leading-6 text-gray-500">
           Update the details of your project.
         </p>
       </div>
