@@ -37,12 +37,12 @@ export default async function Dashboard() {
   const userProfile = await getCurrentUserProfile();
   const currentHour = new Date().getHours();
 
-const greeting =
-  currentHour < 12
-    ? "Good morning"
-    : currentHour < 18
-      ? "Good afternoon"
-      : "Good evening";
+  const greeting =
+    currentHour < 12
+      ? "Good morning"
+      : currentHour < 18
+        ? "Good afternoon"
+        : "Good evening";
   const taskGroups = await Promise.all(
     projects.map((project) => getTasks(project.id))
   );
@@ -159,7 +159,7 @@ const greeting =
       </p>
 
       <div
-        className={`mt-8 grid gap-4 sm:grid-cols-2 ${userProfile?.role === "freelancer"
+        className={`mt-9 grid gap-4 sm:grid-cols-2 ${userProfile?.role === "freelancer"
           ? "lg:grid-cols-3 xl:grid-cols-6"
           : "lg:grid-cols-3 xl:grid-cols-5"
           }`}
@@ -173,14 +173,14 @@ const greeting =
         ))}
       </div>
 
-      <div className="rounded-xl border border-gray-200 bg-white p-6 mt-8">
+      <div className="rounded-xl border border-gray-200 bg-white p-6 mt-9">
         <div className="flex items-center justify-between ">
           <div>
-            <h2 className="font-semibold text-gray-900">
-              Review Overview
-            </h2>
+            <h2 className="text-lg font-semibold tracking-tight text-gray-900">
+  Review Overview
+</h2>
 
-            <p className="mt-1 text-sm text-gray-500">
+            <p className="mt-1 text-sm leading-6 text-gray-500">
               Current status of your project reviews.
             </p>
           </div>
@@ -229,8 +229,8 @@ const greeting =
         <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
           <div>
             <h2 className="text-xl font-semibold tracking-tight text-gray-900">
-  Recent Projects
-</h2>
+              Recent Projects
+            </h2>
 
             <p className="mt-1 text-sm leading-6 text-gray-500">
               {userProfile?.role === "freelancer"
@@ -293,8 +293,8 @@ const greeting =
       <section className="mt-10">
         <div>
           <h2 className="text-xl font-semibold tracking-tight text-gray-900">
-  Recent Activity
-</h2>
+            Recent Activity
+          </h2>
 
           <p className="mt-1 text-sm leading-6 text-gray-500">
             Stay up to date with your latest activity.
