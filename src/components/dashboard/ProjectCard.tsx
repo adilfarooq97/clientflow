@@ -49,7 +49,7 @@ export default function ProjectCard({
               Progress
             </span>
 
-            <span className="text-xs font-semibold text-gray-900">
+            <span className="shrink-0 text-sm font-semibold text-gray-900">
               {project.progress}%
             </span>
           </div>
@@ -59,8 +59,8 @@ export default function ProjectCard({
           </div>
         </div>
 
-        <div className="mt-4 flex items-center justify-between gap-4 text-sm">
-          <span className="text-gray-500">
+        <div className="mt-5 flex items-center justify-between gap-4 text-sm">
+          <span className="text-sm leading-6 text-gray-500">
             Due {project.deadline || "No deadline"}
           </span>
 
