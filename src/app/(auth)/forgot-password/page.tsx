@@ -34,7 +34,7 @@ if (!email) {
 };
 
   return (
-    <div className="flex min-h-screen items-center justify-center p-6">
+    <div className="flex min-h-screen items-center justify-center p-4 sm:p-6">
       <AuthCard>
         <AuthHeader />
         <h1 className="text-2xl font-bold text-gray-900">
