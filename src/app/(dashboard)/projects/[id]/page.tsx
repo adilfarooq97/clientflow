@@ -11,6 +11,7 @@ import ProjectMembers from "@/components/projects/ProjectMembers";
 import AddProjectClientForm from "@/components/projects/AddProjectClientForm";
 import { getMemberProfiles } from "@/lib/supabase/users";
 import { getCurrentUserProfile } from "@/lib/supabase/auth";
+import ProjectNavigation from "@/components/projects/ProjectNavigation";
 
 export default async function ProjectPage({
   params,
@@ -69,6 +70,8 @@ export default async function ProjectPage({
       >
         ← Back to dashboard
       </Link>
+
+      <ProjectNavigation projectId={project.id} />
 
       <div className="mt-6 rounded-xl border bg-white p-6">
         <div className="flex items-start justify-between gap-4">

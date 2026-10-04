@@ -4,6 +4,8 @@ import { getAccessibleProjects } from "@/lib/supabase/projects";
 import { getFiles, getFileUrl } from "@/lib/supabase/files";
 import FileCard from "@/components/files/FileCard";
 import { getCurrentUserProfile } from "@/lib/supabase/auth";
+import ProjectNavigation from "@/components/projects/ProjectNavigation";
+
 
 export default async function FilesPage({
   params,
@@ -40,6 +42,8 @@ export default async function FilesPage({
           >
             ← Back to project
           </Link>
+
+          <ProjectNavigation projectId={project.id} />
 
           <h1 className="mt-2 text-2xl font-bold text-gray-900">
             Files

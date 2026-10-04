@@ -7,8 +7,7 @@ import type { TaskStatus } from "@/types";
 import TaskCard from "@/components/tasks/TaskCard";
 import KanbanBoardWrapper from "@/components/tasks/KanbanBoardWrapper";
 import { getCurrentUserProfile } from "@/lib/supabase/auth";
-
-
+import ProjectNavigation from "@/components/projects/ProjectNavigation";
 
 
 export default async function ProjectTasksPage({
@@ -36,6 +35,8 @@ export default async function ProjectTasksPage({
         >
           ← Back to project
         </Link>
+
+        <ProjectNavigation projectId={project.id} />
 
         <div className="mt-4 flex items-center justify-between">
           <div>

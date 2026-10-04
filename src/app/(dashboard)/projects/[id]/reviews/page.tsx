@@ -5,6 +5,8 @@ import { getReviews } from "@/lib/supabase/reviews";
 import ReviewCard from "@/components/reviews/ReviewCard";
 import { getCurrentUserProfile } from "@/lib/supabase/auth";
 import Button from "@/components/ui/Button";
+import ProjectNavigation from "@/components/projects/ProjectNavigation";
+
 
 export default async function ReviewsPage({
   params,
@@ -33,6 +35,8 @@ export default async function ReviewsPage({
           >
             ← Back to project
           </Link>
+
+          <ProjectNavigation projectId={project.id} />
 
           <h1 className="mt-2 text-2xl font-bold text-gray-900">
             Design Reviews
