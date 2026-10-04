@@ -29,11 +29,11 @@ export default function ProjectCard({
       <Card>
         <div className="flex items-start justify-between gap-4">
           <div>
-            <h3 className="font-semibold text-gray-900">
-              {project.name}
-            </h3>
+            <h3 className="font-semibold tracking-tight text-gray-900">
+  {project.name}
+</h3>
 
-            <p className="mt-1 line-clamp-2 text-sm leading-5 text-gray-500">
+            <p className="mt-1 line-clamp-2 text-sm leading-6 text-gray-500">
               {project.description || "No project description available."}
             </p>
           </div>
