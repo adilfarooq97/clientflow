@@ -12,7 +12,7 @@ export default async function MessagesPage({
 }) {
   const { id } = await params;
 
-  const projectProfile = await getCurrentUserProfile();
+  const profile = await getCurrentUserProfile();
   const projects = await getAccessibleProjects();
 
   const project = projects.find((item) => item.id === id);
@@ -46,7 +46,7 @@ export default async function MessagesPage({
         <MessageThread
           projectId={project.id}
           initialMessages={messages}
-          currentUserId={projectProfile?.id ?? ""}
+          currentUserId={profile?.id ?? ""}
           canSend={true}
         />
       </div>
