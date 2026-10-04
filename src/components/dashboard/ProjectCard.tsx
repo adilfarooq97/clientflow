@@ -30,8 +30,8 @@ export default function ProjectCard({
         <div className="flex items-start justify-between gap-4">
           <div>
             <h3 className="font-semibold tracking-tight text-gray-900">
-  {project.name}
-</h3>
+              {project.name}
+            </h3>
 
             <p className="mt-1 line-clamp-2 text-sm leading-6 text-gray-500">
               {project.description || "No project description available."}
@@ -45,7 +45,7 @@ export default function ProjectCard({
 
         <div className="mt-5">
           <div className="flex items-center justify-between">
-            <span className="text-xs font-medium text-gray-500">
+            <span className="text-xs font-medium tracking-wide text-gray-500">
               Progress
             </span>
 
