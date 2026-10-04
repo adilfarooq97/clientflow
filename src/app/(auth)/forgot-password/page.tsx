@@ -37,7 +37,7 @@ export default function ForgotPasswordPage() {
     <div className="flex min-h-[calc(100vh-4rem)] items-center justify-center">
       <AuthCard>
         <AuthHeader />
-        <h1 className="text-2xl font-bold text-gray-900">
+        <h1 className="text-2xl font-bold tracking-tight text-gray-900">
           Reset your password
         </h1>
 
