@@ -14,49 +14,55 @@ export default function SignupPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [role, setRole] = useState<UserRole>("freelancer");
+  const [loading, setLoading] = useState(false);
 
   const handleSubmit = async (
-  event: React.FormEvent<HTMLFormElement>
-) => {
-  event.preventDefault();
+    event: React.FormEvent<HTMLFormElement>
+  ) => {
+    event.preventDefault();
 
-  if (!name || !email || !password) {
-    return;
-  }
+    if (!name || !email || !password) {
+      return;
+    }
 
-  const { data, error } = await supabase.auth.signUp({
-    email,
-    password,
-    options: {
-    data: {
-      full_name: name,
+    setLoading(true);
+
+    const { data, error } = await supabase.auth.signUp({
+      email,
+      password,
+      options: {
+        data: {
+          full_name: name,
+          role,
+        },
+      },
+    });
+
+    if (error) {
+      console.error("Signup error:", error);
+      setLoading(false);
+      return;
+    }
+
+    console.log("Signup successful:", data);
+    console.log("User profile data:", {
+      name,
       role,
-    },
-  },
-  });
+    });
 
-  if (error) {
-    console.error("Signup error:", error);
-    return;
-  }
-
-  console.log("Signup successful:", data);
-  console.log("User profile data:", {
-    name,
-    role,
-  });
-};
+    setLoading(false);
+  };
 
   return (
     <div className="flex min-h-[calc(100vh-4rem)] items-center justify-center">
       <AuthCard>
-         <AuthHeader />
+        <AuthHeader />
         <h1 className="text-2xl font-bold text-gray-900">
           Create your account
         </h1>
 
         <p className="mt-2 text-sm text-gray-500">
-           Create your ClientFlow account and get started.
+          Create your ClientFlow account and get started.
         </p>
 
         <form
@@ -83,7 +89,7 @@ export default function SignupPage() {
               id="role"
               value={role}
               onChange={(event) =>
-                 setRole(event.target.value as UserRole)
+                setRole(event.target.value as UserRole)
               }
               className="mt-2 w-full rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm outline-none transition focus:border-gray-900 focus:ring-2 focus:ring-gray-200"
             >
@@ -112,8 +118,12 @@ export default function SignupPage() {
             }
           />
 
-          <Button type="submit" className="w-full">
-            Create account
+          <Button
+            type="submit"
+            disabled={loading}
+            className="w-full"
+          >
+            {loading ? "Creating account..." : "Create account"}
           </Button>
         </form>
 
