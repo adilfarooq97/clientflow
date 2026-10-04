@@ -13,7 +13,7 @@ export default async function ReviewsPage({
 }) {
   const { id } = await params;
 
-    const profile = await getCurrentUserProfile();
+  const profile = await getCurrentUserProfile();
   const projects = await getAccessibleProjects();
   const project = projects.find((item) => item.id === id);
 
@@ -44,10 +44,10 @@ export default async function ReviewsPage({
         </div>
 
         {profile?.role === "freelancer" && (
-  <Link href={`/projects/${project.id}/reviews/new`}>
-    <Button>New Review</Button>
-  </Link>
-)}
+          <Link href={`/projects/${project.id}/reviews/new`}>
+            <Button>New Review</Button>
+          </Link>
+        )}
       </div>
 
       {reviews.length === 0 ? (
@@ -57,14 +57,16 @@ export default async function ReviewsPage({
           </h2>
 
           <p className="mt-2 text-sm text-gray-500">
-            Create your first review submission for this project.
+            {profile?.role === "freelancer"
+              ? "Create your first review submission for this project."
+              : "No review submissions have been added to this project yet."}
           </p>
 
           {profile?.role === "freelancer" && (
-  <Link href={`/projects/${project.id}/reviews/new`}>
-    <Button>New Review</Button>
-  </Link>
-)}
+            <Link href={`/projects/${project.id}/reviews/new`}>
+              <Button>New Review</Button>
+            </Link>
+          )}
         </div>
       ) : (
         <div className="grid gap-4">
