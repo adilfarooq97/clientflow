@@ -17,7 +17,7 @@ export default function ProjectCard({
   return (
     <Link
       href={`/projects/${project.id}`}
-      className="block rounded-xl transition hover:-translate-y-0.5 hover:shadow-md"
+      className="block rounded-xl border border-gray-200 bg-white p-5 transition hover:-translate-y-0.5 hover:border-gray-300 hover:shadow-sm"
     >
       <Card>
         <div className="flex items-start justify-between gap-4">

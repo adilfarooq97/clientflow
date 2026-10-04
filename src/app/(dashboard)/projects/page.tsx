@@ -10,8 +10,8 @@ export default async function ProjectsPage() {
   const isFreelancer = userProfile?.role === "freelancer";
 
   return (
-    <div className="p-8">
-      <div className="flex items-start justify-between gap-4">
+    <div className="p-4 sm:p-6 lg:p-8">
+      <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
         <div>
           <h1 className="text-2xl font-bold text-gray-900">
             Projects
@@ -19,8 +19,10 @@ export default async function ProjectsPage() {
 
           <p className="mt-2 text-sm text-gray-500">
             {isFreelancer
-              ? "Manage your projects and keep client work moving."
-              : "View the projects you are currently working on."}
+              ? `${projects.length} ${projects.length === 1 ? "project" : "projects"
+              } in your workspace.`
+              : `${projects.length} ${projects.length === 1 ? "project" : "projects"
+              } available to you.`}
           </p>
         </div>
 
@@ -35,15 +37,19 @@ export default async function ProjectsPage() {
       </div>
 
       {projects.length === 0 ? (
-        <div className="mt-8 rounded-xl border border-dashed border-gray-300 bg-white p-10 text-center">
-          <h2 className="font-semibold text-gray-900">
+        <div className="rounded-xl border border-dashed border-gray-300 bg-white p-10 text-center">
+          <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-gray-100 text-gray-500">
+            <span className="text-lg font-semibold">P</span>
+          </div>
+
+          <h2 className="mt-4 text-lg font-semibold text-gray-900">
             No projects yet
           </h2>
 
-          <p className="mt-2 text-sm text-gray-500">
+          <p className="mx-auto mt-2 max-w-md text-sm leading-6 text-gray-500">
             {isFreelancer
-              ? "Create your first project to get started."
-              : "You have not been added to any projects yet."}
+              ? "Create your first project to start organizing tasks, reviews, files, and client communication."
+              : "You have not been added to any projects yet. Projects you have access to will appear here."}
           </p>
 
           {isFreelancer && (
@@ -56,7 +62,7 @@ export default async function ProjectsPage() {
           )}
         </div>
       ) : (
-        <div className="mt-8 grid gap-4 lg:grid-cols-2">
+        <div className="grid gap-4 sm:gap-6 md:grid-cols-2 xl:grid-cols-3">
           {projects.map((project) => (
             <ProjectCard
               key={project.id}
