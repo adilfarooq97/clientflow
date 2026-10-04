@@ -12,10 +12,12 @@ const KanbanBoard = dynamic(
 
 type KanbanBoardWrapperProps = {
   tasks: Task[];
+  canManage?: boolean;
 };
 
 export default function KanbanBoardWrapper({
   tasks,
+  canManage = true,
 }: KanbanBoardWrapperProps) {
   return <KanbanBoard tasks={tasks} />;
 }

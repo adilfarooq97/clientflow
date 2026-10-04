@@ -7,6 +7,8 @@ import { getTasks } from "@/lib/supabase/tasks";
 import { getReviews } from "@/lib/supabase/reviews";
 import { getFiles } from "@/lib/supabase/files";
 import { getMessages } from "@/lib/supabase/messages";
+import { getAccessibleProjects } from "@/lib/supabase/projects";
+import { getCurrentUserProfile } from "@/lib/supabase/auth";
 
 const stats = [
   {
@@ -36,8 +38,10 @@ const activities = [
   },
 ];
 
+
 export default async function Dashboard() {
-  const projects = await getProjects();
+  const projects = await getAccessibleProjects();
+  const userProfile = await getCurrentUserProfile();
   const taskGroups = await Promise.all(
     projects.map((project) => getTasks(project.id))
   );
@@ -111,6 +115,16 @@ export default async function Dashboard() {
       <h1 className="text-2xl font-bold text-gray-900">
         Good morning 👋
       </h1>
+      {userProfile && (
+        <p className="mt-1 text-sm text-gray-500">
+          Welcome back, {userProfile.full_name}
+        </p>
+      )}
+      {userProfile && (
+        <span className="mt-2 inline-flex rounded-full bg-gray-100 px-2.5 py-1 text-xs font-medium capitalize text-gray-600">
+          {userProfile.role}
+        </span>
+      )}
       <p className="mt-1 text-gray-500">
         Here&apos;s what&apos;s happening with your projects.
       </p>

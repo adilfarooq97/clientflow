@@ -57,10 +57,12 @@ export async function removeProjectMember(
 ) {
   const supabase = await createClient();
 
-  const { error } = await supabase
+  const { data, error } = await supabase
     .from("project_members")
     .delete()
-    .eq("id", memberId);
+    .eq("id", memberId)
+    .select("id")
+    .single();
 
   if (error) {
     console.error(
@@ -70,4 +72,10 @@ export async function removeProjectMember(
 
     throw new Error(error.message);
   }
+
+  if (!data) {
+    throw new Error("Project member was not removed.");
+  }
+
+  return data;
 }

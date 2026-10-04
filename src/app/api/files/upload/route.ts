@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase/server";
 import { uploadProjectFile, createFile } from "@/lib/supabase/files";
 import { getFileType } from "@/lib/files";
+import { getCurrentUserProfile } from "@/lib/supabase/auth";
 
 export async function POST(request: Request) {
   const supabase = await createClient();
@@ -16,6 +17,22 @@ export async function POST(request: Request) {
       { status: 401 }
     );
   }
+
+  const profile = await getCurrentUserProfile();
+
+if (!profile) {
+  return NextResponse.json(
+    { error: "Unauthorized" },
+    { status: 401 }
+  );
+}
+
+if (profile.role !== "freelancer") {
+  return NextResponse.json(
+    { error: "Only freelancers can upload files" },
+    { status: 403 }
+  );
+}
 
   const formData = await request.formData();
 

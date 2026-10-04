@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { getProjects } from "@/lib/supabase/projects";
+import { getAccessibleProjects } from "@/lib/supabase/projects";
 import { getMessages } from "@/lib/supabase/messages";
 import { getCurrentUser } from "@/lib/supabase/auth";
 import MessageThread from "@/components/messages/MessageThread";
@@ -12,7 +12,7 @@ export default async function MessagesPage({
 }) {
   const { id } = await params;
 
-  const projects = await getProjects();
+  const projects = await getAccessibleProjects();
   const project = projects.find((item) => item.id === id);
 
   if (!project) {
@@ -67,6 +67,7 @@ export default async function MessagesPage({
           projectId={project.id}
           currentUserId={user.id}
           initialMessages={messages}
+          canSend={true}
         />
 
 

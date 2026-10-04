@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { updateProject, deleteProject } from "@/lib/supabase/projects";
+import { getCurrentUserProfile } from "@/lib/supabase/auth";
 
 export async function PATCH(
   request: Request,
@@ -12,6 +13,14 @@ export async function PATCH(
   try {
     const { id } = await params;
     const body = await request.json();
+    const profile = await getCurrentUserProfile();
+
+if (!profile || profile.role !== "freelancer") {
+  return NextResponse.json(
+    { error: "Only freelancers can update projects" },
+    { status: 403 }
+  );
+}
 
     const project = await updateProject(id, {
       name: body.name,
@@ -35,6 +44,7 @@ export async function PATCH(
       { status: 500 }
     );
   }
+  
 }
 
 export async function DELETE(
@@ -49,6 +59,14 @@ export async function DELETE(
     const { id } = await params;
 
     await deleteProject(id);
+    const profile = await getCurrentUserProfile();
+
+if (!profile || profile.role !== "freelancer") {
+  return NextResponse.json(
+    { error: "Only freelancers can delete projects" },
+    { status: 403 }
+  );
+}
 
     return new Response(null, { status: 204 });
   } catch (error) {

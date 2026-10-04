@@ -14,6 +14,7 @@ import TaskBadge from "@/components/tasks/TaskBadge";
 
 type KanbanBoardProps = {
   tasks: Task[];
+  canManage?: boolean;
 };
 
 const columns: TaskStatus[] = [
@@ -26,6 +27,7 @@ const columns: TaskStatus[] = [
 
 export default function KanbanBoard({
   tasks: initialTasks,
+   canManage = true,
 }: KanbanBoardProps) {
   const [tasks, setTasks] = useState<Task[]>(initialTasks);
   const [activeTaskId, setActiveTaskId] = useState<string | null>(
@@ -87,13 +89,17 @@ setTasks((currentTasks) =>
   return (
     <DndContext
   collisionDetection={closestCorners}
-  onDragStart={({ active }) => {
-    setActiveTaskId(String(active.id));
-  }}
+  onDragStart={
+    canManage
+      ? ({ active }) => {
+          setActiveTaskId(String(active.id));
+        }
+      : undefined
+  }
   onDragCancel={() => {
     setActiveTaskId(null);
   }}
-  onDragEnd={handleDragEnd}
+  onDragEnd={canManage ? handleDragEnd : undefined}
 >
       <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
   {columns.map((column) => {
@@ -106,12 +112,13 @@ setTasks((currentTasks) =>
         key={column}
         column={column}
         tasks={columnTasks}
+        canManage={canManage}
       />
     );
   })}
 </div>
       <DragOverlay>
-  {activeTask ? (
+  {canManage && activeTask ? (
     <div className="rounded-lg border border-gray-200 bg-white p-4 shadow-xl">
       <div className="flex items-start justify-between gap-3">
         <h3 className="font-medium text-gray-900">

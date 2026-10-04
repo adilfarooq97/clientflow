@@ -1,10 +1,14 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { getProjects } from "@/lib/supabase/projects";
+import { getAccessibleProjects } from "@/lib/supabase/projects";
 import { getTasks } from "@/lib/supabase/tasks";
+import Button from "@/components/ui/Button";
 import type { TaskStatus } from "@/types";
 import TaskCard from "@/components/tasks/TaskCard";
 import KanbanBoardWrapper from "@/components/tasks/KanbanBoardWrapper";
+import { getCurrentUserProfile } from "@/lib/supabase/auth";
+
+
 
 
 export default async function ProjectTasksPage({
@@ -13,8 +17,8 @@ export default async function ProjectTasksPage({
   params: Promise<{ id: string }>;
 }) {
   const { id } = await params;
-
-  const projects = await getProjects();
+  const profile = await getCurrentUserProfile();
+  const projects = await getAccessibleProjects();
   const project = projects.find((item) => item.id === id);
 
   if (!project) {
@@ -43,16 +47,15 @@ export default async function ProjectTasksPage({
             </p>
           </div>
 
-          <Link
-            href={`/projects/${project.id}/tasks/new`}
-            className="rounded-lg bg-gray-900 px-4 py-2 text-sm font-medium text-white transition hover:bg-gray-800"
-          >
-            + New Task
-          </Link>
+          {profile?.role === "freelancer" && (
+  <Link href={`/projects/${project.id}/tasks/new`}>
+    <Button>New Task</Button>
+  </Link>
+)}
         </div>
       </div>
 
-      <KanbanBoardWrapper tasks={tasks} />
+      <KanbanBoardWrapper tasks={tasks} canManage={profile?.role === "freelancer"} />
     </div>
   );
 }

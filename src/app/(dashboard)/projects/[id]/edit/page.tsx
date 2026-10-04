@@ -3,6 +3,8 @@ import { notFound } from "next/navigation";
 import AuthCard from "@/components/auth/AuthCard";
 import EditProjectForm from "@/components/projects/EditProjectForm";
 import { getProjects } from "@/lib/supabase/projects";
+import { getCurrentUserProfile } from "@/lib/supabase/auth";
+import { redirect } from "next/navigation";
 
 export default async function EditProjectPage({
   params,
@@ -17,9 +19,20 @@ export default async function EditProjectPage({
     (item) => item.id === id
   );
 
+
   if (!project) {
     notFound();
   }
+
+  const profile = await getCurrentUserProfile();
+
+if (!profile) {
+  redirect("/login");
+}
+
+if (profile.role !== "freelancer") {
+  redirect("/dashboard");
+}
 
   return (
     <div className="mx-auto max-w-2xl">

@@ -5,6 +5,7 @@ import {
   updateReview,
 } from "@/lib/supabase/reviews";
 import type { ReviewStatus } from "@/types";
+import { getCurrentUserProfile } from "@/lib/supabase/auth";
 
 export async function PATCH(
   request: Request,
@@ -24,6 +25,21 @@ export async function PATCH(
       { status: 401 }
     );
   }
+  const profile = await getCurrentUserProfile();
+
+if (!profile) {
+  return NextResponse.json(
+    { error: "Unauthorized" },
+    { status: 401 }
+  );
+}
+
+if (profile.role !== "freelancer") {
+  return NextResponse.json(
+    { error: "Only freelancers can update reviews" },
+    { status: 403 }
+  );
+}
 
   const body = await request.json();
 
@@ -80,6 +96,21 @@ export async function DELETE(
       { status: 401 }
     );
   }
+  const profile = await getCurrentUserProfile();
+
+if (!profile) {
+  return NextResponse.json(
+    { error: "Unauthorized" },
+    { status: 401 }
+  );
+}
+
+if (profile.role !== "freelancer") {
+  return NextResponse.json(
+    { error: "Only freelancers can delete reviews" },
+    { status: 403 }
+  );
+}
 
   try {
     await deleteReview(id);

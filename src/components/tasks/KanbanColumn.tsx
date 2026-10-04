@@ -7,11 +7,13 @@ import TaskCard from "@/components/tasks/TaskCard";
 type KanbanColumnProps = {
   column: TaskStatus;
   tasks: Task[];
+  canManage?: boolean;
 };
 
 export default function KanbanColumn({
   column,
   tasks,
+  canManage = true,
 }: KanbanColumnProps) {
   const { setNodeRef, isOver } = useDroppable({
     id: column,
@@ -38,7 +40,7 @@ export default function KanbanColumn({
 
       <div className="space-y-3">
         {tasks.map((task) => (
-          <TaskCard key={task.id} task={task} />
+          <TaskCard key={task.id} task={task} canManage={canManage} />
         ))}
 
         {tasks.length === 0 && (

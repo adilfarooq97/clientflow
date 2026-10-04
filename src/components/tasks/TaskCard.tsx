@@ -8,9 +8,10 @@ import TaskBadge from "@/components/tasks/TaskBadge";
 
 type TaskCardProps = {
   task: Task;
+  canManage?: boolean;
 };
 
-export default function TaskCard({ task }: TaskCardProps) {
+export default function TaskCard({ task, canManage = true }: TaskCardProps) {
   const {
     attributes,
     listeners,
@@ -35,45 +36,74 @@ export default function TaskCard({ task }: TaskCardProps) {
         }`}
     >
       <div className="flex items-start gap-3 p-4">
-        <button
-          type="button"
-          {...attributes}
-          {...listeners}
-          aria-label={`Drag ${task.title}`}
-          className="mt-1 cursor-grab touch-none text-gray-400 hover:text-gray-600 active:cursor-grabbing"
-        >
-          ⋮⋮
-        </button>
+        {canManage && (
+  <button
+    type="button"
+    {...attributes}
+    {...listeners}
+    aria-label={`Drag ${task.title}`}
+    className="mt-1 cursor-grab touch-none text-gray-400 hover:text-gray-600 active:cursor-grabbing"
+  >
+    ⋮⋮
+  </button>
+)}
 
-        <div className="min-w-0 flex-1">
-          <Link
-            href={`/projects/${task.project_id}/tasks/${task.id}/edit`}
-            className="block"
-          >
-            <div className="flex items-start justify-between gap-3">
-              <h3 className="font-medium text-gray-900">
-                {task.title}
-              </h3>
+       <div className="min-w-0 flex-1">
+  {canManage ? (
+    <Link
+      href={`/projects/${task.project_id}/tasks/${task.id}/edit`}
+      className="block"
+    >
+      <div className="flex items-start justify-between gap-3">
+        <h3 className="font-medium text-gray-900">
+          {task.title}
+        </h3>
 
-              <TaskBadge
-                type="priority"
-                value={task.priority}
-              />
-            </div>
+        <TaskBadge
+          type="priority"
+          value={task.priority}
+        />
+      </div>
 
-            {task.description && (
-              <p className="mt-2 text-sm text-gray-500">
-                {task.description}
-              </p>
-            )}
+      {task.description && (
+        <p className="mt-2 text-sm text-gray-500">
+          {task.description}
+        </p>
+      )}
 
-            <div className="mt-3 text-xs text-gray-400">
-              {task.due_date
-                ? `Due ${task.due_date}`
-                : "No due date"}
-            </div>
-          </Link>
-        </div>
+      <div className="mt-3 text-xs text-gray-400">
+        {task.due_date
+          ? `Due ${task.due_date}`
+          : "No due date"}
+      </div>
+    </Link>
+  ) : (
+    <div>
+      <div className="flex items-start justify-between gap-3">
+        <h3 className="font-medium text-gray-900">
+          {task.title}
+        </h3>
+
+        <TaskBadge
+          type="priority"
+          value={task.priority}
+        />
+      </div>
+
+      {task.description && (
+        <p className="mt-2 text-sm text-gray-500">
+          {task.description}
+        </p>
+      )}
+
+      <div className="mt-3 text-xs text-gray-400">
+        {task.due_date
+          ? `Due ${task.due_date}`
+          : "No due date"}
+      </div>
+    </div>
+  )}
+</div>
       </div>
     </div>
   );

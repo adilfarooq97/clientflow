@@ -1,6 +1,9 @@
 import { NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase/server";
 import { createTask, getTasks } from "@/lib/supabase/tasks";
+import { getCurrentUserProfile } from "@/lib/supabase/auth";
+
+
 
 export async function GET(request: Request) {
   const supabase = await createClient();
@@ -15,6 +18,22 @@ export async function GET(request: Request) {
       { status: 401 }
     );
   }
+
+  const profile = await getCurrentUserProfile();
+
+if (!profile) {
+  return NextResponse.json(
+    { error: "Unauthorized" },
+    { status: 401 }
+  );
+}
+
+if (profile.role !== "freelancer") {
+  return NextResponse.json(
+    { error: "Only freelancers can create tasks" },
+    { status: 403 }
+  );
+}
 
   const { searchParams } = new URL(request.url);
   const projectId = searchParams.get("projectId");

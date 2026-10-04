@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { getProjects } from "@/lib/supabase/projects";
+import { getAccessibleProjects } from "@/lib/supabase/projects";
 import DeleteProjectButton from "@/components/projects/DeleteProjectButton";
 import { getTasks } from "@/lib/supabase/tasks";
 import { getReviews } from "@/lib/supabase/reviews";
@@ -10,6 +10,7 @@ import { getProjectMembers } from "@/lib/supabase/project-members";
 import ProjectMembers from "@/components/projects/ProjectMembers";
 import AddProjectClientForm from "@/components/projects/AddProjectClientForm";
 import { getMemberProfiles } from "@/lib/supabase/users";
+import { getCurrentUserProfile } from "@/lib/supabase/auth";
 
 export default async function ProjectPage({
   params,
@@ -18,7 +19,8 @@ export default async function ProjectPage({
 }) {
   const { id } = await params;
 
-  const projects = await getProjects();
+  const projects = await getAccessibleProjects();
+  const userProfile = await getCurrentUserProfile();
 
 
   const project = projects.find(
@@ -109,13 +111,17 @@ export default async function ProjectPage({
             >
               View Messages
             </Link>
-            <Link
-              href={`/projects/${project.id}/edit`}
-              className="rounded-lg border border-gray-300 px-4 py-2 text-sm font-medium text-gray-700 transition hover:bg-gray-50"
-            >
-              Edit
-            </Link>
-            <DeleteProjectButton projectId={project.id} />
+            {userProfile?.role === "freelancer" && (
+  <Link
+    href={`/projects/${project.id}/edit`}
+    className="rounded-lg border border-gray-200 px-4 py-2 text-sm font-medium text-gray-700 transition hover:bg-gray-50"
+  >
+    Edit Project
+  </Link>
+)}
+            {userProfile?.role === "freelancer" && (
+  <DeleteProjectButton projectId={project.id} />
+)}
           </div>
         </div>
 
@@ -167,7 +173,7 @@ export default async function ProjectPage({
 
       </div>
       <div className="grid gap-6 lg:grid-cols-2 mt-8">
-        <ProjectMembers members={members} />
+        <ProjectMembers members={members} profiles={memberProfiles} />
 
         <div className="rounded-xl border border-gray-200 bg-white p-5">
           <div className="mb-5">

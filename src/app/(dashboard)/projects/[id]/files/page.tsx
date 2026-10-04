@@ -1,8 +1,9 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { getProjects } from "@/lib/supabase/projects";
+import { getAccessibleProjects } from "@/lib/supabase/projects";
 import { getFiles, getFileUrl } from "@/lib/supabase/files";
 import FileCard from "@/components/files/FileCard";
+import { getCurrentUserProfile } from "@/lib/supabase/auth";
 
 export default async function FilesPage({
   params,
@@ -10,8 +11,10 @@ export default async function FilesPage({
   params: Promise<{ id: string }>;
 }) {
   const { id } = await params;
+  
+const profile = await getCurrentUserProfile();
 
-  const projects = await getProjects();
+  const projects = await getAccessibleProjects();
   const project = projects.find((item) => item.id === id);
 
   if (!project) {
@@ -50,12 +53,14 @@ export default async function FilesPage({
           </p>
         </div>
 
+{profile?.role === "freelancer" && (
         <Link
           href={`/projects/${project.id}/files/new`}
           className="rounded-lg bg-gray-900 px-4 py-2 text-sm font-medium text-white transition hover:bg-gray-800"
         >
           + Add File
         </Link>
+)}
       </div>
 
       {files.length === 0 ? (
@@ -84,6 +89,7 @@ export default async function FilesPage({
                 ...file,
                 file_url: signedUrl,
               }}
+               canManage={profile?.role === "freelancer"}
             />
           ))}
         </div>

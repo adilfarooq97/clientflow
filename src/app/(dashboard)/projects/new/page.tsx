@@ -1,8 +1,19 @@
 import Link from "next/link";
 import AuthCard from "@/components/auth/AuthCard";
 import CreateProjectForm from "@/components/projects/CreateProjectForm";
+import { getCurrentUserProfile } from "@/lib/supabase/auth";
+import { redirect } from "next/navigation";
 
-export default function NewProjectPage() {
+export default async function NewProjectPage() {
+  const profile = await getCurrentUserProfile();
+
+if (!profile) {
+  redirect("/login");
+}
+
+if (profile.role !== "freelancer") {
+  redirect("/dashboard");
+}
   return (
     <div className="mx-auto max-w-2xl">
       <div className="mb-6">

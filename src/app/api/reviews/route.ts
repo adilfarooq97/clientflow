@@ -4,6 +4,7 @@ import {
   createReview,
   getReviews,
 } from "@/lib/supabase/reviews";
+import { getCurrentUserProfile } from "@/lib/supabase/auth";
 
 export async function GET(request: Request) {
   const supabase = await createClient();
@@ -47,6 +48,21 @@ export async function POST(request: Request) {
       { status: 401 }
     );
   }
+  const profile = await getCurrentUserProfile();
+
+if (!profile) {
+  return NextResponse.json(
+    { error: "Unauthorized" },
+    { status: 401 }
+  );
+}
+
+if (profile.role !== "freelancer") {
+  return NextResponse.json(
+    { error: "Only freelancers can create reviews" },
+    { status: 403 }
+  );
+}
 
   const body = await request.json();
 

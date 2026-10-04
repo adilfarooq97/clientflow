@@ -4,9 +4,10 @@ import FileTypeBadge from "@/components/files/FileTypeBadge";
 
 type FileCardProps = {
   file: ProjectFile;
+  canManage?: boolean;
 };
 
-export default function FileCard({ file }: FileCardProps) {
+export default function FileCard({ file }: FileCardProps, canManage = true) {
   return (
     <div className="rounded-xl border border-gray-200 bg-white p-5">
       <div className="flex items-start justify-between gap-4">
@@ -33,8 +34,9 @@ export default function FileCard({ file }: FileCardProps) {
         >
           Open file
         </a>
-
-        <DeleteFileButton fileId={file.id} />
+        {canManage && (
+          <DeleteFileButton fileId={file.id} />
+        )}
       </div>
     </div>
   );

@@ -10,12 +10,14 @@ type MessageThreadProps = {
   projectId: string;
   currentUserId: string;
   initialMessages: Message[];
+  canSend?: boolean;
 };
 
 export default function MessageThread({
   projectId,
   currentUserId,
   initialMessages,
+  canSend= true,
 }: MessageThreadProps) {
   const [messages, setMessages] =
     useState<Message[]>(initialMessages);
@@ -104,7 +106,7 @@ export default function MessageThread({
       </div>
 
       <div className="border-t border-gray-200 p-6">
-        <MessageComposer projectId={projectId} />
+       {canSend && ( <MessageComposer projectId={projectId} /> )}
       </div>
     </>
   );

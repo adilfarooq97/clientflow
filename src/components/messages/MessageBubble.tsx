@@ -29,7 +29,7 @@ export default function MessageBubble({
           className={`mt-1 text-xs ${isOwn ? "text-gray-300" : "text-gray-500"
             }`}
         >
-          {new Date(message.created_at).toLocaleString()}
+          {new Date(message.created_at).toISOString()}
         </p>
         {isOwn && (
           <DeleteMessageButton messageId={message.id} />

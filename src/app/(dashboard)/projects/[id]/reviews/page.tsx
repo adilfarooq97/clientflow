@@ -1,8 +1,10 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { getProjects } from "@/lib/supabase/projects";
+import { getAccessibleProjects } from "@/lib/supabase/projects";
 import { getReviews } from "@/lib/supabase/reviews";
 import ReviewCard from "@/components/reviews/ReviewCard";
+import { getCurrentUserProfile } from "@/lib/supabase/auth";
+import Button from "@/components/ui/Button";
 
 export default async function ReviewsPage({
   params,
@@ -11,7 +13,8 @@ export default async function ReviewsPage({
 }) {
   const { id } = await params;
 
-  const projects = await getProjects();
+    const profile = await getCurrentUserProfile();
+  const projects = await getAccessibleProjects();
   const project = projects.find((item) => item.id === id);
 
   if (!project) {
@@ -40,12 +43,11 @@ export default async function ReviewsPage({
           </p>
         </div>
 
-        <Link
-          href={`/projects/${project.id}/reviews/new`}
-          className="rounded-lg bg-gray-900 px-4 py-2 text-sm font-medium text-white transition hover:bg-gray-800"
-        >
-          + New Review
-        </Link>
+        {profile?.role === "freelancer" && (
+  <Link href={`/projects/${project.id}/reviews/new`}>
+    <Button>New Review</Button>
+  </Link>
+)}
       </div>
 
       {reviews.length === 0 ? (
@@ -58,12 +60,11 @@ export default async function ReviewsPage({
             Create your first review submission for this project.
           </p>
 
-          <Link
-            href={`/projects/${project.id}/reviews/new`}
-            className="mt-4 inline-block text-sm font-medium text-gray-900 underline"
-          >
-            Create a review
-          </Link>
+          {profile?.role === "freelancer" && (
+  <Link href={`/projects/${project.id}/reviews/new`}>
+    <Button>New Review</Button>
+  </Link>
+)}
         </div>
       ) : (
         <div className="grid gap-4">
@@ -72,6 +73,7 @@ export default async function ReviewsPage({
               key={review.id}
               review={review}
               projectId={project.id}
+              canManage={profile?.role === "freelancer"}
             />
           ))}
         </div>

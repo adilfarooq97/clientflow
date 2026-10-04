@@ -1,6 +1,8 @@
 import { NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase/server";
 import { deleteTask, updateTask } from "@/lib/supabase/tasks";
+import { getCurrentUserProfile } from "@/lib/supabase/auth";
+
 
 export async function PATCH(
   request: Request,
@@ -18,6 +20,22 @@ export async function PATCH(
       { status: 401 }
     );
   }
+
+  const profile = await getCurrentUserProfile();
+
+if (!profile) {
+  return NextResponse.json(
+    { error: "Unauthorized" },
+    { status: 401 }
+  );
+}
+
+if (profile.role !== "freelancer") {
+  return NextResponse.json(
+    { error: "Only freelancers can update tasks" },
+    { status: 403 }
+  );
+}
 
   try {
     const { id } = await params;
@@ -70,6 +88,22 @@ export async function DELETE(
       { status: 401 }
     );
   }
+
+  const profile = await getCurrentUserProfile();
+
+if (!profile) {
+  return NextResponse.json(
+    { error: "Unauthorized" },
+    { status: 401 }
+  );
+}
+
+if (profile.role !== "freelancer") {
+  return NextResponse.json(
+    { error: "Only freelancers can delete tasks" },
+    { status: 403 }
+  );
+}
 
   try {
     const { id } = await params;

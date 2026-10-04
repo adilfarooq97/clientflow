@@ -1,6 +1,7 @@
 import Link from "next/link";
+import { getCurrentUserProfile } from "@/lib/supabase/auth";
 
-const navigation = [
+const freelancerNavigation = [
   {
     label: "Dashboard",
     href: "/dashboard",
@@ -9,25 +10,23 @@ const navigation = [
     label: "Projects",
     href: "/projects",
   },
+];
+
+const clientNavigation = [
   {
-    label: "Clients",
-    href: "/clients",
-  },
-  {
-    label: "Invoices",
-    href: "/invoices",
-  },
-  {
-    label: "Messages",
-    href: "/messages",
-  },
-  {
-    label: "Settings",
-    href: "/settings",
+    label: "Dashboard",
+    href: "/dashboard",
   },
 ];
 
-export default function Sidebar() {
+
+
+export default async function Sidebar() {
+  const userProfile = await getCurrentUserProfile();
+  const navigation =
+  userProfile?.role === "client"
+    ? clientNavigation
+    : freelancerNavigation;
   return (
     <aside className="w-64 min-h-screen border-r bg-white p-6">
       <h2 className="text-xl font-bold">ClientFlow</h2>
