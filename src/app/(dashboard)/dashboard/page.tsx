@@ -76,8 +76,8 @@ export default async function Dashboard() {
   );
 
   const dashboardStats =
-  userProfile?.role === "freelancer"
-    ? [
+    userProfile?.role === "freelancer"
+      ? [
         {
           title: "Active Projects",
           value: activeProjects.length.toString(),
@@ -103,7 +103,7 @@ export default async function Dashboard() {
           value: messages.length.toString(),
         },
       ]
-    : [
+      : [
         {
           title: "My Projects",
           value: projects.length.toString(),
@@ -149,6 +149,27 @@ export default async function Dashboard() {
       <p className="mt-1 text-gray-500">
         Here&apos;s what&apos;s happening with your projects.
       </p>
+
+      <div className="mb-6 flex items-center justify-between">
+        <div>
+          <h2 className="text-lg font-semibold text-gray-900">
+            Recent Projects
+          </h2>
+
+          <p className="mt-1 text-sm text-gray-500">
+            {userProfile?.role === "freelancer"
+              ? "Keep track of your active client work."
+              : "View the projects you are currently working on."}
+          </p>
+        </div>
+
+        <Link
+          href="/projects"
+          className="text-sm font-medium text-gray-700 hover:text-gray-900"
+        >
+          View all →
+        </Link>
+      </div>
 
       <div className="mt-8 grid gap-4 md:grid-cols-3">
         {dashboardStats.map((stat) => (
@@ -232,17 +253,37 @@ export default async function Dashboard() {
             </Link>
           )}
         </div>
+        {projects.length === 0 ? (
+          <div className="rounded-xl border border-dashed border-gray-300 bg-white p-10 text-center">
+            <h3 className="text-lg font-semibold text-gray-900">
+              No projects yet
+            </h3>
 
+            <p className="mx-auto mt-2 max-w-md text-sm text-gray-500">
+              {userProfile?.role === "freelancer"
+                ? "Create your first project to start managing your client work."
+                : "You have not been added to any projects yet."}
+            </p>
 
-
-        <div className="mt-4 grid gap-4 lg:grid-cols-2">
-          {projects.map((project) => (
-            <ProjectCard
-              key={project.id}
-              project={project}
-            />
-          ))}
-        </div>
+            {userProfile?.role === "freelancer" && (
+              <Link
+                href="/projects/new"
+                className="mt-5 inline-flex rounded-lg bg-gray-900 px-4 py-2 text-sm font-medium text-white transition hover:bg-gray-800"
+              >
+                Create Project
+              </Link>
+            )}
+          </div>
+        ) : (
+          <div className="grid gap-6 md:grid-cols-2 xl:grid-cols-3">
+            {projects.map((project) => (
+              <ProjectCard
+                key={project.id}
+                project={project}
+              />
+            ))}
+          </div>
+        )}
       </section>
 
       <section className="mt-10">
