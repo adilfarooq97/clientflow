@@ -11,11 +11,11 @@ export default function StatCard({
 }: StatCardProps) {
   return (
     <Card>
-      <p className="text-sm text-gray-500">
+      <p className="text-sm font-medium leading-6 text-gray-500">
         {title}
       </p>
 
-      <p className="mt-2 text-3xl font-bold">
+      <p className="text-2xl font-bold tracking-tight text-gray-900">
         {value}
       </p>
     </Card>
