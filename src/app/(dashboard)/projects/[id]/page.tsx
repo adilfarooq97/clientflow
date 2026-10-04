@@ -62,6 +62,18 @@ export default async function ProjectPage({
     tasks.length > 0
       ? Math.round((completedTasks / tasks.length) * 100)
       : 0;
+  const deadlineDate = project.deadline
+    ? new Date(`${project.deadline}T23:59:59`)
+    : null;
+
+  const today = new Date();
+
+  const daysUntilDeadline = deadlineDate
+    ? Math.ceil(
+      (deadlineDate.getTime() - today.getTime()) /
+      (1000 * 60 * 60 * 24)
+    )
+    : null;
   return (
     <div className="p-8">
       <Link
@@ -73,110 +85,71 @@ export default async function ProjectPage({
 
       <ProjectNavigation projectId={project.id} />
 
-      <div className="mt-6 rounded-xl border bg-white p-6">
-        <div className="flex items-start justify-between gap-4">
-          <div>
-            <h1 className="text-2xl font-bold text-gray-900">
-              {project.name}
-            </h1>
+      <div className="rounded-xl border border-gray-200 bg-white p-6">
+        <div className="flex flex-col gap-6 lg:flex-row lg:items-start lg:justify-between">
+          <div className="min-w-0">
+            <div className="flex flex-wrap items-center gap-3">
+              <h1 className="text-2xl font-bold text-gray-900">
+                {project.name}
+              </h1>
 
-            <p className="mt-2 text-sm text-gray-500">
-              {project.description || "No description provided."}
+              <span className="rounded-full bg-blue-50 px-3 py-1 text-xs font-semibold text-blue-700">
+                {project.status}
+              </span>
+            </div>
+
+            <p className="mt-3 max-w-2xl text-sm leading-6 text-gray-500">
+              {project.description || "No project description has been added yet."}
             </p>
+
+            {project.deadline && (
+              <div className="mt-4 flex flex-wrap items-center gap-2 text-sm">
+                <span className="text-gray-500">
+                  Deadline:
+                </span>
+
+                <span className="font-medium text-gray-900">
+                  {project.deadline}
+                </span>
+
+                {daysUntilDeadline !== null && (
+                  <span
+                    className={`rounded-full px-2.5 py-1 text-xs font-semibold ${daysUntilDeadline < 0
+                        ? "bg-red-100 text-red-700"
+                        : daysUntilDeadline <= 3
+                          ? "bg-amber-100 text-amber-700"
+                          : "bg-green-100 text-green-700"
+                      }`}
+                  >
+                    {daysUntilDeadline < 0
+                      ? "Overdue"
+                      : daysUntilDeadline === 0
+                        ? "Due today"
+                        : daysUntilDeadline === 1
+                          ? "Due tomorrow"
+                          : `${daysUntilDeadline} days left`}
+                  </span>
+                )}
+              </div>
+            )}
           </div>
 
-          <div className="flex items-center gap-3">
-            <span className="rounded-full bg-gray-100 px-3 py-1 text-sm font-medium text-gray-700">
-              {project.status}
-            </span>
-
-            <Link
-              href={`/projects/${project.id}/tasks`}
-              className="rounded-lg bg-gray-900 px-4 py-2 text-sm font-medium text-white transition hover:bg-gray-800"
-            >
-              View Tasks
-            </Link>
-            <Link
-              href={`/projects/${project.id}/reviews`}
-              className="rounded-lg border border-gray-200 px-4 py-2 text-sm font-medium text-gray-700 transition hover:bg-gray-50"
-            >
-              View Reviews
-            </Link>
-            <Link
-              href={`/projects/${project.id}/files`}
-              className="rounded-lg border border-gray-200 px-4 py-2 text-sm font-medium text-gray-700 transition hover:bg-gray-50"
-            >
-              View Files
-            </Link>
-            <Link
-              href={`/projects/${project.id}/messages`}
-              className="rounded-lg border border-gray-200 px-4 py-2 text-sm font-medium text-gray-700 transition hover:bg-gray-50"
-            >
-              View Messages
-            </Link>
-            {userProfile?.role === "freelancer" && (
+          {userProfile?.role === "freelancer" && (
+            <div className="flex shrink-0 gap-2">
               <Link
                 href={`/projects/${project.id}/edit`}
-                className="rounded-lg border border-gray-200 px-4 py-2 text-sm font-medium text-gray-700 transition hover:bg-gray-50"
+                className="rounded-lg border border-gray-300 px-4 py-2 text-sm font-medium text-gray-700 transition hover:bg-gray-50"
               >
                 Edit Project
               </Link>
-            )}
-            {userProfile?.role === "freelancer" && (
+
               <DeleteProjectButton projectId={project.id} />
-            )}
-          </div>
+            </div>
+          )}
         </div>
-
-        <div className="mt-8">
-          <div className="flex items-center justify-between text-sm">
-            <span className="font-medium text-gray-700">
-              Progress
-            </span>
-
-            <span className="text-gray-500">
-              {project.progress}%
-            </span>
-          </div>
-
-          <div className="mt-2 h-2 overflow-hidden rounded-full bg-gray-100">
-            <div
-              className="h-full rounded-full bg-gray-900"
-              style={{
-                width: `${project.progress}%`,
-              }}
-            />
-          </div>
-        </div>
-
-        <div className="mt-8 grid gap-4 sm:grid-cols-2">
-          <div className="rounded-lg border p-4">
-            <p className="text-sm text-gray-500">
-              Deadline
-            </p>
-
-            <p className="mt-1 font-medium text-gray-900">
-              {project.deadline || "No deadline"}
-            </p>
-          </div>
-
-          <div className="rounded-lg border p-4">
-            <p className="text-sm text-gray-500">
-              Created
-            </p>
-
-            <p className="mt-1 font-medium text-gray-900">
-              {new Date(
-                project.created_at
-              ).toLocaleDateString()}
-            </p>
-          </div>
-
-        </div>
-
       </div>
       <div className="grid gap-6 lg:grid-cols-2 mt-8">
-        <ProjectMembers members={members} profiles={memberProfiles}  canManage={userProfile?.role === "freelancer"}/>
+        <ProjectMembers members={members} profiles={memberProfiles} canManage={userProfile?.role === "freelancer"} />
 
         {userProfile?.role === "freelancer" && (
           <div className="rounded-xl border border-gray-200 bg-white p-5">
@@ -199,7 +172,7 @@ export default async function ProjectPage({
       <div className="mt-8">
         <div className="mb-4 flex items-center justify-between">
           <div>
-            <h2 className="text-lg font-semibold text-gray-900">
+            <h2 className="text-lg font-bold text-gray-900">
               Tasks
             </h2>
 
@@ -216,123 +189,74 @@ export default async function ProjectPage({
           </Link>
         </div>
 
-        <div className="grid gap-4 sm:grid-cols-3">
-          <div className="rounded-xl border border-gray-200 bg-white p-4">
-            <p className="text-sm text-gray-500">
+        <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
+          <div className="rounded-xl border border-gray-200 bg-white p-5">
+            <p className="text-sm font-medium text-gray-500">
               Total Tasks
             </p>
 
-            <p className="mt-2 text-2xl font-bold text-gray-900">
+            <p className="mt-2 text-3xl font-bold text-gray-900">
               {tasks.length}
+            </p>
+
+            <p className="mt-1 text-xs text-gray-500">
+              Tasks across this project
             </p>
           </div>
 
-          <div className="rounded-xl border border-gray-200 bg-white p-4">
-            <p className="text-sm text-gray-500">
+          <div className="rounded-xl border border-gray-200 bg-white p-5">
+            <p className="text-sm font-medium text-gray-500">
               Completed Tasks
             </p>
 
-            <p className="mt-2 text-2xl font-bold text-gray-900">
+            <p className="mt-2 text-3xl font-bold text-gray-900">
               {completedTasks}
+            </p>
+
+            <p className="mt-1 text-xs text-gray-500">
+              {taskProgress}% of all tasks
             </p>
           </div>
 
-          <div className="rounded-xl border border-gray-200 bg-white p-4">
-            <p className="text-sm text-gray-500">
+          <div className="rounded-xl border border-gray-200 bg-white p-5">
+            <p className="text-sm font-medium text-gray-500">
               Remaining Tasks
             </p>
 
-            <p className="mt-2 text-2xl font-bold text-gray-900">
+            <p className="mt-2 text-3xl font-bold text-gray-900">
               {remainingTasks}
             </p>
+
+            <p className="mt-1 text-xs text-gray-500">
+              Tasks still in progress
+            </p>
           </div>
+
           <div className="rounded-xl border border-gray-200 bg-white p-5">
-            <p className="text-sm text-gray-500">
+            <p className="text-sm font-medium text-gray-500">
               Project Reviews
             </p>
 
-            <p className="mt-2 text-2xl font-bold text-gray-900">
+            <p className="mt-2 text-3xl font-bold text-gray-900">
               {reviews.length}
             </p>
 
-            <p className="mt-1 text-sm text-gray-500">
-              {pendingReviews.length} pending
+            <p className="mt-1 text-xs text-gray-500">
+              {pendingReviews.length} pending review
+              {pendingReviews.length === 1 ? "" : "s"}
             </p>
-
-            <Link
-              href={`/projects/${project.id}/reviews`}
-              className="mt-3 inline-block text-sm font-medium text-gray-700 hover:text-gray-900"
-            >
-              View Reviews →
-            </Link>
           </div>
-          <div className="rounded-xl border border-gray-200 bg-white p-5">
-            <p className="text-sm text-gray-500">
-              Project Files
-            </p>
-
-            <p className="mt-2 text-2xl font-bold text-gray-900">
-              {files.length}
-            </p>
-
-            <p className="mt-1 text-sm text-gray-500">
-              {files.length === 1
-                ? "1 project file"
-                : `${files.length} project files`}
-            </p>
-
-            <div className="mt-4 flex gap-4 text-xs text-gray-500">
-              <span>
-                Images: {imageFiles}
-              </span>
-
-              <span>
-                Documents: {documentFiles}
-              </span>
-            </div>
-
-            <Link
-              href={`/projects/${project.id}/files`}
-              className="mt-3 inline-block text-sm font-medium text-gray-700 hover:text-gray-900"
-            >
-              View Files →
-            </Link>
-          </div>
-          <Link
-            href={`/projects/${project.id}/messages`}
-            className="group rounded-xl border border-gray-200 bg-white p-5 transition hover:border-gray-300 hover:shadow-sm"
-          >
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="font-semibold text-gray-900">
-                  Messages
-                </p>
-
-                <p className="mt-1 text-sm text-gray-500">
-                  Communicate about this project
-                </p>
-              </div>
-
-              <span className="text-sm font-medium text-gray-500 transition group-hover:text-gray-900">
-                Open →
-              </span>
-            </div>
-
-            <p className="mt-4 text-2xl font-bold text-gray-900">
-              {messages.length}
-            </p>
-
-            <p className="text-xs text-gray-500">
-              {messages.length === 1 ? "message" : "messages"}
-            </p>
-          </Link>
         </div>
       </div>
       <div className="mt-4 rounded-xl border border-gray-200 bg-white p-5">
         <div className="flex items-center justify-between">
           <div>
-            <p className="text-sm font-medium text-gray-700">
-              Task completion
+            <h2 className="text-lg font-bold text-gray-900">
+              Project Progress
+            </h2>
+
+            <p className="mt-1 text-sm text-gray-500">
+              Progress based on completed tasks.
             </p>
 
             <p className="mt-1 text-sm text-gray-500">
@@ -340,16 +264,80 @@ export default async function ProjectPage({
             </p>
           </div>
 
-          <span className="text-lg font-semibold text-gray-900">
+          <span className="text-lg font-bold text-gray-900">
             {taskProgress}%
           </span>
         </div>
 
-        <div className="mt-4 h-2 overflow-hidden rounded-full bg-gray-100">
+        <div className="mt-5 h-3 overflow-hidden rounded-full bg-gray-100">
           <div
             className="h-full rounded-full bg-gray-900 transition-all"
             style={{ width: `${taskProgress}%` }}
           />
+        </div>
+      </div>
+      <div className="mt-8">
+        <div className="mb-4">
+          <h2 className="text-lg font-semibold text-gray-900">
+            Project Activity
+          </h2>
+
+          <p className="mt-1 text-sm text-gray-500">
+            Quickly access the latest areas of this project.
+          </p>
+        </div>
+
+        <div className="grid gap-4 md:grid-cols-3">
+          <Link
+            href={`/projects/${project.id}/reviews`}
+            className="rounded-xl border border-gray-200 bg-white p-5 transition hover:border-gray-300 hover:shadow-sm"
+          >
+            <p className="text-sm font-medium text-gray-500">
+              Reviews
+            </p>
+
+            <p className="mt-2 text-2xl font-bold text-gray-900">
+              {reviews.length}
+            </p>
+
+            <p className="mt-1 text-xs text-gray-500">
+              {pendingReviews.length} pending
+            </p>
+          </Link>
+
+          <Link
+            href={`/projects/${project.id}/files`}
+            className="rounded-xl border border-gray-200 bg-white p-5 transition hover:border-gray-300 hover:shadow-sm"
+          >
+            <p className="text-sm font-medium text-gray-500">
+              Files
+            </p>
+
+            <p className="mt-2 text-2xl font-bold text-gray-900">
+              {files.length}
+            </p>
+
+            <p className="mt-1 text-xs text-gray-500">
+              {imageFiles} images · {documentFiles} documents
+            </p>
+          </Link>
+
+          <Link
+            href={`/projects/${project.id}/messages`}
+            className="rounded-xl border border-gray-200 bg-white p-5 transition hover:border-gray-300 hover:shadow-sm"
+          >
+            <p className="text-sm font-medium text-gray-500">
+              Messages
+            </p>
+
+            <p className="mt-2 text-2xl font-bold text-gray-900">
+              {messages.length}
+            </p>
+
+            <p className="mt-1 text-xs text-gray-500">
+              Project conversation
+            </p>
+          </Link>
         </div>
       </div>
     </div>
