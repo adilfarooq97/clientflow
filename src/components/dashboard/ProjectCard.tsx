@@ -14,6 +14,13 @@ export default function ProjectCard({
 }: ProjectCardProps) {
   const isCompleted = project.status === "Completed";
 
+  const statusStyles = {
+    Planning: "bg-gray-100 text-gray-700",
+    "In Progress": "bg-blue-100 text-blue-700",
+    Review: "bg-yellow-100 text-yellow-700",
+    Completed: "bg-green-100 text-green-700",
+  };
+
   return (
     <Link
       href={`/projects/${project.id}`}
@@ -47,16 +54,20 @@ export default function ProjectCard({
 
           <div className="flex items-center gap-2">
             <span
-              className={`rounded-full px-2.5 py-1 text-xs font-medium ${
-                isCompleted
+              className={`rounded-full px-2.5 py-1 text-xs font-medium ${isCompleted
                   ? "bg-green-100 text-green-700"
                   : "bg-blue-100 text-blue-700"
-              }`}
+                }`}
             >
               {isCompleted ? "Completed" : "Active"}
             </span>
 
-            <Badge>{project.status}</Badge>
+            <Badge><span
+              className={`rounded-full px-2.5 py-1 text-xs font-semibold ${statusStyles[project.status]
+                }`}
+            >
+              {project.status}
+            </span></Badge>
           </div>
         </div>
       </Card>
