@@ -21,55 +21,55 @@ export default function LoginPage() {
   const [rememberMe, setRememberMe] = useState(false);
 
   const handleSubmit = async (
-  event: React.FormEvent<HTMLFormElement>
-) => {
-  event.preventDefault();
+    event: React.FormEvent<HTMLFormElement>
+  ) => {
+    event.preventDefault();
 
-  setEmailError("");
-  setPasswordError("");
+    setEmailError("");
+    setPasswordError("");
 
-  let hasError = false;
+    let hasError = false;
 
-  if (!email) {
-    setEmailError("Email is required.");
-    hasError = true;
-  } else if (!email.includes("@")) {
-    setEmailError("Please enter a valid email.");
-    hasError = true;
-  }
+    if (!email) {
+      setEmailError("Email is required.");
+      hasError = true;
+    } else if (!email.includes("@")) {
+      setEmailError("Please enter a valid email.");
+      hasError = true;
+    }
 
-  if (!password) {
-    setPasswordError("Password is required.");
-    hasError = true;
-  } else if (password.length < 6) {
-    setPasswordError(
-      "Password must be at least 6 characters."
-    );
-    hasError = true;
-  }
+    if (!password) {
+      setPasswordError("Password is required.");
+      hasError = true;
+    } else if (password.length < 6) {
+      setPasswordError(
+        "Password must be at least 6 characters."
+      );
+      hasError = true;
+    }
 
-  if (hasError) {
-    return;
-  }
+    if (hasError) {
+      return;
+    }
 
-  setIsLoading(true);
+    setIsLoading(true);
 
-  const { error } = await supabase.auth.signInWithPassword({
-    email,
-    password,
-  });
+    const { error } = await supabase.auth.signInWithPassword({
+      email,
+      password,
+    });
 
-  setIsLoading(false);
+    setIsLoading(false);
 
-  if (error) {
-    console.error("Login error:", error);
-    return;
-  }
+    if (error) {
+      console.error("Login error:", error);
+      return;
+    }
 
-  router.push("/dashboard");
-};
+    router.push("/dashboard");
+  };
   return (
-    <div className="flex min-h-screen items-center justify-center p-4 sm:p-6">
+    <div className="flex min-h-[calc(100vh-4rem)] items-center justify-center">
       <AuthCard>
         <AuthHeader />
         <h1 className="text-2xl font-bold text-gray-900">
@@ -77,7 +77,7 @@ export default function LoginPage() {
         </h1>
 
         <p className="mt-2 text-sm text-gray-500">
-          Sign in to your ClientFlow account.
+          Sign in to continue to your ClientFlow workspace.
         </p>
 
         <form onSubmit={handleSubmit} className="mt-6 space-y-4">
@@ -123,11 +123,11 @@ export default function LoginPage() {
             </Link>
           </div>
 
-          <Button 
+          <Button
             type="submit"
             disabled={isLoading}
             className="w-full">
-              {isLoading ? "Signing in..." : "Sign in"}
+            {isLoading ? "Signing in..." : "Sign in"}
           </Button>
         </form>
 

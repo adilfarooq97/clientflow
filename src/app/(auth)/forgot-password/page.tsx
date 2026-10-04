@@ -34,7 +34,7 @@ if (!email) {
 };
 
   return (
-    <div className="flex min-h-screen items-center justify-center p-4 sm:p-6">
+    <div className="flex min-h-[calc(100vh-4rem)] items-center justify-center">
       <AuthCard>
         <AuthHeader />
         <h1 className="text-2xl font-bold text-gray-900">
@@ -42,7 +42,7 @@ if (!email) {
         </h1>
 
         <p className="mt-2 text-sm text-gray-500">
-          Enter your email and we'll help you reset your password.
+          Enter your email and we&apos;ll help you reset your password.
         </p>
 
         {isSubmitted ? (

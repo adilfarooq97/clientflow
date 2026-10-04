@@ -6,7 +6,7 @@ export default function AuthCard({
   children,
 }: AuthCardProps) {
   return (
-    <div className="w-full max-w-md rounded-xl border bg-white p-8">
+    <div className="w-full max-w-md rounded-2xl border border-gray-200 bg-white p-6 shadow-sm sm:p-8">
       {children}
     </div>
   );

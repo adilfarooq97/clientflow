@@ -48,7 +48,7 @@ export default function SignupPage() {
 };
 
   return (
-    <div className="flex min-h-screen items-center justify-center p-4 sm:p-6">
+    <div className="flex min-h-[calc(100vh-4rem)] items-center justify-center">
       <AuthCard>
          <AuthHeader />
         <h1 className="text-2xl font-bold text-gray-900">
@@ -56,7 +56,7 @@ export default function SignupPage() {
         </h1>
 
         <p className="mt-2 text-sm text-gray-500">
-          Get started with ClientFlow.
+           Create your ClientFlow account and get started.
         </p>
 
         <form
