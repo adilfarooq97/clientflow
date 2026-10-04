@@ -17,11 +17,11 @@ export default function MessageThread({
   projectId,
   currentUserId,
   initialMessages,
-  canSend= true,
+  canSend = true,
 }: MessageThreadProps) {
   const [messages, setMessages] =
     useState<Message[]>(initialMessages);
-    const messagesEndRef = useRef<HTMLDivElement>(null);
+  const messagesEndRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const channel = supabase
@@ -73,10 +73,10 @@ export default function MessageThread({
     };
   }, [projectId]);
   useEffect(() => {
-  messagesEndRef.current?.scrollIntoView({
-    behavior: "smooth",
-  });
-}, [messages]);
+    messagesEndRef.current?.scrollIntoView({
+      behavior: "smooth",
+    });
+  }, [messages]);
 
   return (
     <>
@@ -89,7 +89,7 @@ export default function MessageThread({
               </p>
 
               <p className="mt-1 text-sm text-gray-500">
-                Start the conversation with your client.
+                Start the conversation about this project.
               </p>
             </div>
           </div>
@@ -106,7 +106,9 @@ export default function MessageThread({
       </div>
 
       <div className="border-t border-gray-200 p-6">
-       {canSend && ( <MessageComposer projectId={projectId} /> )}
+        {canSend && (
+          <MessageComposer projectId={projectId} />
+        )}
       </div>
     </>
   );
