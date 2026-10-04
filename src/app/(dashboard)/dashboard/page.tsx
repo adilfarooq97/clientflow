@@ -35,6 +35,14 @@ const activities = [
 export default async function Dashboard() {
   const projects = await getAccessibleProjects();
   const userProfile = await getCurrentUserProfile();
+  const currentHour = new Date().getHours();
+
+const greeting =
+  currentHour < 12
+    ? "Good morning"
+    : currentHour < 18
+      ? "Good afternoon"
+      : "Good evening";
   const taskGroups = await Promise.all(
     projects.map((project) => getTasks(project.id))
   );
@@ -129,7 +137,7 @@ export default async function Dashboard() {
   return (
     <div className="p-8">
       <h1 className="text-2xl font-bold text-gray-900">
-        Good morning 👋
+        {greeting} 👋
       </h1>
       {userProfile && (
         <p className="mt-1 text-sm text-gray-500">
