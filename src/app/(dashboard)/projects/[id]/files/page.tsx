@@ -11,8 +11,8 @@ export default async function FilesPage({
   params: Promise<{ id: string }>;
 }) {
   const { id } = await params;
-  
-const profile = await getCurrentUserProfile();
+
+  const profile = await getCurrentUserProfile();
 
   const projects = await getAccessibleProjects();
   const project = projects.find((item) => item.id === id);
@@ -53,14 +53,14 @@ const profile = await getCurrentUserProfile();
           </p>
         </div>
 
-{profile?.role === "freelancer" && (
-        <Link
-          href={`/projects/${project.id}/files/new`}
-          className="rounded-lg bg-gray-900 px-4 py-2 text-sm font-medium text-white transition hover:bg-gray-800"
-        >
-          + Add File
-        </Link>
-)}
+        {profile?.role === "freelancer" && (
+          <Link
+            href={`/projects/${project.id}/files/new`}
+            className="rounded-lg bg-gray-900 px-4 py-2 text-sm font-medium text-white transition hover:bg-gray-800"
+          >
+            + Add File
+          </Link>
+        )}
       </div>
 
       {files.length === 0 ? (
@@ -70,15 +70,19 @@ const profile = await getCurrentUserProfile();
           </h2>
 
           <p className="mt-2 text-sm text-gray-500">
-            Add your first project file.
+            {profile?.role === "freelancer"
+              ? "Add your first project file."
+              : "No project files have been uploaded yet."}
           </p>
 
-          <Link
-            href={`/projects/${project.id}/files/new`}
-            className="mt-4 inline-block text-sm font-medium text-gray-900 underline"
-          >
-            Add a file
-          </Link>
+          {profile?.role === "freelancer" && (
+            <Link
+              href={`/projects/${project.id}/files/new`}
+              className="mt-4 inline-block text-sm font-medium text-gray-900 underline"
+            >
+              Add a file
+            </Link>
+          )}
         </div>
       ) : (
         <div className="grid gap-4 sm:grid-cols-2">
@@ -89,7 +93,7 @@ const profile = await getCurrentUserProfile();
                 ...file,
                 file_url: signedUrl,
               }}
-               canManage={profile?.role === "freelancer"}
+              canManage={profile?.role === "freelancer"}
             />
           ))}
         </div>
