@@ -7,13 +7,13 @@ import { redirect } from "next/navigation";
 export default async function NewProjectPage() {
   const profile = await getCurrentUserProfile();
 
-if (!profile) {
-  redirect("/login");
-}
+  if (!profile) {
+    redirect("/login");
+  }
 
-if (profile.role !== "freelancer") {
-  redirect("/dashboard");
-}
+  if (profile.role !== "freelancer") {
+    redirect("/dashboard");
+  }
   return (
     <div className="mx-auto max-w-2xl">
       <div className="mb-6">
@@ -24,11 +24,11 @@ if (profile.role !== "freelancer") {
           ← Back to dashboard
         </Link>
 
-        <h1 className="mt-4 text-2xl font-bold text-gray-900">
+        <h1 className="mt-4 text-2xl font-bold tracking-tight text-gray-900">
           Create a new project
         </h1>
 
-        <p className="mt-2 text-sm text-gray-500">
+        <p className="mt-2 text-sm leading-6 text-gray-500">
           Add a project to your ClientFlow workspace.
         </p>
       </div>
