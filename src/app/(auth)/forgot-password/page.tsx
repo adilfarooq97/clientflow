@@ -14,24 +14,24 @@ export default function ForgotPasswordPage() {
   const [isLoading, setIsLoading] = useState(false);
 
   const handleSubmit = (
-  event: React.FormEvent<HTMLFormElement>
-) => {
-  event.preventDefault();
+    event: React.FormEvent<HTMLFormElement>
+  ) => {
+    event.preventDefault();
 
-  setError("");
+    setError("");
 
-if (!email) {
-  setError("Please enter your email address.");
-  return;
-}
+    if (!email) {
+      setError("Please enter your email address.");
+      return;
+    }
 
-  setIsLoading(true);
+    setIsLoading(true);
 
-  setTimeout(() => {
-    setIsLoading(false);
-    setIsSubmitted(true);
-  }, 1500);
-};
+    setTimeout(() => {
+      setIsLoading(false);
+      setIsSubmitted(true);
+    }, 1500);
+  };
 
   return (
     <div className="flex min-h-[calc(100vh-4rem)] items-center justify-center">
@@ -46,37 +46,37 @@ if (!email) {
         </p>
 
         {isSubmitted ? (
-  <div className="mt-6 rounded-lg bg-green-50 p-4">
-    <p className="text-sm font-medium text-green-800">
-      Check your email
-    </p>
+          <div className="mt-6 rounded-lg bg-green-50 p-4">
+            <p className="text-sm font-medium text-green-800">
+              Check your email
+            </p>
 
-    <p className="mt-1 text-sm text-green-700">
-      We've sent a password reset link to{" "}
-      {email}.
-    </p>
-  </div>
-) : (
-  <form
-    onSubmit={handleSubmit}
-    className="mt-7 space-y-5"
-  >
+            <p className="mt-1 text-sm text-green-700">
+              We've sent a password reset link to{" "}
+              {email}.
+            </p>
+          </div>
+        ) : (
+          <form
+            onSubmit={handleSubmit}
+            className="mt-7 space-y-5"
+          >
 
-    <FormField
-      id="email"
-      label="Email"
-      type="email"
-      placeholder="you@example.com"
-      value={email}
-      error={error}
-      onChange={(event) => setEmail(event.target.value)}
-    />
+            <FormField
+              id="email"
+              label="Email"
+              type="email"
+              placeholder="you@example.com"
+              value={email}
+              error={error}
+              onChange={(event) => setEmail(event.target.value)}
+            />
 
-    <Button type="submit" disabled={isLoading}  className="w-full">
-      {isLoading ? "Sending..." : "Send reset link"}
-    </Button>
-  </form>
-)}
+            <Button type="submit" disabled={isLoading} className="w-full">
+              {isLoading ? "Sending..." : "Send reset link"}
+            </Button>
+          </form>
+        )}
 
         <div className="mt-6 text-center">
           <Link
