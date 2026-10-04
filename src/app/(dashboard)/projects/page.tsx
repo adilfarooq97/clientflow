@@ -42,11 +42,11 @@ export default async function ProjectsPage() {
             <span className="text-lg font-semibold">P</span>
           </div>
 
-          <h2 className="mt-4 text-lg font-semibold text-gray-900">
+          <h2 className="text-lg font-semibold tracking-tight text-gray-900">
             No projects yet
           </h2>
 
-          <p className="mx-auto mt-2 max-w-md text-sm leading-6 text-gray-500">
+          <p className="mt-2 text-sm leading-6 text-gray-500">
             {isFreelancer
               ? "Create your first project to start organizing tasks, reviews, files, and client communication."
               : "You have not been added to any projects yet. Projects you have access to will appear here."}
