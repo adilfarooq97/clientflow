@@ -33,8 +33,8 @@ export default function ProjectCard({
               {project.name}
             </h3>
 
-            <p className="mt-1 text-sm text-gray-500">
-              {project.description}
+            <p className="mt-1 line-clamp-2 text-sm leading-5 text-gray-500">
+              {project.description || "No project description available."}
             </p>
           </div>
 
