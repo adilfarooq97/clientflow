@@ -43,8 +43,20 @@ export default function ProjectCard({
           </span>
         </div>
 
-        <div className="mt-4">
-          <Progress value={project.progress} />
+        <div className="mt-5">
+          <div className="flex items-center justify-between">
+            <span className="text-xs font-medium text-gray-500">
+              Progress
+            </span>
+
+            <span className="text-xs font-semibold text-gray-900">
+              {project.progress}%
+            </span>
+          </div>
+
+          <div className="mt-2">
+            <Progress value={project.progress} />
+          </div>
         </div>
 
         <div className="mt-4 flex items-center justify-between gap-4 text-sm">
@@ -55,19 +67,19 @@ export default function ProjectCard({
           <div className="flex items-center gap-2">
             <span
               className={`rounded-full px-2.5 py-1 text-xs font-medium ${isCompleted
-                  ? "bg-green-100 text-green-700"
-                  : "bg-blue-100 text-blue-700"
+                ? "bg-green-100 text-green-700"
+                : "bg-blue-100 text-blue-700"
                 }`}
             >
               {isCompleted ? "Completed" : "Active"}
             </span>
 
-            <Badge><span
+            <span
               className={`rounded-full px-2.5 py-1 text-xs font-semibold ${statusStyles[project.status]
                 }`}
             >
               {project.status}
-            </span></Badge>
+            </span>
           </div>
         </div>
       </Card>
