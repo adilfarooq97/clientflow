@@ -100,7 +100,7 @@ export default function EditProjectForm({
   return (
     <form
       onSubmit={handleSubmit}
-      className="space-y-4"
+      className="space-y-5"
     >
       <FormField
         id="project-name"
@@ -126,7 +126,7 @@ export default function EditProjectForm({
             setDescription(event.target.value)
           }
           rows={4}
-          className="mt-2 w-full rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm outline-none transition focus:border-gray-900 focus:ring-2 focus:ring-gray-200"
+          className="mt-2 w-full rounded-lg border border-gray-300 bg-white px-3 py-2.5 text-sm leading-6 text-gray-900 outline-none transition focus:border-gray-900 focus:ring-2 focus:ring-gray-200"
         />
       </div>
 
@@ -146,7 +146,7 @@ export default function EditProjectForm({
               event.target.value as ProjectStatus
             )
           }
-          className="mt-2 w-full rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm outline-none transition focus:border-gray-900 focus:ring-2 focus:ring-gray-200"
+          className="mt-2 w-full rounded-lg border border-gray-300 bg-white px-3 py-2.5 text-sm text-gray-900 outline-none transition focus:border-gray-900 focus:ring-2 focus:ring-gray-200"
         >
           <option value="Planning">Planning</option>
           <option value="In Progress">In Progress</option>
@@ -180,12 +180,12 @@ export default function EditProjectForm({
           onChange={(event) =>
             setDeadline(event.target.value)
           }
-          className="mt-2 w-full rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm outline-none transition focus:border-gray-900 focus:ring-2 focus:ring-gray-200"
+          className="mt-2 w-full rounded-lg border border-gray-300 bg-white px-3 py-2.5 text-sm text-gray-900 outline-none transition focus:border-gray-900 focus:ring-2 focus:ring-gray-200"
         />
       </div>
 
       {error && (
-        <p className="text-sm text-red-600">
+        <p className="rounded-lg border border-red-200 bg-red-50 px-3 py-2 text-sm leading-6 text-red-700">
           {error}
         </p>
       )}
@@ -195,7 +195,7 @@ export default function EditProjectForm({
         disabled={isLoading}
         className="w-full"
       >
-        {isLoading ? "Saving..." : "Save changes"}
+        {isLoading ? "Saving changes..." : "Save changes"}
       </Button>
     </form>
   );
