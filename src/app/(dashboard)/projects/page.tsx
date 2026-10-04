@@ -13,11 +13,11 @@ export default async function ProjectsPage() {
     <div className="p-4 sm:p-6 lg:p-8">
       <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900">
+          <h1 className="text-2xl font-bold tracking-tight text-gray-900">
             Projects
           </h1>
 
-          <p className="mt-2 text-sm text-gray-500">
+          <p className="mt-2 text-sm leading-6 text-gray-500">
             {isFreelancer
               ? `${projects.length} ${projects.length === 1 ? "project" : "projects"
               } in your workspace.`
@@ -62,7 +62,7 @@ export default async function ProjectsPage() {
           )}
         </div>
       ) : (
-        <div className="grid gap-4 sm:gap-6 md:grid-cols-2 xl:grid-cols-3">
+        <div className="mt-2 grid gap-4 sm:gap-6 md:grid-cols-2 xl:grid-cols-3">
           {projects.map((project) => (
             <ProjectCard
               key={project.id}
