@@ -8,11 +8,13 @@ type ProjectMembersProps = {
     full_name: string;
     role: "client" | "freelancer";
   }[];
+  canManage?: boolean;
 };
 
 export default function ProjectMembers({
   members,
   profiles,
+  canManage = false,
 }: ProjectMembersProps) {
   return (
     <div className="rounded-xl border border-gray-200 bg-white p-5">
@@ -63,9 +65,11 @@ export default function ProjectMembers({
                     {member.role}
                   </span>
 
-                  <RemoveProjectMemberButton
-                    memberId={member.id}
-                  />
+                  {canManage && (
+                    <RemoveProjectMemberButton
+                      memberId={member.id}
+                    />
+                  )}
                 </div>
               </div>
             );

@@ -38,8 +38,8 @@ export default async function ProjectPage({
   const members = await getProjectMembers(project.id);
 
   const memberProfiles = await getMemberProfiles(
-  members.map((member) => member.user_id)
-);
+    members.map((member) => member.user_id)
+  );
 
   const imageFiles = files.filter(
     (file) => file.file_type === "image"
@@ -112,16 +112,16 @@ export default async function ProjectPage({
               View Messages
             </Link>
             {userProfile?.role === "freelancer" && (
-  <Link
-    href={`/projects/${project.id}/edit`}
-    className="rounded-lg border border-gray-200 px-4 py-2 text-sm font-medium text-gray-700 transition hover:bg-gray-50"
-  >
-    Edit Project
-  </Link>
-)}
+              <Link
+                href={`/projects/${project.id}/edit`}
+                className="rounded-lg border border-gray-200 px-4 py-2 text-sm font-medium text-gray-700 transition hover:bg-gray-50"
+              >
+                Edit Project
+              </Link>
+            )}
             {userProfile?.role === "freelancer" && (
-  <DeleteProjectButton projectId={project.id} />
-)}
+              <DeleteProjectButton projectId={project.id} />
+            )}
           </div>
         </div>
 
@@ -173,23 +173,25 @@ export default async function ProjectPage({
 
       </div>
       <div className="grid gap-6 lg:grid-cols-2 mt-8">
-        <ProjectMembers members={members} profiles={memberProfiles} />
+        <ProjectMembers members={members} profiles={memberProfiles}  canManage={userProfile?.role === "freelancer"}/>
 
-        <div className="rounded-xl border border-gray-200 bg-white p-5">
-          <div className="mb-5">
-            <h2 className="font-semibold text-gray-900">
-              Add Client
-            </h2>
+        {userProfile?.role === "freelancer" && (
+          <div className="rounded-xl border border-gray-200 bg-white p-5">
+            <div className="mb-5">
+              <h2 className="font-semibold text-gray-900">
+                Add Client
+              </h2>
 
-            <p className="mt-1 text-sm text-gray-500">
-              Give an existing client access to this project.
-            </p>
+              <p className="mt-1 text-sm text-gray-500">
+                Give an existing client access to this project.
+              </p>
+            </div>
+
+            <AddProjectClientForm
+              projectId={project.id}
+            />
           </div>
-
-          <AddProjectClientForm
-            projectId={project.id}
-          />
-        </div>
+        )}
       </div>
       <div className="mt-8">
         <div className="mb-4 flex items-center justify-between">
@@ -214,7 +216,7 @@ export default async function ProjectPage({
         <div className="grid gap-4 sm:grid-cols-3">
           <div className="rounded-xl border border-gray-200 bg-white p-4">
             <p className="text-sm text-gray-500">
-              Total tasks
+              Total Tasks
             </p>
 
             <p className="mt-2 text-2xl font-bold text-gray-900">
@@ -224,7 +226,7 @@ export default async function ProjectPage({
 
           <div className="rounded-xl border border-gray-200 bg-white p-4">
             <p className="text-sm text-gray-500">
-              Completed
+              Completed Tasks
             </p>
 
             <p className="mt-2 text-2xl font-bold text-gray-900">
@@ -234,7 +236,7 @@ export default async function ProjectPage({
 
           <div className="rounded-xl border border-gray-200 bg-white p-4">
             <p className="text-sm text-gray-500">
-              Remaining
+              Remaining Tasks
             </p>
 
             <p className="mt-2 text-2xl font-bold text-gray-900">
@@ -243,7 +245,7 @@ export default async function ProjectPage({
           </div>
           <div className="rounded-xl border border-gray-200 bg-white p-5">
             <p className="text-sm text-gray-500">
-              Reviews
+              Project Reviews
             </p>
 
             <p className="mt-2 text-2xl font-bold text-gray-900">
@@ -263,7 +265,7 @@ export default async function ProjectPage({
           </div>
           <div className="rounded-xl border border-gray-200 bg-white p-5">
             <p className="text-sm text-gray-500">
-              Files
+              Project Files
             </p>
 
             <p className="mt-2 text-2xl font-bold text-gray-900">
