@@ -80,7 +80,7 @@ export default function LoginPage() {
           Sign in to continue to your ClientFlow workspace.
         </p>
 
-        <form onSubmit={handleSubmit} className="mt-6 space-y-4">
+        <form onSubmit={handleSubmit} className="mt-7 space-y-5">
           <FormField
             id="email"
             label="Email"

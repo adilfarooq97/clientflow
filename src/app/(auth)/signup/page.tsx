@@ -67,7 +67,7 @@ export default function SignupPage() {
 
         <form
           onSubmit={handleSubmit}
-          className="mt-6 space-y-4"
+          className="mt-7 space-y-5"
         >
           <FormField
             id="name"
