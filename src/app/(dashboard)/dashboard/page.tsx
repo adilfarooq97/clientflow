@@ -150,28 +150,12 @@ export default async function Dashboard() {
         Here&apos;s what&apos;s happening with your projects.
       </p>
 
-      <div className="mb-6 flex items-center justify-between">
-        <div>
-          <h2 className="text-lg font-semibold text-gray-900">
-            Recent Projects
-          </h2>
-
-          <p className="mt-1 text-sm text-gray-500">
-            {userProfile?.role === "freelancer"
-              ? "Keep track of your active client work."
-              : "View the projects you are currently working on."}
-          </p>
-        </div>
-
-        <Link
-          href="/projects"
-          className="text-sm font-medium text-gray-700 hover:text-gray-900"
-        >
-          View all →
-        </Link>
-      </div>
-
-      <div className="mt-8 grid gap-4 md:grid-cols-3">
+      <div
+        className={`mt-8 grid gap-4 sm:grid-cols-2 ${userProfile?.role === "freelancer"
+          ? "lg:grid-cols-3 xl:grid-cols-6"
+          : "lg:grid-cols-3 xl:grid-cols-5"
+          }`}
+      >
         {dashboardStats.map((stat) => (
           <StatCard
             key={stat.title}
@@ -237,21 +221,33 @@ export default async function Dashboard() {
         <div className="flex items-center justify-between gap-4">
           <div>
             <h2 className="text-lg font-semibold text-gray-900">
-              Active Projects
+              Recent Projects
             </h2>
 
             <p className="mt-1 text-sm text-gray-500">
-              Track the progress of your current projects.
+              {userProfile?.role === "freelancer"
+                ? "Keep track of your active client work."
+                : "View the projects you are currently working on."}
             </p>
           </div>
-          {userProfile?.role === "freelancer" && (
+
+          <div className="flex items-center gap-4">
             <Link
-              href="/projects/new"
-              className="rounded-lg bg-gray-900 px-4 py-2 text-sm font-medium text-white transition hover:bg-gray-800"
+              href="/projects"
+              className="text-sm font-medium text-gray-700 hover:text-gray-900"
             >
-              + New Project
+              View all →
             </Link>
-          )}
+
+            {userProfile?.role === "freelancer" && (
+              <Link
+                href="/projects/new"
+                className="rounded-lg bg-gray-900 px-4 py-2 text-sm font-medium text-white transition hover:bg-gray-800"
+              >
+                + New Project
+              </Link>
+            )}
+          </div>
         </div>
         {projects.length === 0 ? (
           <div className="rounded-xl border border-dashed border-gray-300 bg-white p-10 text-center">
