@@ -12,13 +12,15 @@ type ProjectCardProps = {
 export default function ProjectCard({
   project,
 }: ProjectCardProps) {
+  const isCompleted = project.status === "Completed";
+
   return (
     <Link
       href={`/projects/${project.id}`}
       className="block rounded-xl transition hover:-translate-y-0.5 hover:shadow-md"
     >
       <Card>
-        <div className="flex items-start justify-between">
+        <div className="flex items-start justify-between gap-4">
           <div>
             <h3 className="font-semibold text-gray-900">
               {project.name}
@@ -29,7 +31,7 @@ export default function ProjectCard({
             </p>
           </div>
 
-          <span className="text-sm font-medium text-gray-600">
+          <span className="shrink-0 text-sm font-medium text-gray-600">
             {project.progress}%
           </span>
         </div>
@@ -38,14 +40,24 @@ export default function ProjectCard({
           <Progress value={project.progress} />
         </div>
 
-        <div className="mt-4 flex items-center justify-between text-sm">
+        <div className="mt-4 flex items-center justify-between gap-4 text-sm">
           <span className="text-gray-500">
             Due {project.deadline || "No deadline"}
           </span>
 
-          <Badge>
-            {project.status}
-          </Badge>
+          <div className="flex items-center gap-2">
+            <span
+              className={`rounded-full px-2.5 py-1 text-xs font-medium ${
+                isCompleted
+                  ? "bg-green-100 text-green-700"
+                  : "bg-blue-100 text-blue-700"
+              }`}
+            >
+              {isCompleted ? "Completed" : "Active"}
+            </span>
+
+            <Badge>{project.status}</Badge>
+          </div>
         </div>
       </Card>
     </Link>

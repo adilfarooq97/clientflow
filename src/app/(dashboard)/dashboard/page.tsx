@@ -1,6 +1,5 @@
 import StatCard from "@/components/dashboard/StatCard";
 import ProjectCard from "@/components/dashboard/ProjectCard";
-import { getProjects } from "@/lib/supabase/projects";
 import Link from "next/link";
 import ActivityItem from "@/components/dashboard/ActivityItem";
 import { getTasks } from "@/lib/supabase/tasks";
@@ -10,12 +9,6 @@ import { getMessages } from "@/lib/supabase/messages";
 import { getAccessibleProjects } from "@/lib/supabase/projects";
 import { getCurrentUserProfile } from "@/lib/supabase/auth";
 
-const stats = [
-  {
-    title: "Revenue",
-    value: "$4,250",
-  },
-];
 
 const activities = [
   {
@@ -82,33 +75,56 @@ export default async function Dashboard() {
     (project) => project.status !== "Completed"
   );
 
-  const dashboardStats = [
-    {
-      title: "Active Projects",
-      value: activeProjects.length.toString(),
-    },
-    {
-      title: "Active Tasks",
-      value: activeTasks.toString(),
-    },
-    {
-      title: "Completed Tasks",
-      value: completedTasks.toString(),
-    },
-    {
-      title: "Pending Reviews",
-      value: pendingReviews.length.toString(),
-    },
-    {
-      title: "Project Files",
-      value: files.length.toString(),
-    },
-    {
-      title: "Messages",
-      value: messages.length.toString(),
-    },
-    ...stats,
-  ];
+  const dashboardStats =
+  userProfile?.role === "freelancer"
+    ? [
+        {
+          title: "Active Projects",
+          value: activeProjects.length.toString(),
+        },
+        {
+          title: "Active Tasks",
+          value: activeTasks.toString(),
+        },
+        {
+          title: "Completed Tasks",
+          value: completedTasks.toString(),
+        },
+        {
+          title: "Pending Reviews",
+          value: pendingReviews.length.toString(),
+        },
+        {
+          title: "Project Files",
+          value: files.length.toString(),
+        },
+        {
+          title: "Messages",
+          value: messages.length.toString(),
+        },
+      ]
+    : [
+        {
+          title: "My Projects",
+          value: projects.length.toString(),
+        },
+        {
+          title: "Open Tasks",
+          value: activeTasks.toString(),
+        },
+        {
+          title: "Reviews to Check",
+          value: pendingReviews.length.toString(),
+        },
+        {
+          title: "Project Files",
+          value: files.length.toString(),
+        },
+        {
+          title: "Messages",
+          value: messages.length.toString(),
+        },
+      ];
 
   return (
     <div className="p-8">
@@ -120,6 +136,11 @@ export default async function Dashboard() {
           Welcome back, {userProfile.full_name}
         </p>
       )}
+      <p className="mt-1 text-sm text-gray-500">
+        {userProfile?.role === "freelancer"
+          ? "Manage your projects and keep client work moving."
+          : "Track your projects, tasks, reviews, and conversations."}
+      </p>
       {userProfile && (
         <span className="mt-2 inline-flex rounded-full bg-gray-100 px-2.5 py-1 text-xs font-medium capitalize text-gray-600">
           {userProfile.role}
@@ -202,13 +223,14 @@ export default async function Dashboard() {
               Track the progress of your current projects.
             </p>
           </div>
-
-          <Link
-            href="/projects/new"
-            className="rounded-lg bg-gray-900 px-4 py-2 text-sm font-medium text-white transition hover:bg-gray-800"
-          >
-            + New Project
-          </Link>
+          {userProfile?.role === "freelancer" && (
+            <Link
+              href="/projects/new"
+              className="rounded-lg bg-gray-900 px-4 py-2 text-sm font-medium text-white transition hover:bg-gray-800"
+            >
+              + New Project
+            </Link>
+          )}
         </div>
 
 
