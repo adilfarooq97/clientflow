@@ -57,11 +57,11 @@ export default function ReviewCard({
         }
       );
 
-      const data = await response.json();
+      const data = await response.json().catch(() => null);
 
       if (!response.ok) {
         throw new Error(
-          data.error || "Unable to respond to review."
+          data?.error || "Unable to respond to review."
         );
       }
 
