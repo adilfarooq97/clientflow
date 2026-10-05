@@ -20,9 +20,6 @@ export default function EditReviewForm({
   const [title, setTitle] = useState(review.title);
   const [description, setDescription] = useState(review.description);
   const [fileUrl, setFileUrl] = useState(review.file_url ?? "");
-  const [clientComment, setClientComment] = useState(
-    review.client_comment
-  );
 
   const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
@@ -51,7 +48,6 @@ export default function EditReviewForm({
           title: title.trim(),
           description: description.trim(),
           file_url: fileUrl.trim() || null,
-          client_comment: clientComment.trim(),
         }),
       });
 
@@ -82,7 +78,7 @@ export default function EditReviewForm({
         </h1>
 
         <p className="mt-1 text-sm text-gray-500">
-          Update the review submission and client feedback.
+          Update the review submission.
         </p>
       </div>
 
@@ -136,24 +132,6 @@ export default function EditReviewForm({
           value={fileUrl}
           onChange={(event) => setFileUrl(event.target.value)}
           disabled={isLoading}
-        />
-      </div>
-
-      <div>
-        <label
-          htmlFor="clientComment"
-          className="mb-2 block text-sm font-medium text-gray-700"
-        >
-          Client comment
-        </label>
-
-        <textarea
-          id="clientComment"
-          value={clientComment}
-          onChange={(event) => setClientComment(event.target.value)}
-          disabled={isLoading}
-          rows={3}
-          className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm outline-none focus:border-gray-500 focus:ring-1 focus:ring-gray-500 disabled:cursor-not-allowed disabled:bg-gray-100"
         />
       </div>
 
