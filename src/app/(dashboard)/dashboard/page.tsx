@@ -9,29 +9,6 @@ import { getMessages } from "@/lib/supabase/messages";
 import { getAccessibleProjects } from "@/lib/supabase/projects";
 import { getCurrentUserProfile } from "@/lib/supabase/auth";
 
-
-const activities = [
-  {
-    id: 1,
-    title: "Homepage approved",
-    description: "Acme Corporation approved the homepage design.",
-    time: "10m ago",
-  },
-  {
-    id: 2,
-    title: "New feedback",
-    description: "Sarah left feedback on the dashboard design.",
-    time: "1h ago",
-  },
-  {
-    id: 3,
-    title: "Invoice paid",
-    description: "Invoice #1042 was marked as paid.",
-    time: "3h ago",
-  },
-];
-
-
 export default async function Dashboard() {
   const projects = await getAccessibleProjects();
   const userProfile = await getCurrentUserProfile();
@@ -63,6 +40,27 @@ export default async function Dashboard() {
   const files = fileGroups.flat();
 
   const reviews = reviewGroups.flat();
+  const recentActivities = reviews
+    .sort(
+      (a, b) =>
+        new Date(b.updated_at).getTime() -
+        new Date(a.updated_at).getTime()
+    )
+    .slice(0, 5)
+    .map((review) => ({
+      id: review.id,
+      title:
+        review.status === "Approved"
+          ? "Review approved"
+          : review.status === "Changes Requested"
+            ? "Changes requested"
+            : "Review pending",
+      description: review.title,
+      time: new Intl.DateTimeFormat("en-US", {
+        dateStyle: "medium",
+        timeStyle: "short",
+      }).format(new Date(review.updated_at)),
+    }));
 
   const pendingReviews = reviews.filter(
     (review) => review.status === "Pending"
@@ -177,8 +175,8 @@ export default async function Dashboard() {
         <div className="flex items-center justify-between ">
           <div>
             <h2 className="text-lg font-semibold tracking-tight text-gray-900">
-  Review Overview
-</h2>
+              Review Overview
+            </h2>
 
             <p className="mt-1 text-sm leading-6 text-gray-500">
               Current status of your project reviews.
@@ -302,7 +300,7 @@ export default async function Dashboard() {
         </div>
 
         <div className="mt-4 divide-y rounded-xl border bg-white px-6">
-          {activities.map((activity) => (
+          {recentActivities.map((activity) => (
             <ActivityItem
               key={activity.id}
               title={activity.title}
