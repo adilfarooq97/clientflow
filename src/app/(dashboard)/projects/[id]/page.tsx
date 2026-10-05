@@ -32,11 +32,14 @@ export default async function ProjectPage({
     notFound();
   }
 
-  const tasks = await getTasks(project.id);
-  const reviews = await getReviews(project.id);
-  const files = await getFiles(project.id);
-  const messages = await getMessages(project.id);
-  const members = await getProjectMembers(project.id);
+  const [tasks, reviews, files, messages, members] =
+    await Promise.all([
+      getTasks(project.id),
+      getReviews(project.id),
+      getFiles(project.id),
+      getMessages(project.id),
+      getProjectMembers(project.id),
+    ]);
 
   const memberProfiles = await getMemberProfiles(
     members.map((member) => member.user_id)
