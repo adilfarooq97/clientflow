@@ -7,7 +7,12 @@ type ProjectNavigationProps = {
   projectId: string;
 };
 
-const navigation = [
+type NavigationItem = {
+  label: string;
+  href: string;
+};
+
+const navigation: NavigationItem[] = [
   {
     label: "Overview",
     href: "",
@@ -51,8 +56,8 @@ export default function ProjectNavigation({
               key={item.label}
               href={href}
               className={`border-b-2 px-1 pb-3 text-sm font-medium transition-colors ${isActive
-                  ? "border-gray-900 text-gray-900"
-                  : "border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-900"
+                ? "border-gray-900 text-gray-900"
+                : "border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-900"
                 }`}
             >
               {item.label}
