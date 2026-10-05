@@ -17,7 +17,6 @@ export default function CreateReviewForm({
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [fileUrl, setFileUrl] = useState("");
-  const [clientComment, setClientComment] = useState("");
 
   const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
@@ -48,7 +47,6 @@ export default function CreateReviewForm({
           description: description.trim(),
           file_url: fileUrl.trim() || null,
           status: "Pending",
-          client_comment: clientComment.trim(),
         }),
       });
 
@@ -141,25 +139,6 @@ export default function CreateReviewForm({
         <p className="mt-1 text-xs text-gray-500">
           For now, paste a link to the design or deliverable.
         </p>
-      </div>
-
-      <div>
-        <label
-          htmlFor="clientComment"
-          className="mb-2 block text-sm font-medium text-gray-700"
-        >
-          Client comment
-        </label>
-
-        <textarea
-          id="clientComment"
-          value={clientComment}
-          onChange={(event) => setClientComment(event.target.value)}
-          placeholder="Optional client feedback..."
-          disabled={isLoading}
-          rows={3}
-          className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm outline-none transition focus:border-gray-500 focus:ring-1 focus:ring-gray-500 disabled:cursor-not-allowed disabled:bg-gray-100"
-        />
       </div>
 
       {error && (
