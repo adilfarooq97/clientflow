@@ -46,11 +46,11 @@ export default function AddProjectClientForm({
         }
       );
 
-      const data = await response.json();
+      const data = await response.json().catch(() => null);
 
       if (!response.ok) {
         throw new Error(
-          data.error || "Failed to add client"
+          data?.error || "Failed to add client"
         );
       }
 
