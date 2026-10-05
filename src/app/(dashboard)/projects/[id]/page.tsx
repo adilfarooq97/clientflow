@@ -43,9 +43,12 @@ export default async function ProjectPage({
       getProjectMembers(project.id),
     ]);
 
-  const memberProfiles = await getMemberProfiles(
-    members.map((member) => member.user_id)
-  );
+  const memberProfiles =
+    members.length > 0
+      ? await getMemberProfiles(
+        members.map((member) => member.user_id)
+      )
+      : [];
 
   const imageFiles = files.filter(
     (file) => file.file_type === "image"
