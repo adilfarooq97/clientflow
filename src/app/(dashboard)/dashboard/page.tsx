@@ -25,6 +25,23 @@ export default async function Dashboard() {
   );
 
   const tasks = taskGroups.flat();
+  const recentTaskActivities = tasks
+    .sort(
+      (a, b) =>
+        new Date(b.created_at).getTime() -
+        new Date(a.created_at).getTime()
+    )
+    .slice(0, 5)
+    .map((task) => ({
+      id: `task-${task.id}`,
+      title: "Task created",
+      description: task.title,
+      time: new Intl.DateTimeFormat("en-US", {
+        dateStyle: "medium",
+        timeStyle: "short",
+      }).format(new Date(task.created_at)),
+    }));
+
   const reviewGroups = await Promise.all(
     projects.map((project) => getReviews(project.id))
   );
@@ -61,6 +78,17 @@ export default async function Dashboard() {
         timeStyle: "short",
       }).format(new Date(review.updated_at)),
     }));
+
+  const activities = [
+    ...recentActivities,
+    ...recentTaskActivities,
+  ]
+    .sort(
+      (a, b) =>
+        new Date(b.time).getTime() -
+        new Date(a.time).getTime()
+    )
+    .slice(0, 5);
 
   const pendingReviews = reviews.filter(
     (review) => review.status === "Pending"
@@ -300,7 +328,7 @@ export default async function Dashboard() {
         </div>
 
         <div className="mt-4 divide-y rounded-xl border bg-white px-6">
-          {recentActivities.map((activity) => (
+          {activities.map((activity) => (
             <ActivityItem
               key={activity.id}
               title={activity.title}
