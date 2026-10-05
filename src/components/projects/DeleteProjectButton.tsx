@@ -13,6 +13,7 @@ export default function DeleteProjectButton({
 }: DeleteProjectButtonProps) {
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState("");
 
   const handleDelete = async () => {
     const confirmed = window.confirm(
@@ -23,6 +24,7 @@ export default function DeleteProjectButton({
       return;
     }
 
+    setError("");
     setIsLoading(true);
 
     try {
@@ -45,17 +47,32 @@ export default function DeleteProjectButton({
       router.refresh();
     } catch (error) {
       console.error("Delete error:", error);
+
+      setError(
+        error instanceof Error
+          ? error.message
+          : "Unable to delete project."
+      );
+
       setIsLoading(false);
     }
   };
 
   return (
-    <Button
-      variant="danger"
-      onClick={handleDelete}
-      disabled={isLoading}
-    >
-      {isLoading ? "Deleting..." : "Delete project"}
-    </Button>
+    <div>
+      {error && (
+        <p className="mb-2 rounded-lg border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-700">
+          {error}
+        </p>
+      )}
+
+      <Button
+        variant="danger"
+        onClick={handleDelete}
+        disabled={isLoading}
+      >
+        {isLoading ? "Deleting..." : "Delete project"}
+      </Button>
+    </div>
   );
 }
