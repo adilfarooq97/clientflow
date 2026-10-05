@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase/server";
 import { searchClients } from "@/lib/supabase/users";
+import { getCurrentUserProfile } from "@/lib/supabase/auth";
 
 export async function GET(request: Request) {
   const supabase = await createClient();
@@ -13,6 +14,15 @@ export async function GET(request: Request) {
     return NextResponse.json(
       { error: "Unauthorized" },
       { status: 401 }
+    );
+  }
+
+  const profile = await getCurrentUserProfile();
+
+  if (!profile || profile.role !== "freelancer") {
+    return NextResponse.json(
+      { error: "Only freelancers can search for clients." },
+      { status: 403 }
     );
   }
 
