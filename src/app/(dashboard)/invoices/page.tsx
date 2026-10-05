@@ -1,9 +1,44 @@
 import Link from "next/link";
 import Button from "@/components/ui/Button";
 import { getCurrentUserProfile } from "@/lib/supabase/auth";
+import { getInvoices } from "@/lib/supabase/invoices";
+import type { InvoiceStatus } from "@/types";
+
+const statusStyles: Record<InvoiceStatus, string> = {
+  Draft: "bg-gray-100 text-gray-700",
+  Pending: "bg-yellow-100 text-yellow-700",
+  Paid: "bg-green-100 text-green-700",
+  Overdue: "bg-red-100 text-red-700",
+};
 
 export default async function InvoicesPage() {
-  const userProfile = await getCurrentUserProfile();
+  const [userProfile, invoices] = await Promise.all([
+    getCurrentUserProfile(),
+    getInvoices(),
+  ]);
+
+  const totalAmount = invoices.reduce(
+    (sum, invoice) => sum + Number(invoice.amount),
+    0
+  );
+
+  const paidAmount = invoices
+    .filter((invoice) => invoice.status === "Paid")
+    .reduce((sum, invoice) => sum + Number(invoice.amount), 0);
+
+  const pendingAmount = invoices
+    .filter((invoice) => invoice.status === "Pending")
+    .reduce((sum, invoice) => sum + Number(invoice.amount), 0);
+
+  const overdueAmount = invoices
+    .filter((invoice) => invoice.status === "Overdue")
+    .reduce((sum, invoice) => sum + Number(invoice.amount), 0);
+
+  const formatAmount = (amount: number) =>
+    `$${amount.toLocaleString("en-US", {
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2,
+    })}`;
 
   return (
     <div className="space-y-8">
@@ -27,28 +62,20 @@ export default async function InvoicesPage() {
 
       <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
         <div className="rounded-xl border border-gray-200 bg-white p-5">
-          <p className="text-sm font-medium text-gray-500">
-            Total
-          </p>
-
+          <p className="text-sm font-medium text-gray-500">Total</p>
           <p className="mt-2 text-3xl font-bold text-gray-900">
-            $0
+            {formatAmount(totalAmount)}
           </p>
-
           <p className="mt-1 text-xs text-gray-500">
             All invoices
           </p>
         </div>
 
         <div className="rounded-xl border border-gray-200 bg-white p-5">
-          <p className="text-sm font-medium text-gray-500">
-            Paid
-          </p>
-
+          <p className="text-sm font-medium text-gray-500">Paid</p>
           <p className="mt-2 text-3xl font-bold text-gray-900">
-            $0
+            {formatAmount(paidAmount)}
           </p>
-
           <p className="mt-1 text-xs text-gray-500">
             Completed payments
           </p>
@@ -58,11 +85,9 @@ export default async function InvoicesPage() {
           <p className="text-sm font-medium text-gray-500">
             Pending
           </p>
-
           <p className="mt-2 text-3xl font-bold text-gray-900">
-            $0
+            {formatAmount(pendingAmount)}
           </p>
-
           <p className="mt-1 text-xs text-gray-500">
             Awaiting payment
           </p>
@@ -72,36 +97,103 @@ export default async function InvoicesPage() {
           <p className="text-sm font-medium text-gray-500">
             Overdue
           </p>
-
           <p className="mt-2 text-3xl font-bold text-gray-900">
-            $0
+            {formatAmount(overdueAmount)}
           </p>
-
           <p className="mt-1 text-xs text-gray-500">
             Past the due date
           </p>
         </div>
       </div>
 
-      <div className="rounded-xl border border-gray-200 bg-white p-8 text-center">
-        <h2 className="text-lg font-semibold text-gray-900">
-          No invoices yet
-        </h2>
+      {invoices.length === 0 ? (
+        <div className="rounded-xl border border-gray-200 bg-white p-8 text-center">
+          <h2 className="text-lg font-semibold text-gray-900">
+            No invoices yet
+          </h2>
 
-        <p className="mx-auto mt-2 max-w-md text-sm leading-6 text-gray-500">
-          {userProfile?.role === "freelancer"
-            ? "Create your first invoice to start tracking client payments."
-            : "Invoices shared with you will appear here."}
-        </p>
+          <p className="mx-auto mt-2 max-w-md text-sm leading-6 text-gray-500">
+            {userProfile?.role === "freelancer"
+              ? "Create your first invoice to start tracking client payments."
+              : "Invoices shared with you will appear here."}
+          </p>
 
-        {userProfile?.role === "freelancer" && (
-          <div className="mt-5">
-            <Link href="/invoices/new">
-              <Button>Create your first invoice</Button>
-            </Link>
+          {userProfile?.role === "freelancer" && (
+            <div className="mt-5">
+              <Link href="/invoices/new">
+                <Button>Create your first invoice</Button>
+              </Link>
+            </div>
+          )}
+        </div>
+      ) : (
+        <div className="overflow-hidden rounded-xl border border-gray-200 bg-white">
+          <div className="overflow-x-auto">
+            <table className="w-full min-w-[700px] text-left">
+              <thead className="border-b border-gray-200 bg-gray-50">
+                <tr>
+                  <th className="px-5 py-3 text-xs font-semibold uppercase tracking-wide text-gray-500">
+                    Invoice
+                  </th>
+                  <th className="px-5 py-3 text-xs font-semibold uppercase tracking-wide text-gray-500">
+                    Amount
+                  </th>
+                  <th className="px-5 py-3 text-xs font-semibold uppercase tracking-wide text-gray-500">
+                    Issue Date
+                  </th>
+                  <th className="px-5 py-3 text-xs font-semibold uppercase tracking-wide text-gray-500">
+                    Due Date
+                  </th>
+                  <th className="px-5 py-3 text-xs font-semibold uppercase tracking-wide text-gray-500">
+                    Status
+                  </th>
+                </tr>
+              </thead>
+
+              <tbody className="divide-y divide-gray-100">
+                {invoices.map((invoice) => (
+                  <tr
+                    key={invoice.id}
+                    className="transition hover:bg-gray-50"
+                  >
+                    <td className="px-5 py-4">
+                      <p className="font-medium text-gray-900">
+                        {invoice.invoice_number}
+                      </p>
+
+                      {invoice.description && (
+                        <p className="mt-1 max-w-xs truncate text-sm text-gray-500">
+                          {invoice.description}
+                        </p>
+                      )}
+                    </td>
+
+                    <td className="px-5 py-4 text-sm font-medium text-gray-900">
+                      {formatAmount(Number(invoice.amount))}
+                    </td>
+
+                    <td className="px-5 py-4 text-sm text-gray-600">
+                      {invoice.issue_date}
+                    </td>
+
+                    <td className="px-5 py-4 text-sm text-gray-600">
+                      {invoice.due_date}
+                    </td>
+
+                    <td className="px-5 py-4">
+                      <span
+                        className={`rounded-full px-2.5 py-1 text-xs font-semibold ${statusStyles[invoice.status]}`}
+                      >
+                        {invoice.status}
+                      </span>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
           </div>
-        )}
-      </div>
+        </div>
+      )}
     </div>
   );
 }
