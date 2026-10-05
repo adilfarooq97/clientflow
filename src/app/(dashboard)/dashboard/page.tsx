@@ -47,6 +47,7 @@ export default async function Dashboard() {
           dateStyle: "medium",
           timeStyle: "short",
         }).format(new Date(task.created_at)),
+        href: `/projects/${task.project_id}/tasks`,
       };
     });
 
@@ -92,6 +93,7 @@ export default async function Dashboard() {
           dateStyle: "medium",
           timeStyle: "short",
         }).format(new Date(review.updated_at)),
+        href: `/projects/${review.project_id}/reviews`,
       };
     });
 
@@ -350,6 +352,7 @@ export default async function Dashboard() {
               title={activity.title}
               description={activity.description}
               time={activity.time}
+              href={activity.href}
             />
           ))}
         </div>
