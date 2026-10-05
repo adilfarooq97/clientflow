@@ -346,15 +346,27 @@ export default async function Dashboard() {
         </div>
 
         <div className="mt-4 divide-y rounded-xl border bg-white px-6">
-          {activities.map((activity) => (
-            <ActivityItem
-              key={activity.id}
-              title={activity.title}
-              description={activity.description}
-              time={activity.time}
-              href={activity.href}
-            />
-          ))}
+          {activities.length === 0 ? (
+            <div className="py-10 text-center">
+              <p className="text-sm font-medium text-gray-900">
+                No recent activity
+              </p>
+
+              <p className="mt-1 text-sm text-gray-500">
+                Activity from your projects will appear here.
+              </p>
+            </div>
+          ) : (
+            activities.map((activity) => (
+              <ActivityItem
+                key={activity.id}
+                title={activity.title}
+                description={activity.description}
+                time={activity.time}
+                href={activity.href}
+              />
+            ))
+          )}
         </div>
       </section>
     </div>
