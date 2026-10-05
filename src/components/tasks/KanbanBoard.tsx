@@ -27,17 +27,22 @@ const columns: TaskStatus[] = [
 
 export default function KanbanBoard({
   tasks: initialTasks,
-   canManage = true,
+  canManage = true,
 }: KanbanBoardProps) {
   const [tasks, setTasks] = useState<Task[]>(initialTasks);
   const [activeTaskId, setActiveTaskId] = useState<string | null>(
-  null
-);
-const activeTask = tasks.find(
-  (task) => task.id === activeTaskId
-);
+    null
+  );
+  const activeTask = tasks.find(
+    (task) => task.id === activeTaskId
+  );
   const handleDragEnd = async (event: DragEndEvent) => {
     setActiveTaskId(null);
+
+    if (!canManage) {
+      return;
+    }
+
     const { active, over } = event;
 
     if (!over) return;
@@ -76,11 +81,11 @@ const activeTask = tasks.find(
 
       const updatedTask = await response.json();
 
-setTasks((currentTasks) =>
-  currentTasks.map((item) =>
-    item.id === taskId ? updatedTask : item
-  )
-);
+      setTasks((currentTasks) =>
+        currentTasks.map((item) =>
+          item.id === taskId ? updatedTask : item
+        )
+      );
     } catch (error) {
       console.error("Error moving task:", error);
     }
@@ -88,63 +93,63 @@ setTasks((currentTasks) =>
 
   return (
     <DndContext
-  collisionDetection={closestCorners}
-  onDragStart={
-    canManage
-      ? ({ active }) => {
-          setActiveTaskId(String(active.id));
-        }
-      : undefined
-  }
-  onDragCancel={() => {
-    setActiveTaskId(null);
-  }}
-  onDragEnd={canManage ? handleDragEnd : undefined}
->
+      collisionDetection={closestCorners}
+      onDragStart={
+        canManage
+          ? ({ active }) => {
+            setActiveTaskId(String(active.id));
+          }
+          : undefined
+      }
+      onDragCancel={() => {
+        setActiveTaskId(null);
+      }}
+      onDragEnd={canManage ? handleDragEnd : undefined}
+    >
       <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
-  {columns.map((column) => {
-    const columnTasks = tasks.filter(
-      (task) => task.status === column
-    );
+        {columns.map((column) => {
+          const columnTasks = tasks.filter(
+            (task) => task.status === column
+          );
 
-    return (
-      <KanbanColumn
-        key={column}
-        column={column}
-        tasks={columnTasks}
-        canManage={canManage}
-      />
-    );
-  })}
-</div>
+          return (
+            <KanbanColumn
+              key={column}
+              column={column}
+              tasks={columnTasks}
+              canManage={canManage}
+            />
+          );
+        })}
+      </div>
       <DragOverlay>
-  {canManage && activeTask ? (
-    <div className="rounded-lg border border-gray-200 bg-white p-4 shadow-xl">
-      <div className="flex items-start justify-between gap-3">
-        <h3 className="font-medium text-gray-900">
-          {activeTask.title}
-        </h3>
+        {canManage && activeTask ? (
+          <div className="rounded-lg border border-gray-200 bg-white p-4 shadow-xl">
+            <div className="flex items-start justify-between gap-3">
+              <h3 className="font-medium text-gray-900">
+                {activeTask.title}
+              </h3>
 
-        <TaskBadge
-  type="priority"
-  value={activeTask.priority}
-/>
-      </div>
+              <TaskBadge
+                type="priority"
+                value={activeTask.priority}
+              />
+            </div>
 
-      {activeTask.description && (
-        <p className="mt-2 text-sm text-gray-500">
-          {activeTask.description}
-        </p>
-      )}
+            {activeTask.description && (
+              <p className="mt-2 text-sm text-gray-500">
+                {activeTask.description}
+              </p>
+            )}
 
-      <div className="mt-3 text-xs text-gray-400">
-        {activeTask.due_date
-          ? `Due ${activeTask.due_date}`
-          : "No due date"}
-      </div>
-    </div>
-  ) : null}
-</DragOverlay>
+            <div className="mt-3 text-xs text-gray-400">
+              {activeTask.due_date
+                ? `Due ${activeTask.due_date}`
+                : "No due date"}
+            </div>
+          </div>
+        ) : null}
+      </DragOverlay>
     </DndContext>
   );
 }

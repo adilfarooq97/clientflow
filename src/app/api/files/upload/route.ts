@@ -48,6 +48,22 @@ if (profile.role !== "freelancer") {
       { status: 400 }
     );
   }
+  const { data: project } = await supabase
+  .from("projects")
+  .select("id")
+  .eq("id", projectId)
+  .eq("owner_id", user.id)
+  .maybeSingle();
+
+if (!project) {
+  return NextResponse.json(
+    {
+      error:
+        "You do not have permission to upload files to this project.",
+    },
+    { status: 403 }
+  );
+}
 
   if (file.size === 0) {
     return NextResponse.json(

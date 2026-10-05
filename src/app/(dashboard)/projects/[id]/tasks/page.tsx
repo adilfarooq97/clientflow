@@ -44,15 +44,17 @@ export default async function ProjectTasksPage({
               {project.name} Tasks
             </h1>
             <p className="mt-1 text-sm text-gray-500">
-              Manage tasks and track project progress.
+              {profile?.role === "freelancer"
+                ? "Manage tasks and track project progress."
+                : "View tasks and track project progress."}
             </p>
           </div>
 
           {profile?.role === "freelancer" && (
-  <Link href={`/projects/${project.id}/tasks/new`}>
-    <Button>New Task</Button>
-  </Link>
-)}
+            <Link href={`/projects/${project.id}/tasks/new`}>
+              <Button>New Task</Button>
+            </Link>
+          )}
         </div>
       </div>
 

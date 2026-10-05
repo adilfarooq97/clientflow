@@ -41,13 +41,15 @@ export default function MessageComposer({
         }),
       });
 
-      const data = await response.json();
+      const data = await response
+  .json()
+  .catch(() => null);
 
-      if (!response.ok) {
-        throw new Error(
-          data.error || "Failed to send message"
-        );
-      }
+if (!response.ok) {
+  throw new Error(
+    data?.error || "Failed to send message"
+  );
+}
 
       setContent("");
       router.refresh();

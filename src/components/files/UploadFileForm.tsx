@@ -47,12 +47,16 @@ export default function UploadFileForm({
         body: formData,
       });
 
-      const data = await response.json();
+      const data = await response
+  .json()
+  .catch(() => null);
 
-      if (!response.ok) {
-        setError(data.error || "Failed to upload file.");
-        return;
-      }
+if (!response.ok) {
+  setError(
+    data?.error || "Failed to upload file."
+  );
+  return;
+}
 
       router.push(`/projects/${projectId}/files`);
       router.refresh();

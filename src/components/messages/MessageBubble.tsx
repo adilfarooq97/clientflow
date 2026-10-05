@@ -17,8 +17,8 @@ export default function MessageBubble({
     >
       <div
         className={`max-w-[75%] rounded-2xl px-4 py-3 ${isOwn
-            ? "bg-gray-900 text-white"
-            : "bg-gray-100 text-gray-900"
+          ? "bg-gray-900 text-white"
+          : "bg-gray-100 text-gray-900"
           }`}
       >
         <p className="text-sm leading-6">
@@ -29,7 +29,11 @@ export default function MessageBubble({
           className={`mt-1 text-xs ${isOwn ? "text-gray-300" : "text-gray-500"
             }`}
         >
-          {new Date(message.created_at).toISOString()}
+          {new Intl.DateTimeFormat("en-US", {
+            dateStyle: "medium",
+            timeStyle: "short",
+            timeZone: "UTC",
+          }).format(new Date(message.created_at))}
         </p>
         {isOwn && (
           <DeleteMessageButton messageId={message.id} />

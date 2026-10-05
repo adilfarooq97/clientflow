@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import type { Review, ReviewStatus } from "@/types";
+import type { Review } from "@/types";
 import Button from "@/components/ui/Button";
 import Input from "@/components/ui/Input";
 
@@ -20,7 +20,6 @@ export default function EditReviewForm({
   const [title, setTitle] = useState(review.title);
   const [description, setDescription] = useState(review.description);
   const [fileUrl, setFileUrl] = useState(review.file_url ?? "");
-  const [status, setStatus] = useState<ReviewStatus>(review.status);
   const [clientComment, setClientComment] = useState(
     review.client_comment
   );
@@ -52,7 +51,6 @@ export default function EditReviewForm({
           title: title.trim(),
           description: description.trim(),
           file_url: fileUrl.trim() || null,
-          status,
           client_comment: clientComment.trim(),
         }),
       });
@@ -139,31 +137,6 @@ export default function EditReviewForm({
           onChange={(event) => setFileUrl(event.target.value)}
           disabled={isLoading}
         />
-      </div>
-
-      <div>
-        <label
-          htmlFor="status"
-          className="mb-2 block text-sm font-medium text-gray-700"
-        >
-          Status
-        </label>
-
-        <select
-          id="status"
-          value={status}
-          onChange={(event) =>
-            setStatus(event.target.value as ReviewStatus)
-          }
-          disabled={isLoading}
-          className="w-full rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm outline-none focus:border-gray-500 focus:ring-1 focus:ring-gray-500 disabled:cursor-not-allowed disabled:bg-gray-100"
-        >
-          <option value="Pending">Pending</option>
-          <option value="Approved">Approved</option>
-          <option value="Changes Requested">
-            Changes Requested
-          </option>
-        </select>
       </div>
 
       <div>

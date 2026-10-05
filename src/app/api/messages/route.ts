@@ -5,6 +5,8 @@ import {
   createMessage,
 } from "@/lib/supabase/messages";
 
+const MAX_MESSAGE_LENGTH = 1000;
+
 export async function GET(request: Request) {
   const supabase = await createClient();
 
@@ -24,8 +26,43 @@ export async function GET(request: Request) {
 
   if (!projectId) {
     return NextResponse.json(
-      { error: "Project ID is required" },
+      { error: "Project ID is required." },
       { status: 400 }
+    );
+  }
+  const { data: project } = await supabase
+    .from("projects")
+    .select("id")
+    .eq("id", projectId)
+    .maybeSingle();
+
+  if (!project) {
+    return NextResponse.json(
+      { error: "Project not found." },
+      { status: 404 }
+    );
+  }
+
+  const { data: membership } = await supabase
+    .from("project_members")
+    .select("id")
+    .eq("project_id", projectId)
+    .eq("user_id", user.id)
+    .maybeSingle();
+
+  const { data: ownedProject } = await supabase
+    .from("projects")
+    .select("id")
+    .eq("id", projectId)
+    .eq("owner_id", user.id)
+    .maybeSingle();
+
+  if (!membership && !ownedProject) {
+    return NextResponse.json(
+      {
+        error: "You do not have access to this project.",
+      },
+      { status: 403 }
     );
   }
 
@@ -48,25 +85,114 @@ export async function POST(request: Request) {
     );
   }
 
-  const body = await request.json();
-
-  const {
-    project_id,
-    content,
-  } = body;
-
-  if (!project_id || !content?.trim()) {
+  let body: {
+    project_id?: unknown;
+    content?: unknown;
+  };
+  try {
+    body = await request.json();
+  } catch {
     return NextResponse.json(
-      { error: "Project ID and message content are required" },
+      { error: "Invalid request body." },
       { status: 400 }
     );
   }
 
-  const message = await createMessage({
-    project_id,
-    sender_id: user.id,
-    content: content.trim(),
-  });
+  if (
+    !body ||
+    typeof body !== "object" ||
+    Array.isArray(body)
+  ) {
+    return NextResponse.json(
+      { error: "Invalid request body." },
+      { status: 400 }
+    );
+  }
 
-  return NextResponse.json(message, { status: 201 });
+  const { project_id, content } = body;
+
+  if (
+    typeof project_id !== "string" ||
+    !project_id.trim()
+  ) {
+    return NextResponse.json(
+      { error: "Project ID is required." },
+      { status: 400 }
+    );
+  }
+
+  if (
+    typeof content !== "string" ||
+    !content.trim()
+  ) {
+    return NextResponse.json(
+      { error: "Message content is required." },
+      { status: 400 }
+    );
+  }
+
+  const trimmedContent = content.trim();
+
+  if (trimmedContent.length > MAX_MESSAGE_LENGTH) {
+    return NextResponse.json(
+      {
+        error: `Message must be ${MAX_MESSAGE_LENGTH} characters or less.`,
+      },
+      { status: 400 }
+    );
+  }
+
+  const { data: project } = await supabase
+    .from("projects")
+    .select("id")
+    .eq("id", project_id)
+    .maybeSingle();
+
+  if (!project) {
+    return NextResponse.json(
+      { error: "Project not found." },
+      { status: 404 }
+    );
+  }
+
+  const { data: membership } = await supabase
+    .from("project_members")
+    .select("id")
+    .eq("project_id", project_id)
+    .eq("user_id", user.id)
+    .maybeSingle();
+
+  const { data: ownedProject } = await supabase
+    .from("projects")
+    .select("id")
+    .eq("id", project_id)
+    .eq("owner_id", user.id)
+    .maybeSingle();
+
+  if (!membership && !ownedProject) {
+    return NextResponse.json(
+      {
+        error:
+          "You do not have access to this project.",
+      },
+      { status: 403 }
+    );
+  }
+
+  try {
+    const message = await createMessage({
+      project_id: project_id.trim(),
+      sender_id: user.id,
+      content: trimmedContent,
+    });
+
+    return NextResponse.json(message, { status: 201 });
+  } catch (error) {
+    console.error("Error creating message:", error);
+
+    return NextResponse.json(
+      { error: "Failed to send message." },
+      { status: 500 }
+    );
+  }
 }

@@ -2,7 +2,6 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import type { ReviewStatus } from "@/types";
 import Button from "@/components/ui/Button";
 import Input from "@/components/ui/Input";
 
@@ -18,13 +17,14 @@ export default function CreateReviewForm({
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [fileUrl, setFileUrl] = useState("");
-  const [status, setStatus] = useState<ReviewStatus>("Pending");
   const [clientComment, setClientComment] = useState("");
 
   const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
 
-  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (
+    event: React.FormEvent<HTMLFormElement>
+  ) => {
     event.preventDefault();
 
     setError("");
@@ -47,15 +47,15 @@ export default function CreateReviewForm({
           title: title.trim(),
           description: description.trim(),
           file_url: fileUrl.trim() || null,
-          status,
+          status: "Pending",
           client_comment: clientComment.trim(),
         }),
       });
 
-      const data = await response.json();
+      const data = await response.json().catch(() => null);
 
       if (!response.ok) {
-        setError(data.error || "Failed to create review.");
+        setError(data?.error || "Failed to create review.");
         return;
       }
 
@@ -141,31 +141,6 @@ export default function CreateReviewForm({
         <p className="mt-1 text-xs text-gray-500">
           For now, paste a link to the design or deliverable.
         </p>
-      </div>
-
-      <div>
-        <label
-          htmlFor="status"
-          className="mb-2 block text-sm font-medium text-gray-700"
-        >
-          Status
-        </label>
-
-        <select
-          id="status"
-          value={status}
-          onChange={(event) =>
-            setStatus(event.target.value as ReviewStatus)
-          }
-          disabled={isLoading}
-          className="w-full rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm outline-none focus:border-gray-500 focus:ring-1 focus:ring-gray-500 disabled:cursor-not-allowed disabled:bg-gray-100"
-        >
-          <option value="Pending">Pending</option>
-          <option value="Approved">Approved</option>
-          <option value="Changes Requested">
-            Changes Requested
-          </option>
-        </select>
       </div>
 
       <div>

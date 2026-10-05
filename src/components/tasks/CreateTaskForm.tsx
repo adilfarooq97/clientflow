@@ -78,23 +78,24 @@ export default function CreateTaskForm({
   return (
     <form onSubmit={handleSubmit} className="space-y-5">
       <div>
-  <label className="mb-2 block text-sm font-medium text-gray-700">
-    Task title
-  </label>
+        <label className="mb-2 block text-sm font-medium text-gray-700">
+          Task title
+        </label>
 
-  <Input
-    value={title}
-    onChange={(event) => setTitle(event.target.value)}
-    placeholder="e.g. Create homepage design"
-    disabled={isLoading}
-  />
+        <Input
+          label=""
+          value={title}
+          onChange={(event) => setTitle(event.target.value)}
+          placeholder="e.g. Create homepage design"
+          disabled={isLoading}
+        />
 
-  {error && (
-    <p className="mt-1 text-sm text-red-600">
-      {error}
-    </p>
-  )}
-</div>
+        {error && (
+          <p className="mt-1 text-sm text-red-600">
+            {error}
+          </p>
+        )}
+      </div>
 
       <div>
         <label className="mb-2 block text-sm font-medium text-gray-700">

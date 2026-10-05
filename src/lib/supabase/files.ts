@@ -118,7 +118,32 @@ export async function uploadProjectFile(
 export async function getFileUrl(filePath: string) {
   const supabase = await createClient();
 
-  const { data, error } = await supabase.storage
+  const { data: file, error: fileError } = await supabase
+    .from("files")
+    .select("id, project_id")
+    .eq("file_url", filePath)
+    .maybeSingle();
+
+  if (fileError) {
+    console.error("Error fetching file:", fileError);
+    throw new Error(fileError.message);
+  }
+
+  if (!file) {
+    throw new Error("File not found");
+  }
+
+  const { data: project } = await supabase
+    .from("projects")
+    .select("id")
+    .eq("id", file.project_id)
+    .maybeSingle();
+
+  if (!project) {
+    throw new Error("You do not have access to this file");
+  }
+
+  const { data: signedUrl, error } = await supabase.storage
     .from("project-files")
     .createSignedUrl(filePath, 60 * 10);
 
@@ -127,5 +152,5 @@ export async function getFileUrl(filePath: string) {
     throw new Error(error.message);
   }
 
-  return data.signedUrl;
+  return signedUrl.signedUrl;
 }

@@ -21,6 +21,7 @@ export default function TaskCard({ task, canManage = true }: TaskCardProps) {
     isDragging,
   } = useSortable({
     id: task.id,
+    disabled: !canManage,
   });
 
   const style = {

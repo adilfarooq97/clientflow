@@ -67,6 +67,7 @@ export default function ReviewCard({
 
       setStatus(nextStatus);
       setClientComment(comment.trim());
+      setComment("");
     } catch (error) {
       setError(
         error instanceof Error

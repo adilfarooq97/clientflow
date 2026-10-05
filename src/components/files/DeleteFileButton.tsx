@@ -14,6 +14,7 @@ export default function DeleteFileButton({
   const router = useRouter();
 
   const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState("");
 
   const handleDelete = async () => {
     const confirmed = window.confirm(
@@ -31,17 +32,37 @@ export default function DeleteFileButton({
         method: "DELETE",
       });
 
+      const data = await response
+        .json()
+        .catch(() => null);
+
       if (!response.ok) {
-        throw new Error("Failed to delete file");
+        throw new Error(
+          data?.error || "Failed to delete file"
+        );
       }
 
       router.refresh();
     } catch (error) {
       console.error("Delete file error:", error);
+
+      setError(
+        error instanceof Error
+          ? error.message
+          : "Failed to delete file"
+      );
+
       setIsLoading(false);
     }
   };
 
+  {
+    error && (
+      <p className="text-sm text-red-600">
+        {error}
+      </p>
+    )
+  }
   return (
     <Button
       type="button"

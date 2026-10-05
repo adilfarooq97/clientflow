@@ -19,5 +19,5 @@ export default function KanbanBoardWrapper({
   tasks,
   canManage = true,
 }: KanbanBoardWrapperProps) {
-  return <KanbanBoard tasks={tasks} />;
+  return <KanbanBoard tasks={tasks} canManage={canManage}/>;
 }

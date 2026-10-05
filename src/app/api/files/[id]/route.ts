@@ -37,6 +37,36 @@ if (profile.role !== "freelancer") {
   );
 }
 
+const { data: file } = await supabase
+  .from("files")
+  .select("id, project_id")
+  .eq("id", id)
+  .maybeSingle();
+
+if (!file) {
+  return NextResponse.json(
+    { error: "File not found." },
+    { status: 404 }
+  );
+}
+
+const { data: project } = await supabase
+  .from("projects")
+  .select("id")
+  .eq("id", file.project_id)
+  .eq("owner_id", user.id)
+  .maybeSingle();
+
+if (!project) {
+  return NextResponse.json(
+    {
+      error:
+        "You do not have permission to delete this file.",
+    },
+    { status: 403 }
+  );
+}
+
   try {
     await deleteFile(id);
 

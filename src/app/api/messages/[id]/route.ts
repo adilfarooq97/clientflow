@@ -25,6 +25,29 @@ export async function DELETE(
 
   const { id } = await params;
 
+  const { data: message } = await supabase
+    .from("messages")
+    .select("id, sender_id")
+    .eq("id", id)
+    .maybeSingle();
+
+  if (!message) {
+    return NextResponse.json(
+      { error: "Message not found." },
+      { status: 404 }
+    );
+  }
+
+  if (message.sender_id !== user.id) {
+    return NextResponse.json(
+      {
+        error:
+          "You can only delete your own messages.",
+      },
+      { status: 403 }
+    );
+  }
+
   try {
     await deleteMessage(id);
 
@@ -35,7 +58,7 @@ export async function DELETE(
     console.error("Delete message error:", error);
 
     return NextResponse.json(
-      { error: "Failed to delete message" },
+      { error: "Failed to delete message." },
       { status: 500 }
     );
   }

@@ -24,42 +24,81 @@ export async function PATCH(
     );
   }
 
-   const { id } = await params;
+  const { id } = await params;
   const { data: review, error: reviewError } = await supabase
-  .from("reviews")
-  .select("id, project_id")
-  .eq("id", id)
-  .single();
+    .from("reviews")
+    .select("id, project_id, status")
+    .eq("id", id)
+    .single();
 
-if (reviewError || !review) {
-  return NextResponse.json(
-    { error: "Review not found." },
-    { status: 404 }
-  );
-}
+  if (reviewError || !review) {
+    return NextResponse.json(
+      { error: "Review not found." },
+      { status: 404 }
+    );
+  }
+  if (review.status !== "Pending") {
+    return NextResponse.json(
+      { error: "This review has already been responded to." },
+      { status: 409 }
+    );
+  }
 
-const { data: membership, error: membershipError } = await supabase
-  .from("project_members")
-  .select("id")
-  .eq("project_id", review.project_id)
-  .eq("user_id", user.id)
-  .eq("role", "client")
-  .maybeSingle();
+  const { data: membership, error: membershipError } = await supabase
+    .from("project_members")
+    .select("id")
+    .eq("project_id", review.project_id)
+    .eq("user_id", user.id)
+    .eq("role", "client")
+    .maybeSingle();
 
-if (membershipError || !membership) {
-  return NextResponse.json(
-    { error: "You are not a client on this project." },
-    { status: 403 }
-  );
-}
+  if (membershipError || !membership) {
+    return NextResponse.json(
+      { error: "You are not a client on this project." },
+      { status: 403 }
+    );
+  }
   try {
-   
-    const body = await request.json();
+    let body: {
+      status?: unknown;
+      client_comment?: unknown;
+    };
+
+    try {
+      body = await request.json();
+    } catch {
+      return NextResponse.json(
+        { error: "Invalid request body." },
+        { status: 400 }
+      );
+    }
+
+    if (!body || typeof body !== "object" || Array.isArray(body)) {
+      return NextResponse.json(
+        { error: "Invalid request body." },
+        { status: 400 }
+      );
+    }
 
     const status = body.status;
-    const clientComment = body.client_comment?.trim() ?? "";
+    const clientComment =
+      typeof body.client_comment === "string"
+        ? body.client_comment.trim()
+        : "";
 
-    if (!allowedStatuses.includes(status)) {
+    if (clientComment.length > 1000) {
+      return NextResponse.json(
+        { error: "Client comment must be 1000 characters or less." },
+        { status: 400 }
+      );
+    }
+
+    if (
+      typeof status !== "string" ||
+      !allowedStatuses.includes(
+        status as (typeof allowedStatuses)[number]
+      )
+    ) {
       return NextResponse.json(
         { error: "Invalid review response." },
         { status: 400 }

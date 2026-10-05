@@ -12,6 +12,7 @@ export default function DeleteMessageButton({
 }: DeleteMessageButtonProps) {
   const router = useRouter();
   const [isDeleting, setIsDeleting] = useState(false);
+  const [error, setError] = useState("");
 
   const handleDelete = async () => {
     const confirmed = window.confirm(
@@ -22,6 +23,7 @@ export default function DeleteMessageButton({
       return;
     }
 
+    setError("");
     setIsDeleting(true);
 
     try {
@@ -42,9 +44,23 @@ export default function DeleteMessageButton({
       router.refresh();
     } catch (error) {
       console.error("Delete message error:", error);
+
+      setError(
+        error instanceof Error
+          ? error.message
+          : "Failed to delete message"
+      );
+
       setIsDeleting(false);
     }
   };
+  {
+    error && (
+      <p className="mt-1 text-xs text-red-500">
+        {error}
+      </p>
+    )
+  }
 
   return (
     <button

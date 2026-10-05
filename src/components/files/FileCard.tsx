@@ -7,7 +7,10 @@ type FileCardProps = {
   canManage?: boolean;
 };
 
-export default function FileCard({ file }: FileCardProps, canManage = true) {
+export default function FileCard({
+  file,
+  canManage = true,
+}: FileCardProps) {
   return (
     <div className="rounded-xl border border-gray-200 bg-white p-5">
       <div className="flex items-start justify-between gap-4">

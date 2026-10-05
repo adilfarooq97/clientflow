@@ -25,11 +25,33 @@ export default async function FilesPage({
 
   const files = await getFiles(project.id);
 
-  const filesWithUrls = await Promise.all(
-    files.map(async (file) => ({
-      file,
-      signedUrl: await getFileUrl(file.file_url),
-    }))
+  const filesWithUrls = (
+    await Promise.all(
+      files.map(async (file) => {
+        try {
+          const signedUrl = await getFileUrl(file.file_url);
+
+          return {
+            file,
+            signedUrl,
+          };
+        } catch (error) {
+          console.error(
+            `Error creating signed URL for file ${file.id}:`,
+            error
+          );
+
+          return null;
+        }
+      })
+    )
+  ).filter(
+    (
+      item
+    ): item is {
+      file: (typeof files)[number];
+      signedUrl: string;
+    } => item !== null
   );
 
   return (
@@ -67,19 +89,23 @@ export default async function FilesPage({
         )}
       </div>
 
-      {files.length === 0 ? (
+      {filesWithUrls.length === 0 ? (
         <div className="rounded-xl border border-dashed border-gray-300 bg-white p-10 text-center">
           <h2 className="font-semibold text-gray-900">
-            No files yet
+            {files.length === 0
+              ? "No files yet"
+              : "Files are unavailable"}
           </h2>
 
           <p className="mt-2 text-sm text-gray-500">
-            {profile?.role === "freelancer"
-              ? "Add your first project file."
-              : "No project files have been uploaded yet."}
+            {files.length === 0
+              ? profile?.role === "freelancer"
+                ? "Add your first project file."
+                : "No project files have been uploaded yet."
+              : "Some project files could not be loaded. Please try again later."}
           </p>
 
-          {profile?.role === "freelancer" && (
+          {profile?.role === "freelancer" && files.length === 0 && (
             <Link
               href={`/projects/${project.id}/files/new`}
               className="mt-4 inline-block text-sm font-medium text-gray-900 underline"

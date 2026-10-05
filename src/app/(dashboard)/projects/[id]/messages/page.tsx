@@ -4,6 +4,7 @@ import { getAccessibleProjects } from "@/lib/supabase/projects";
 import { getMessages } from "@/lib/supabase/messages";
 import { getCurrentUser } from "@/lib/supabase/auth";
 import MessageThread from "@/components/messages/MessageThread";
+import ProjectNavigation from "@/components/projects/ProjectNavigation";
 
 export default async function MessagesPage({
   params,
@@ -38,6 +39,7 @@ export default async function MessagesPage({
           >
             ← Back to project
           </Link>
+          <ProjectNavigation projectId={project.id} />
 
           <h1 className="mt-2 text-2xl font-bold text-gray-900">
             Messages
