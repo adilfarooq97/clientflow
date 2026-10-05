@@ -32,15 +32,23 @@ export default async function Dashboard() {
         new Date(a.created_at).getTime()
     )
     .slice(0, 5)
-    .map((task) => ({
-      id: `task-${task.id}`,
-      title: "Task created",
-      description: task.title,
-      time: new Intl.DateTimeFormat("en-US", {
-        dateStyle: "medium",
-        timeStyle: "short",
-      }).format(new Date(task.created_at)),
-    }));
+    .map((task) => {
+      const project = projects.find(
+        (item) => item.id === task.project_id
+      );
+
+      return {
+        id: `task-${task.id}`,
+        title: "Task created",
+        description: project
+          ? `${task.title} · ${project.name}`
+          : task.title,
+        time: new Intl.DateTimeFormat("en-US", {
+          dateStyle: "medium",
+          timeStyle: "short",
+        }).format(new Date(task.created_at)),
+      };
+    });
 
   const reviewGroups = await Promise.all(
     projects.map((project) => getReviews(project.id))
@@ -64,20 +72,28 @@ export default async function Dashboard() {
         new Date(a.updated_at).getTime()
     )
     .slice(0, 5)
-    .map((review) => ({
-      id: review.id,
-      title:
-        review.status === "Approved"
-          ? "Review approved"
-          : review.status === "Changes Requested"
-            ? "Changes requested"
-            : "Review pending",
-      description: review.title,
-      time: new Intl.DateTimeFormat("en-US", {
-        dateStyle: "medium",
-        timeStyle: "short",
-      }).format(new Date(review.updated_at)),
-    }));
+    .map((review) => {
+      const project = projects.find(
+        (item) => item.id === review.project_id
+      );
+
+      return {
+        id: `review-${review.id}`,
+        title:
+          review.status === "Approved"
+            ? "Review approved"
+            : review.status === "Changes Requested"
+              ? "Changes requested"
+              : "Review pending",
+        description: project
+          ? `${review.title} · ${project.name}`
+          : review.title,
+        time: new Intl.DateTimeFormat("en-US", {
+          dateStyle: "medium",
+          timeStyle: "short",
+        }).format(new Date(review.updated_at)),
+      };
+    });
 
   const activities = [
     ...recentActivities,
