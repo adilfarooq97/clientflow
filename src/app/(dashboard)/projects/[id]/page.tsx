@@ -76,13 +76,14 @@ export default async function ProjectPage({
       ? Math.round((completedTasks / tasks.length) * 100)
       : 0;
   const deadlineDate = project.deadline
-    ? new Date(`${project.deadline}T23:59:59`)
+    ? new Date(`${project.deadline}T00:00:00`)
     : null;
 
   const today = new Date();
+  today.setHours(0, 0, 0, 0);
 
   const daysUntilDeadline = deadlineDate
-    ? Math.ceil(
+    ? Math.round(
       (deadlineDate.getTime() - today.getTime()) /
       (1000 * 60 * 60 * 24)
     )
