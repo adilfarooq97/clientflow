@@ -93,6 +93,7 @@ export async function updateProject(
       deadline: project.deadline,
     })
     .eq("id", projectId)
+    .eq("owner_id", user.id)
     .select()
     .single();
 
@@ -120,7 +121,8 @@ export async function deleteProject(projectId: string) {
   const { error } = await supabase
     .from("projects")
     .delete()
-    .eq("id", projectId);
+    .eq("id", projectId)
+    .eq("owner_id", user.id);
 
   if (error) {
     console.error("Error deleting project:", error);
