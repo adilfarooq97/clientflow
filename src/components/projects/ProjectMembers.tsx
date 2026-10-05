@@ -54,10 +54,6 @@ export default function ProjectMembers({
                   <p className="text-sm font-medium text-gray-900">
                     {profile?.full_name ?? "Unknown user"}
                   </p>
-
-                  <p className="text-xs capitalize text-gray-500">
-                    {member.role}
-                  </p>
                 </div>
 
                 <div className="flex items-center gap-3">
