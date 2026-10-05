@@ -154,35 +154,36 @@ export default async function InvoicesPage() {
                 {invoices.map((invoice) => (
                   <tr
                     key={invoice.id}
-                    className="transition hover:bg-gray-50"
+                    className="border-t border-gray-100 transition hover:bg-gray-50"
                   >
-                    <td className="px-5 py-4">
-                      <p className="font-medium text-gray-900">
+                    <td className="px-4 py-4">
+                      <Link
+                        href={`/invoices/${invoice.id}`}
+                        className="font-medium text-gray-900 hover:underline"
+                      >
                         {invoice.invoice_number}
-                      </p>
-
-                      {invoice.description && (
-                        <p className="mt-1 max-w-xs truncate text-sm text-gray-500">
-                          {invoice.description}
-                        </p>
-                      )}
+                      </Link>
                     </td>
 
-                    <td className="px-5 py-4 text-sm font-medium text-gray-900">
+                    <td className="px-4 py-4 text-gray-600">
+                      {invoice.description || "No description"}
+                    </td>
+
+                    <td className="px-4 py-4 font-medium text-gray-900">
                       {formatAmount(Number(invoice.amount))}
                     </td>
 
-                    <td className="px-5 py-4 text-sm text-gray-600">
+                    <td className="px-4 py-4 text-gray-600">
                       {invoice.issue_date}
                     </td>
 
-                    <td className="px-5 py-4 text-sm text-gray-600">
+                    <td className="px-4 py-4 text-gray-600">
                       {invoice.due_date}
                     </td>
 
-                    <td className="px-5 py-4">
+                    <td className="px-4 py-4">
                       <span
-                        className={`rounded-full px-2.5 py-1 text-xs font-semibold ${statusStyles[invoice.status]}`}
+                        className={`rounded-full px-2.5 py-1 text-xs font-medium ${statusStyles[invoice.status]}`}
                       >
                         {invoice.status}
                       </span>
