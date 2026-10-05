@@ -11,14 +11,16 @@ type ClientOption = {
   full_name: string;
 };
 
-type CreateInvoiceFormProps = {
-  projects: Project[];
+type ProjectOption = Project & {
   clients: ClientOption[];
+};
+
+type CreateInvoiceFormProps = {
+  projects: ProjectOption[];
 };
 
 export default function CreateInvoiceForm({
   projects,
-  clients,
 }: CreateInvoiceFormProps) {
   const router = useRouter();
 
@@ -31,6 +33,12 @@ export default function CreateInvoiceForm({
   const [dueDate, setDueDate] = useState("");
   const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+
+  const selectedProject = projects.find(
+    (project) => project.id === projectId
+  );
+
+  const clients = selectedProject?.clients ?? [];
 
   const handleSubmit = async (
     event: React.FormEvent<HTMLFormElement>
@@ -146,7 +154,10 @@ export default function CreateInvoiceForm({
         <select
           id="project"
           value={projectId}
-          onChange={(event) => setProjectId(event.target.value)}
+          onChange={(event) => {
+            setProjectId(event.target.value);
+            setClientId("");
+          }}
           disabled={isLoading}
           className="w-full rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm outline-none focus:border-gray-500 focus:ring-1 focus:ring-gray-500 disabled:cursor-not-allowed disabled:bg-gray-100"
         >
