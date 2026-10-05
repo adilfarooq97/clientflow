@@ -12,6 +12,7 @@ export default function RemoveProjectMemberButton({
 }: RemoveProjectMemberButtonProps) {
   const router = useRouter();
   const [isRemoving, setIsRemoving] = useState(false);
+  const [error, setError] = useState("");
 
   const handleRemove = async () => {
     const confirmed = window.confirm(
@@ -22,6 +23,7 @@ export default function RemoveProjectMemberButton({
       return;
     }
 
+    setError("");
     setIsRemoving(true);
 
     try {
@@ -32,11 +34,11 @@ export default function RemoveProjectMemberButton({
         }
       );
 
-      if (!response.ok) {
-        const data = await response.json();
+      const data = await response.json().catch(() => null);
 
+      if (!response.ok) {
         throw new Error(
-          data.error || "Failed to remove member"
+          data?.error || "Failed to remove member."
         );
       }
 
@@ -47,18 +49,32 @@ export default function RemoveProjectMemberButton({
         error
       );
 
+      setError(
+        error instanceof Error
+          ? error.message
+          : "Failed to remove member."
+      );
+
       setIsRemoving(false);
     }
   };
 
   return (
-    <button
-      type="button"
-      onClick={() => void handleRemove()}
-      disabled={isRemoving}
-      className="text-xs font-medium text-gray-400 hover:text-red-600 disabled:cursor-not-allowed disabled:opacity-50"
-    >
-      {isRemoving ? "Removing..." : "Remove"}
-    </button>
+    <div className="flex flex-col items-end gap-1">
+      <button
+        type="button"
+        onClick={() => void handleRemove()}
+        disabled={isRemoving}
+        className="text-xs font-medium text-gray-400 hover:text-red-600 disabled:cursor-not-allowed disabled:opacity-50"
+      >
+        {isRemoving ? "Removing..." : "Remove"}
+      </button>
+
+      {error && (
+        <p className="max-w-40 text-right text-xs text-red-600">
+          {error}
+        </p>
+      )}
+    </div>
   );
 }
