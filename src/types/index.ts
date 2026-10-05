@@ -30,3 +30,8 @@ export type {
   ProjectMember,
   ProjectMemberRole,
 } from "./project-member";
+
+export type {
+  Invoice,
+  InvoiceStatus,
+} from "./invoice";
