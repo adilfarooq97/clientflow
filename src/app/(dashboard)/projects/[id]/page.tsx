@@ -50,13 +50,18 @@ export default async function ProjectPage({
       )
       : [];
 
-  const imageFiles = files.filter(
-    (file) => file.file_type === "image"
-  ).length;
+  let imageFiles = 0;
+  let documentFiles = 0;
 
-  const documentFiles = files.filter(
-    (file) => file.file_type === "document"
-  ).length;
+  for (const file of files) {
+    if (file.file_type === "image") {
+      imageFiles += 1;
+    }
+
+    if (file.file_type === "document") {
+      documentFiles += 1;
+    }
+  }
 
   const pendingReviews = reviews.filter(
     (review) => review.status === "Pending"
