@@ -24,6 +24,9 @@ export default async function ReviewsPage({
   }
 
   const reviews = await getReviews(project.id);
+  const pendingReviews = reviews.filter(
+    (review) => review.status === "Pending"
+  );
 
   return (
     <div className="space-y-6">
@@ -53,6 +56,19 @@ export default async function ReviewsPage({
           </Link>
         )}
       </div>
+      {profile?.role === "client" && pendingReviews.length > 0 && (
+        <div className="rounded-xl border border-yellow-200 bg-yellow-50 p-4">
+          <p className="text-sm font-semibold text-yellow-900">
+            {pendingReviews.length === 1
+              ? "1 review is waiting for your approval."
+              : `${pendingReviews.length} reviews are waiting for your approval.`}
+          </p>
+
+          <p className="mt-1 text-sm text-yellow-800">
+            Review the submitted work and approve it or request changes.
+          </p>
+        </div>
+      )}
 
       {reviews.length === 0 ? (
         <div className="rounded-xl border border-dashed border-gray-300 bg-white p-10 text-center">
