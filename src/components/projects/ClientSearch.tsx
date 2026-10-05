@@ -24,8 +24,11 @@ export default function ClientSearch({
 
     if (!trimmedSearch) {
       setClients([]);
+      setIsLoading(false);
       return;
     }
+
+    const controller = new AbortController();
 
     const timeout = setTimeout(async () => {
       setIsLoading(true);
@@ -34,7 +37,10 @@ export default function ClientSearch({
         const response = await fetch(
           `/api/users/clients?search=${encodeURIComponent(
             trimmedSearch
-          )}`
+          )}`,
+          {
+            signal: controller.signal,
+          }
         );
 
         if (!response.ok) {
@@ -45,14 +51,23 @@ export default function ClientSearch({
 
         setClients(data);
       } catch (error) {
+        if (error instanceof DOMException && error.name === "AbortError") {
+          return;
+        }
+
         console.error("Client search error:", error);
         setClients([]);
       } finally {
-        setIsLoading(false);
+        if (!controller.signal.aborted) {
+          setIsLoading(false);
+        }
       }
     }, 300);
 
-    return () => clearTimeout(timeout);
+    return () => {
+      clearTimeout(timeout);
+      controller.abort();
+    };
   }, [search]);
 
   return (
