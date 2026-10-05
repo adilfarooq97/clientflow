@@ -18,26 +18,68 @@ export async function POST(request: Request) {
 
   const profile = await getCurrentUserProfile();
 
-if (!profile || profile.role !== "freelancer") {
-  return NextResponse.json(
-    { error: "Only freelancers can create projects" },
-    { status: 403 }
-  );
-}
+  if (!profile || profile.role !== "freelancer") {
+    return NextResponse.json(
+      { error: "Only freelancers can create projects" },
+      { status: 403 }
+    );
+  }
 
-  const body = await request.json();
+  let body: {
+    name?: unknown;
+    description?: unknown;
+    deadline?: unknown;
+  };
 
-  const {
-    name,
-    description,
-    status,
-    progress,
-    deadline,
-  } = body;
+  try {
+    body = await request.json();
+  } catch {
+    return NextResponse.json(
+      { error: "Invalid request body." },
+      { status: 400 }
+    );
+  }
 
-  if (!name?.trim()) {
+  if (
+    !body ||
+    typeof body !== "object" ||
+    Array.isArray(body)
+  ) {
+    return NextResponse.json(
+      { error: "Invalid request body." },
+      { status: 400 }
+    );
+  }
+
+  const { name, description, deadline } = body;
+
+  if (
+    typeof name !== "string" ||
+    !name.trim()
+  ) {
     return NextResponse.json(
       { error: "Project name is required." },
+      { status: 400 }
+    );
+  }
+
+  if (
+    description !== undefined &&
+    typeof description !== "string"
+  ) {
+    return NextResponse.json(
+      { error: "Project description must be text." },
+      { status: 400 }
+    );
+  }
+
+  if (
+    deadline !== undefined &&
+    deadline !== null &&
+    typeof deadline !== "string"
+  ) {
+    return NextResponse.json(
+      { error: "Project deadline is invalid." },
       { status: 400 }
     );
   }
@@ -48,8 +90,8 @@ if (!profile || profile.role !== "freelancer") {
       owner_id: user.id,
       name: name.trim(),
       description: description?.trim() ?? "",
-      status,
-      progress: progress ?? 0,
+      status: "Planning",
+      progress: 0,
       deadline: deadline || null,
     })
     .select()
