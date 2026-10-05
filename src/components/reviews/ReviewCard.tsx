@@ -109,6 +109,16 @@ export default function ReviewCard({
         </div>
       )}
 
+      {!canManage && status !== "Pending" && (
+        <div className="mt-4 rounded-lg bg-gray-50 p-3">
+          <p className="text-sm font-medium text-gray-700">
+            {status === "Approved"
+              ? "You approved this review."
+              : "You requested changes to this review."}
+          </p>
+        </div>
+      )}
+
       {review.file_url && (
         <div className="mt-4">
           <a
