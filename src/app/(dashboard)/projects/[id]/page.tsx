@@ -20,8 +20,10 @@ export default async function ProjectPage({
 }) {
   const { id } = await params;
 
-  const projects = await getAccessibleProjects();
-  const userProfile = await getCurrentUserProfile();
+  const [projects, userProfile] = await Promise.all([
+    getAccessibleProjects(),
+    getCurrentUserProfile(),
+  ]);
 
 
   const project = projects.find(
