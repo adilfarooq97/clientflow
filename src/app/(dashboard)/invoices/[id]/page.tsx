@@ -5,7 +5,7 @@ import DeleteInvoiceButton from "@/components/invoices/DeleteInvoiceButton";
 import { getCurrentUserProfile } from "@/lib/supabase/auth";
 import { getInvoice } from "@/lib/supabase/invoices";
 import type { InvoiceStatus } from "@/types";
-
+import { getDisplayInvoiceStatus } from "@/lib/invoices";
 
 const statusStyles: Record<InvoiceStatus, string> = {
   Draft: "bg-gray-100 text-gray-700",
@@ -33,6 +33,8 @@ export default async function InvoicePage({
   if (!invoice) {
     notFound();
   }
+
+  const displayStatus = getDisplayInvoiceStatus(invoice);
 
 
   const formatAmount = (amount: number) =>
@@ -63,9 +65,9 @@ export default async function InvoicePage({
           </div>
 
           <span
-            className={`w-fit rounded-full px-3 py-1.5 text-xs font-semibold ${statusStyles[invoice.status]}`}
+            className={`w-fit rounded-full px-3 py-1.5 text-xs font-semibold ${statusStyles[displayStatus]}`}
           >
-            {invoice.status}
+            {displayStatus}
           </span>
         </div>
 

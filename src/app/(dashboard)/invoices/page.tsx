@@ -3,6 +3,7 @@ import Button from "@/components/ui/Button";
 import { getCurrentUserProfile } from "@/lib/supabase/auth";
 import { getInvoices } from "@/lib/supabase/invoices";
 import type { InvoiceStatus } from "@/types";
+import { getDisplayInvoiceStatus } from "@/lib/invoices";
 
 const statusStyles: Record<InvoiceStatus, string> = {
   Draft: "bg-gray-100 text-gray-700",
@@ -29,15 +30,23 @@ export default async function InvoicesPage({
   );
 
   const paidAmount = invoices
-    .filter((invoice) => invoice.status === "Paid")
+    .filter(
+      (invoice) => getDisplayInvoiceStatus(invoice) === "Paid"
+    )
     .reduce((sum, invoice) => sum + Number(invoice.amount), 0);
 
   const pendingAmount = invoices
-    .filter((invoice) => invoice.status === "Pending")
+    .filter(
+      (invoice) =>
+        getDisplayInvoiceStatus(invoice) === "Pending"
+    )
     .reduce((sum, invoice) => sum + Number(invoice.amount), 0);
 
   const overdueAmount = invoices
-    .filter((invoice) => invoice.status === "Overdue")
+    .filter(
+      (invoice) =>
+        getDisplayInvoiceStatus(invoice) === "Overdue"
+    )
     .reduce((sum, invoice) => sum + Number(invoice.amount), 0);
 
   const formatAmount = (amount: number) =>
@@ -63,7 +72,8 @@ export default async function InvoicesPage({
     selectedStatus === "All"
       ? invoices
       : invoices.filter(
-        (invoice) => invoice.status === selectedStatus
+        (invoice) =>
+          getDisplayInvoiceStatus(invoice) === selectedStatus
       );
 
   return (
@@ -262,9 +272,9 @@ export default async function InvoicesPage({
 
                     <td className="px-4 py-4">
                       <span
-                        className={`rounded-full px-2.5 py-1 text-xs font-medium ${statusStyles[invoice.status]}`}
+                        className={`rounded-full px-2.5 py-1 text-xs font-medium ${statusStyles[getDisplayInvoiceStatus(invoice)]}`}
                       >
-                        {invoice.status}
+                        {getDisplayInvoiceStatus(invoice)}
                       </span>
                     </td>
                   </tr>
