@@ -88,6 +88,12 @@ export default async function ProjectPage({
       (1000 * 60 * 60 * 24)
     )
     : null;
+  const projectStatusStyles = {
+    Planning: "bg-gray-100 text-gray-700",
+    "In Progress": "bg-blue-100 text-blue-700",
+    Review: "bg-yellow-100 text-yellow-700",
+    Completed: "bg-green-100 text-green-700",
+  };
   return (
     <div className="p-8">
       <Link
@@ -107,7 +113,9 @@ export default async function ProjectPage({
                 {project.name}
               </h1>
 
-              <span className="rounded-full bg-blue-50 px-3 py-1.5 text-xs font-semibold text-blue-700">
+              <span
+                className={`rounded-full px-3 py-1.5 text-xs font-semibold ${projectStatusStyles[project.status]}`}
+              >
                 {project.status}
               </span>
             </div>
