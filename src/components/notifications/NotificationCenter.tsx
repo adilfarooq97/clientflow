@@ -115,6 +115,38 @@ export default function NotificationCenter() {
     }
   };
 
+  const markAllAsRead = async () => {
+    const unreadNotifications = notifications.filter(
+      (notification) => !notification.is_read
+    );
+
+    if (unreadNotifications.length === 0) {
+      return;
+    }
+
+    try {
+      await Promise.all(
+        unreadNotifications.map((notification) =>
+          fetch(`/api/notifications/${notification.id}`, {
+            method: "PATCH",
+          })
+        )
+      );
+
+      setNotifications((currentNotifications) =>
+        currentNotifications.map((notification) => ({
+          ...notification,
+          is_read: true,
+        }))
+      );
+    } catch (error) {
+      console.error(
+        "Error marking all notifications as read:",
+        error
+      );
+    }
+  };
+
   return (
     <div className="relative">
       <button
@@ -143,9 +175,13 @@ export default function NotificationCenter() {
             </h2>
 
             {unreadCount > 0 && (
-              <span className="text-xs text-gray-500">
-                {unreadCount} unread
-              </span>
+              <button
+                type="button"
+                onClick={markAllAsRead}
+                className="text-xs font-medium text-gray-600 transition hover:text-gray-900"
+              >
+                Mark all as read
+              </button>
             )}
           </div>
 
