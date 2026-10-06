@@ -1,12 +1,61 @@
-export default function ClientsPage() {
+import { getClients } from "@/lib/supabase/client-data";
+
+export default async function ClientsPage() {
+  const clients = await getClients();
+
   return (
-    <div>
-      <h1 className="text-2xl font-semibold text-gray-900">
-        Clients
-      </h1>
-      <p className="mt-2 text-sm text-gray-500">
-        Client management is coming soon.
-      </p>
+    <div className="space-y-6">
+      <div>
+        <h1 className="text-2xl font-semibold text-gray-900">
+          Clients
+        </h1>
+
+        <p className="mt-1 text-sm text-gray-500">
+          Clients connected to your projects.
+        </p>
+      </div>
+
+      {clients.length === 0 ? (
+        <div className="rounded-xl border border-gray-200 bg-white p-8 text-center">
+          <h2 className="text-lg font-semibold text-gray-900">
+            No clients yet
+          </h2>
+
+          <p className="mt-2 text-sm text-gray-500">
+            Add a client to one of your projects to see them here.
+          </p>
+        </div>
+      ) : (
+        <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+          {clients.map((client) => (
+            <div
+              key={client.id}
+              className="rounded-xl border border-gray-200 bg-white p-5"
+            >
+              <div className="flex items-center gap-3">
+                <div className="flex h-10 w-10 items-center justify-center rounded-full bg-gray-100 text-sm font-semibold text-gray-700">
+                  {client.full_name
+                    .charAt(0)
+                    .toUpperCase()}
+                </div>
+
+                <div>
+                  <h2 className="font-semibold text-gray-900">
+                    {client.full_name}
+                  </h2>
+
+                  <p className="text-sm text-gray-500">
+                    {client.project_count}{" "}
+                    {client.project_count === 1
+                      ? "project"
+                      : "projects"}
+                  </p>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
     </div>
   );
 }
