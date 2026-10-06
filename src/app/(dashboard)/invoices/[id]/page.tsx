@@ -47,7 +47,7 @@ export default async function InvoicePage({
     <div className="max-w-3xl space-y-6">
       <Link
         href="/invoices"
-        className="text-sm font-medium text-gray-500 transition hover:text-gray-900"
+        className="inline-flex items-center text-sm font-medium text-gray-500 transition hover:text-gray-900"
       >
         ← Back to invoices
       </Link>
