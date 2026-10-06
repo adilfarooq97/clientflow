@@ -10,6 +10,10 @@ const freelancerNavigation = [
     label: "Projects",
     href: "/projects",
   },
+  {
+    label: "Invoices",
+    href: "/invoices",
+  },
 ];
 
 const clientNavigation = [
