@@ -2,12 +2,23 @@ import Link from "next/link";
 import ProjectCard from "@/components/dashboard/ProjectCard";
 import { getAccessibleProjects } from "@/lib/supabase/projects";
 import { getCurrentUserProfile } from "@/lib/supabase/auth";
+import type { ProjectStatus } from "@/types";
 
 export default async function ProjectsPage() {
   const projects = await getAccessibleProjects();
   const userProfile = await getCurrentUserProfile();
 
   const isFreelancer = userProfile?.role === "freelancer";
+  const statusCounts: Record<ProjectStatus, number> = {
+    Planning: projects.filter((project) => project.status === "Planning").length,
+    "In Progress": projects.filter(
+      (project) => project.status === "In Progress"
+    ).length,
+    Review: projects.filter((project) => project.status === "Review").length,
+    Completed: projects.filter(
+      (project) => project.status === "Completed"
+    ).length,
+  };
 
   return (
     <div className="p-4 sm:p-6 lg:p-8">
@@ -62,14 +73,53 @@ export default async function ProjectsPage() {
           )}
         </div>
       ) : (
-        <div className="mt-2 grid gap-4 sm:gap-6 md:grid-cols-2 xl:grid-cols-3">
-          {projects.map((project) => (
-            <ProjectCard
-              key={project.id}
-              project={project}
-            />
-          ))}
-        </div>
+        <>
+          <div className="mb-6 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+            {(
+              [
+                ["Planning", "Planning"],
+                ["In Progress", "In Progress"],
+                ["Review", "Review"],
+                ["Completed", "Completed"],
+              ] as const
+            ).map(([status, label]) => (
+              <div
+                key={status}
+                className="rounded-xl border border-gray-200 bg-white p-4"
+              >
+                <div className="flex items-center justify-between gap-3">
+                  <p className="text-sm font-medium text-gray-500">
+                    {label}
+                  </p>
+
+                  <span
+                    className={`h-2.5 w-2.5 rounded-full ${status === "Planning"
+                        ? "bg-gray-400"
+                        : status === "In Progress"
+                          ? "bg-blue-500"
+                          : status === "Review"
+                            ? "bg-yellow-500"
+                            : "bg-green-500"
+                      }`}
+                    aria-hidden="true"
+                  />
+                </div>
+
+                <p className="mt-1 text-2xl font-bold text-gray-900">
+                  {statusCounts[status]}
+                </p>
+              </div>
+            ))}
+          </div>
+          <div className="mt-2 grid gap-4 sm:gap-6 md:grid-cols-2 xl:grid-cols-3">
+            {projects.map((project) => (
+              <ProjectCard
+                key={project.id}
+                project={project}
+              />
+            ))}
+          </div>
+        </>
       )}
     </div>
   );
