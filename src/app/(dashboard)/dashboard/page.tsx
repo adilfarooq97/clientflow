@@ -11,6 +11,13 @@ import { getCurrentUserProfile } from "@/lib/supabase/auth";
 
 export default async function Dashboard() {
   const projects = await getAccessibleProjects();
+  const recentProjects = [...projects]
+    .sort(
+      (a, b) =>
+        new Date(b.created_at).getTime() -
+        new Date(a.created_at).getTime()
+    )
+    .slice(0, 3);
   const userProfile = await getCurrentUserProfile();
   const currentHour = new Date().getHours();
 
@@ -158,19 +165,19 @@ export default async function Dashboard() {
     });
 
   const activities: Array<{
-  id: string;
-  type: "review" | "task" | "message" | "file";
-  title: string;
-  description: string;
-  time: string;
-  timestamp: string;
-  href: string;
-}> = [
-  ...recentActivities,
-  ...recentTaskActivities,
-  ...recentMessageActivities,
-  ...recentFileActivities,
-]
+    id: string;
+    type: "review" | "task" | "message" | "file";
+    title: string;
+    description: string;
+    time: string;
+    timestamp: string;
+    href: string;
+  }> = [
+    ...recentActivities,
+    ...recentTaskActivities,
+    ...recentMessageActivities,
+    ...recentFileActivities,
+  ]
     .sort(
       (a, b) =>
         new Date(b.timestamp).getTime() -
@@ -358,7 +365,7 @@ export default async function Dashboard() {
               href="/projects"
               className="text-sm font-medium text-gray-700 hover:text-gray-900"
             >
-              View all →
+              View all ({projects.length}) →
             </Link>
 
             {userProfile?.role === "freelancer" && (
@@ -394,7 +401,7 @@ export default async function Dashboard() {
           </div>
         ) : (
           <div className="grid gap-6 md:grid-cols-2 xl:grid-cols-3">
-            {projects.map((project) => (
+            {recentProjects.map((project) => (
               <ProjectCard
                 key={project.id}
                 project={project}
