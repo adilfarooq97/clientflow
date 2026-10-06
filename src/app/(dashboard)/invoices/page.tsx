@@ -11,7 +11,13 @@ const statusStyles: Record<InvoiceStatus, string> = {
   Overdue: "bg-red-100 text-red-700",
 };
 
-export default async function InvoicesPage() {
+export default async function InvoicesPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ status?: string }>;
+}) {
+  const { status } = await searchParams;
+
   const [userProfile, invoices] = await Promise.all([
     getCurrentUserProfile(),
     getInvoices(),
@@ -39,6 +45,26 @@ export default async function InvoicesPage() {
       minimumFractionDigits: 2,
       maximumFractionDigits: 2,
     })}`;
+
+  const validStatuses: InvoiceStatus[] = [
+    "Draft",
+    "Pending",
+    "Paid",
+    "Overdue",
+  ];
+
+  const selectedStatus = validStatuses.includes(
+    status as InvoiceStatus
+  )
+    ? (status as InvoiceStatus)
+    : "All";
+
+  const filteredInvoices =
+    selectedStatus === "All"
+      ? invoices
+      : invoices.filter(
+        (invoice) => invoice.status === selectedStatus
+      );
 
   return (
     <div className="space-y-8">
@@ -106,6 +132,33 @@ export default async function InvoicesPage() {
         </div>
       </div>
 
+      {invoices.length > 0 && (
+        <div className="flex flex-wrap items-center gap-2">
+          <Link
+            href="/invoices"
+            className={`rounded-lg px-3 py-2 text-sm font-medium ${selectedStatus === "All"
+              ? "bg-gray-900 text-white"
+              : "bg-gray-100 text-gray-600 hover:bg-gray-200"
+              }`}
+          >
+            All
+          </Link>
+
+          {validStatuses.map((invoiceStatus) => (
+            <Link
+              key={invoiceStatus}
+              href={`/invoices?status=${encodeURIComponent(invoiceStatus)}`}
+              className={`rounded-lg px-3 py-2 text-sm font-medium ${selectedStatus === invoiceStatus
+                ? "bg-gray-900 text-white"
+                : "bg-gray-100 text-gray-600 hover:bg-gray-200"
+                }`}
+            >
+              {invoiceStatus}
+            </Link>
+          ))}
+        </div>
+      )}
+
       {invoices.length === 0 ? (
         <div className="rounded-xl border border-gray-200 bg-white p-8 text-center">
           <h2 className="text-lg font-semibold text-gray-900">
@@ -125,6 +178,24 @@ export default async function InvoicesPage() {
               </Link>
             </div>
           )}
+        </div>
+      ) : filteredInvoices.length === 0 ? (
+        <div className="rounded-xl border border-gray-200 bg-white p-8 text-center">
+          <h2 className="text-lg font-semibold text-gray-900">
+            No {selectedStatus.toLowerCase()} invoices
+          </h2>
+
+          <p className="mx-auto mt-2 max-w-md text-sm leading-6 text-gray-500">
+            There are no invoices matching this status.
+          </p>
+
+          <div className="mt-5">
+            <Link href="/invoices">
+              <Button variant="secondary">
+                View all invoices
+              </Button>
+            </Link>
+          </div>
         </div>
       ) : (
         <div className="overflow-hidden rounded-xl border border-gray-200 bg-white">
@@ -159,7 +230,7 @@ export default async function InvoicesPage() {
               </thead>
 
               <tbody className="divide-y divide-gray-100">
-                {invoices.map((invoice) => (
+                {filteredInvoices.map((invoice) => (
                   <tr
                     key={invoice.id}
                     className="border-t border-gray-100 transition hover:bg-gray-50"
