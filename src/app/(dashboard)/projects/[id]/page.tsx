@@ -103,7 +103,16 @@ export default async function ProjectPage({
         ← Back to dashboard
       </Link>
 
-      <ProjectNavigation projectId={project.id} />
+      <ProjectNavigation
+        projectId={project.id}
+        active="overview"
+        counts={{
+          tasks: tasks.length,
+          reviews: reviews.length,
+          files: files.length,
+          messages: messages.length,
+        }}
+      />
 
       <div className="rounded-xl border border-gray-200 bg-white p-6">
         <div className="flex flex-col gap-6 lg:flex-row lg:items-start lg:justify-between">
