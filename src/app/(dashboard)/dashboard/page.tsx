@@ -39,6 +39,7 @@ export default async function Dashboard() {
 
       return {
         id: `task-${task.id}`,
+        type: "task" as const,
         title: "Task created",
         description: project
           ? `${task.title} · ${project.name}`
@@ -47,6 +48,7 @@ export default async function Dashboard() {
           dateStyle: "medium",
           timeStyle: "short",
         }).format(new Date(task.created_at)),
+        timestamp: task.created_at,
         href: `/projects/${task.project_id}/tasks`,
       };
     });
@@ -59,11 +61,67 @@ export default async function Dashboard() {
   );
   const messages = messageGroups.flat();
 
+  const recentMessageActivities = messages
+    .sort(
+      (a, b) =>
+        new Date(b.created_at).getTime() -
+        new Date(a.created_at).getTime()
+    )
+    .slice(0, 5)
+    .map((message) => {
+      const project = projects.find(
+        (item) => item.id === message.project_id
+      );
+
+      return {
+        id: `message-${message.id}`,
+        type: "message" as const,
+        title: "New message",
+        description: project
+          ? `${message.content} · ${project.name}`
+          : message.content,
+        time: new Intl.DateTimeFormat("en-US", {
+          dateStyle: "medium",
+          timeStyle: "short",
+        }).format(new Date(message.created_at)),
+        timestamp: message.created_at,
+        href: `/projects/${message.project_id}/messages`,
+      };
+    });
+
   const fileGroups = await Promise.all(
     projects.map((project) => getFiles(project.id))
   );
 
   const files = fileGroups.flat();
+
+  const recentFileActivities = files
+    .sort(
+      (a, b) =>
+        new Date(b.created_at).getTime() -
+        new Date(a.created_at).getTime()
+    )
+    .slice(0, 5)
+    .map((file) => {
+      const project = projects.find(
+        (item) => item.id === file.project_id
+      );
+
+      return {
+        id: `file-${file.id}`,
+        type: "file" as const,
+        title: "File uploaded",
+        description: project
+          ? `${file.name} · ${project.name}`
+          : file.name,
+        time: new Intl.DateTimeFormat("en-US", {
+          dateStyle: "medium",
+          timeStyle: "short",
+        }).format(new Date(file.created_at)),
+        timestamp: file.created_at,
+        href: `/projects/${file.project_id}/files`,
+      };
+    });
 
   const reviews = reviewGroups.flat();
   const recentActivities = reviews
@@ -80,6 +138,7 @@ export default async function Dashboard() {
 
       return {
         id: `review-${review.id}`,
+        type: "review" as const,
         title:
           review.status === "Approved"
             ? "Review approved"
@@ -93,18 +152,29 @@ export default async function Dashboard() {
           dateStyle: "medium",
           timeStyle: "short",
         }).format(new Date(review.updated_at)),
+        timestamp: review.updated_at,
         href: `/projects/${review.project_id}/reviews`,
       };
     });
 
-  const activities = [
-    ...recentActivities,
-    ...recentTaskActivities,
-  ]
+  const activities: Array<{
+  id: string;
+  type: "review" | "task" | "message" | "file";
+  title: string;
+  description: string;
+  time: string;
+  timestamp: string;
+  href: string;
+}> = [
+  ...recentActivities,
+  ...recentTaskActivities,
+  ...recentMessageActivities,
+  ...recentFileActivities,
+]
     .sort(
       (a, b) =>
-        new Date(b.time).getTime() -
-        new Date(a.time).getTime()
+        new Date(b.timestamp).getTime() -
+        new Date(a.timestamp).getTime()
     )
     .slice(0, 5);
 
@@ -360,6 +430,7 @@ export default async function Dashboard() {
             activities.map((activity) => (
               <ActivityItem
                 key={activity.id}
+                type={activity.type}
                 title={activity.title}
                 description={activity.description}
                 time={activity.time}
