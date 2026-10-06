@@ -24,9 +24,15 @@ export default async function ProjectsPage() {
     <div className="p-4 sm:p-6 lg:p-8">
       <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
         <div>
-          <h1 className="text-2xl font-bold tracking-tight text-gray-900">
-            Projects
-          </h1>
+          <div className="flex items-center gap-3">
+            <h1 className="text-2xl font-bold tracking-tight text-gray-900">
+              Projects
+            </h1>
+
+            <span className="rounded-full bg-gray-100 px-2.5 py-1 text-xs font-medium text-gray-600">
+              {projects.length}
+            </span>
+          </div>
 
           <p className="mt-2 text-sm leading-6 text-gray-500">
             {isFreelancer
@@ -94,12 +100,12 @@ export default async function ProjectsPage() {
 
                   <span
                     className={`h-2.5 w-2.5 rounded-full ${status === "Planning"
-                        ? "bg-gray-400"
-                        : status === "In Progress"
-                          ? "bg-blue-500"
-                          : status === "Review"
-                            ? "bg-yellow-500"
-                            : "bg-green-500"
+                      ? "bg-gray-400"
+                      : status === "In Progress"
+                        ? "bg-blue-500"
+                        : status === "Review"
+                          ? "bg-yellow-500"
+                          : "bg-green-500"
                       }`}
                     aria-hidden="true"
                   />
