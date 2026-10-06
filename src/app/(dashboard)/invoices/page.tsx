@@ -135,15 +135,23 @@ export default async function InvoicesPage() {
                   <th className="px-5 py-3 text-xs font-semibold uppercase tracking-wide text-gray-500">
                     Invoice
                   </th>
+
+                  <th className="px-5 py-3 text-xs font-semibold uppercase tracking-wide text-gray-500">
+                    Description
+                  </th>
+
                   <th className="px-5 py-3 text-xs font-semibold uppercase tracking-wide text-gray-500">
                     Amount
                   </th>
+
                   <th className="px-5 py-3 text-xs font-semibold uppercase tracking-wide text-gray-500">
                     Issue Date
                   </th>
+
                   <th className="px-5 py-3 text-xs font-semibold uppercase tracking-wide text-gray-500">
                     Due Date
                   </th>
+
                   <th className="px-5 py-3 text-xs font-semibold uppercase tracking-wide text-gray-500">
                     Status
                   </th>
