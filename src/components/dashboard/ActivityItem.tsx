@@ -16,6 +16,40 @@ type ActivityItemProps = {
   href?: string;
 };
 
+function formatRelativeTime(time: string) {
+  const activityTime = new Date(time).getTime();
+  const now = Date.now();
+  const difference = Math.max(0, now - activityTime);
+
+  const minutes = Math.floor(difference / (1000 * 60));
+
+  if (minutes < 1) {
+    return "Just now";
+  }
+
+  if (minutes < 60) {
+    return `${minutes}m ago`;
+  }
+
+  const hours = Math.floor(minutes / 60);
+
+  if (hours < 24) {
+    return `${hours}h ago`;
+  }
+
+  const days = Math.floor(hours / 24);
+
+  if (days === 1) {
+    return "Yesterday";
+  }
+
+  if (days < 7) {
+    return `${days}d ago`;
+  }
+
+  return new Date(time).toLocaleDateString();
+}
+
 function getActivityIcon(type: ActivityType) {
   if (type === "review") {
     return CheckCircle2;
@@ -40,6 +74,8 @@ export default function ActivityItem({
   href,
 }: ActivityItemProps) {
   const Icon = getActivityIcon(type);
+  const relativeTime = formatRelativeTime(time);
+
 
   const content = (
     <div className="flex items-start gap-4 py-4">
@@ -58,7 +94,7 @@ export default function ActivityItem({
       </div>
 
       <span className="shrink-0 text-xs text-gray-400">
-        {time}
+        {relativeTime}
       </span>
     </div>
   );

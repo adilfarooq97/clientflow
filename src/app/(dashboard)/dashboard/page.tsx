@@ -51,10 +51,7 @@ export default async function Dashboard() {
         description: project
           ? `${task.title} · ${project.name}`
           : task.title,
-        time: new Intl.DateTimeFormat("en-US", {
-          dateStyle: "medium",
-          timeStyle: "short",
-        }).format(new Date(task.created_at)),
+        time: task.created_at,
         timestamp: task.created_at,
         href: `/projects/${task.project_id}/tasks`,
       };
@@ -87,10 +84,7 @@ export default async function Dashboard() {
         description: project
           ? `${message.content} · ${project.name}`
           : message.content,
-        time: new Intl.DateTimeFormat("en-US", {
-          dateStyle: "medium",
-          timeStyle: "short",
-        }).format(new Date(message.created_at)),
+        time: message.created_at,
         timestamp: message.created_at,
         href: `/projects/${message.project_id}/messages`,
       };
@@ -121,10 +115,7 @@ export default async function Dashboard() {
         description: project
           ? `${file.name} · ${project.name}`
           : file.name,
-        time: new Intl.DateTimeFormat("en-US", {
-          dateStyle: "medium",
-          timeStyle: "short",
-        }).format(new Date(file.created_at)),
+        time: file.created_at,
         timestamp: file.created_at,
         href: `/projects/${file.project_id}/files`,
       };
@@ -155,10 +146,7 @@ export default async function Dashboard() {
         description: project
           ? `${review.title} · ${project.name}`
           : review.title,
-        time: new Intl.DateTimeFormat("en-US", {
-          dateStyle: "medium",
-          timeStyle: "short",
-        }).format(new Date(review.updated_at)),
+        time: review.updated_at,
         timestamp: review.updated_at,
         href: `/projects/${review.project_id}/reviews`,
       };
