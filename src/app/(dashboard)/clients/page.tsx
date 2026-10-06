@@ -50,6 +50,25 @@ export default async function ClientsPage() {
                       ? "project"
                       : "projects"}
                   </p>
+
+                  {client.projects.length > 0 && (
+                    <div className="mt-4 border-t border-gray-100 pt-4">
+                      <p className="text-xs font-medium uppercase tracking-wide text-gray-400">
+                        Projects
+                      </p>
+
+                      <div className="mt-2 space-y-1">
+                        {client.projects.map((project) => (
+                          <p
+                            key={project.id}
+                            className="text-sm text-gray-600"
+                          >
+                            {project.name}
+                          </p>
+                        ))}
+                      </div>
+                    </div>
+                  )}
                 </div>
               </div>
             </div>

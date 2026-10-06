@@ -1,9 +1,15 @@
 import { createClient } from "@/lib/supabase/server";
 
+export type ClientProject = {
+  id: string;
+  name: string;
+};
+
 export type ClientSummary = {
   id: string;
   full_name: string;
   project_count: number;
+  projects: ClientProject[];
 };
 type ClientProfile = {
   id: string;
@@ -25,7 +31,7 @@ export async function getClients(): Promise<ClientSummary[]> {
   const { data: projects, error: projectsError } =
     await supabase
       .from("projects")
-      .select("id")
+      .select("id, name")
       .eq("owner_id", user.id);
 
   if (projectsError || !projects) {
@@ -87,15 +93,37 @@ const profiles = (data ?? []) as ClientProfile[];
     return [];
   }
 
-  return profiles
-    .map((profile) => ({
+ return profiles
+  .map((profile) => {
+    const clientProjects = members
+      .filter(
+        (member) => member.user_id === profile.id
+      )
+      .map((member) => {
+        const project = projects.find(
+          (item) => item.id === member.project_id
+        );
+
+        return project
+          ? {
+              id: project.id,
+              name: project.name,
+            }
+          : null;
+      })
+      .filter(
+        (project): project is ClientProject =>
+          project !== null
+      );
+
+    return {
       id: profile.id,
       full_name: profile.full_name,
-      project_count: members.filter(
-        (member) => member.user_id === profile.id
-      ).length,
-    }))
-    .sort((a, b) =>
-      a.full_name.localeCompare(b.full_name)
-    );
+      project_count: clientProjects.length,
+      projects: clientProjects,
+    };
+  })
+  .sort((a, b) =>
+    a.full_name.localeCompare(b.full_name)
+  );
 }
