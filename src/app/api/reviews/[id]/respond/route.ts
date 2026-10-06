@@ -37,6 +37,7 @@ export async function PATCH(
       { status: 404 }
     );
   }
+
   if (review.status !== "Pending") {
     return NextResponse.json(
       { error: "This review has already been responded to." },
