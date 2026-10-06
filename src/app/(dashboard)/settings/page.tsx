@@ -1,4 +1,5 @@
 import { getProfileSettings } from "@/lib/supabase/settings";
+import ProfileForm from "@/components/settings/ProfileForm";
 
 export default async function SettingsPage() {
   const profile = await getProfileSettings();
@@ -40,27 +41,7 @@ export default async function SettingsPage() {
           </p>
         </div>
 
-        <div className="mt-6 space-y-5">
-          <div>
-            <p className="text-xs font-medium uppercase tracking-wide text-gray-400">
-              Full name
-            </p>
-
-            <p className="mt-1 text-sm font-medium text-gray-900">
-              {profile.full_name}
-            </p>
-          </div>
-
-          <div>
-            <p className="text-xs font-medium uppercase tracking-wide text-gray-400">
-              Role
-            </p>
-
-            <p className="mt-1 text-sm font-medium capitalize text-gray-900">
-              {profile.role}
-            </p>
-          </div>
-        </div>
+        <ProfileForm profile={profile} />
       </section>
     </div>
   );
