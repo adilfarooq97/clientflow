@@ -1,8 +1,8 @@
 import Link from "next/link";
-import ProjectCard from "@/components/dashboard/ProjectCard";
 import { getAccessibleProjects } from "@/lib/supabase/projects";
 import { getCurrentUserProfile } from "@/lib/supabase/auth";
 import type { ProjectStatus } from "@/types";
+import ProjectStatusFilter from "@/components/projects/ProjectStatusFilter";
 
 export default async function ProjectsPage() {
   const projects = await getAccessibleProjects();
@@ -111,14 +111,7 @@ export default async function ProjectsPage() {
               </div>
             ))}
           </div>
-          <div className="mt-2 grid gap-4 sm:gap-6 md:grid-cols-2 xl:grid-cols-3">
-            {projects.map((project) => (
-              <ProjectCard
-                key={project.id}
-                project={project}
-              />
-            ))}
-          </div>
+          <ProjectStatusFilter projects={projects} />
         </>
       )}
     </div>
