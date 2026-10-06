@@ -38,8 +38,21 @@ export default function EditProjectForm({
 
     setError("");
 
-    if (!name.trim()) {
+    const trimmedName = name.trim();
+    const trimmedDescription = description.trim();
+
+    if (!trimmedName) {
       setError("Project name is required.");
+      return;
+    }
+
+    if (trimmedName.length > 200) {
+      setError("Project name must be 200 characters or fewer.");
+      return;
+    }
+
+    if (trimmedDescription.length > 5000) {
+      setError("Description must be 5,000 characters or fewer.");
       return;
     }
 
@@ -65,8 +78,8 @@ export default function EditProjectForm({
             "Content-Type": "application/json",
           },
           body: JSON.stringify({
-            name: name.trim(),
-            description: description.trim(),
+            name: trimmedName,
+            description: trimmedDescription,
             status,
             progress: progressValue,
             deadline: deadline || null,
@@ -126,9 +139,13 @@ export default function EditProjectForm({
             setDescription(event.target.value)
           }
           rows={4}
+          maxLength={5000}
           className="mt-2 w-full rounded-lg border border-gray-300 bg-white px-3 py-2.5 text-sm leading-6 text-gray-900 outline-none transition focus:border-gray-900 focus:ring-2 focus:ring-gray-200"
         />
       </div>
+      <p className="mt-1 text-right text-xs text-gray-400">
+        {description.length}/5000
+      </p>
 
       <div>
         <label
