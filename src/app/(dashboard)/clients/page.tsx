@@ -1,4 +1,5 @@
 import { getClients } from "@/lib/supabase/client-data";
+import Link from "next/link";
 
 export default async function ClientsPage() {
   const clients = await getClients();
@@ -59,12 +60,13 @@ export default async function ClientsPage() {
 
                       <div className="mt-2 space-y-1">
                         {client.projects.map((project) => (
-                          <p
+                          <Link
                             key={project.id}
-                            className="text-sm text-gray-600"
+                            href={`/projects/${project.id}`}
+                            className="block text-sm text-gray-600 transition hover:text-gray-900 hover:underline"
                           >
                             {project.name}
-                          </p>
+                          </Link>
                         ))}
                       </div>
                     </div>
