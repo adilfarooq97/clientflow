@@ -97,6 +97,9 @@ export default function CreateProjectForm() {
           className="text-sm font-medium text-gray-700"
         >
           Description
+          <span className="ml-1 font-normal text-gray-400">
+            (optional)
+          </span>
         </label>
 
         <textarea
@@ -121,6 +124,9 @@ export default function CreateProjectForm() {
           className="text-sm font-medium text-gray-700"
         >
           Status
+          <span className="ml-1 font-normal text-gray-400">
+            (optional)
+          </span>
         </label>
 
         <select
@@ -146,6 +152,9 @@ export default function CreateProjectForm() {
           className="text-sm font-medium text-gray-700"
         >
           Deadline
+          <span className="ml-1 font-normal text-gray-400">
+            (optional)
+          </span>
         </label>
 
         <input
