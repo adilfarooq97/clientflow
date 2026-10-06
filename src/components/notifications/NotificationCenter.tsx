@@ -4,6 +4,47 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import type { Notification } from "@/lib/supabase/notifications";
 
+function formatNotificationTime(
+  createdAt: string
+) {
+  const createdTime = new Date(createdAt).getTime();
+  const now = Date.now();
+  const difference = Math.max(
+    0,
+    now - createdTime
+  );
+
+  const minutes = Math.floor(
+    difference / (1000 * 60)
+  );
+
+  if (minutes < 1) {
+    return "Just now";
+  }
+
+  if (minutes < 60) {
+    return `${minutes}m ago`;
+  }
+
+  const hours = Math.floor(minutes / 60);
+
+  if (hours < 24) {
+    return `${hours}h ago`;
+  }
+
+  const days = Math.floor(hours / 24);
+
+  if (days === 1) {
+    return "Yesterday";
+  }
+
+  if (days < 7) {
+    return `${days}d ago`;
+  }
+
+  return new Date(createdAt).toLocaleDateString();
+}
+
 export default function NotificationCenter() {
   const [notifications, setNotifications] = useState<
     Notification[]
@@ -79,11 +120,10 @@ export default function NotificationCenter() {
       <button
         type="button"
         onClick={() => setIsOpen((open) => !open)}
-        aria-label={`Notifications${
-          unreadCount > 0
-            ? `, ${unreadCount} unread`
-            : ""
-        }`}
+        aria-label={`Notifications${unreadCount > 0
+          ? `, ${unreadCount} unread`
+          : ""
+          }`}
         className="relative rounded-lg p-2 text-gray-500 transition hover:bg-gray-100 hover:text-gray-900"
       >
         <span aria-hidden="true">🔔</span>
@@ -123,11 +163,10 @@ export default function NotificationCenter() {
                 (notification) => (
                   <div
                     key={notification.id}
-                    className={`border-b border-gray-100 px-4 py-3 last:border-b-0 ${
-                      notification.is_read
-                        ? "bg-white"
-                        : "bg-gray-50"
-                    }`}
+                    className={`border-b border-gray-100 px-4 py-3 last:border-b-0 ${notification.is_read
+                      ? "bg-white"
+                      : "bg-gray-50"
+                      }`}
                   >
                     {notification.project_id ? (
                       <Link
@@ -146,6 +185,10 @@ export default function NotificationCenter() {
                             {notification.message}
                           </p>
                         )}
+
+                        <p className="mt-1 text-[11px] text-gray-400">
+                          {formatNotificationTime(notification.created_at)}
+                        </p>
                       </Link>
                     ) : (
                       <button
@@ -164,6 +207,9 @@ export default function NotificationCenter() {
                             {notification.message}
                           </p>
                         )}
+                        <p className="mt-1 text-[11px] text-gray-400">
+                          {formatNotificationTime(notification.created_at)}
+                        </p>
                       </button>
                     )}
                   </div>
