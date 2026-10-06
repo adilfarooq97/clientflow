@@ -27,6 +27,13 @@ export default async function Dashboard() {
       : currentHour < 18
         ? "Good afternoon"
         : "Good evening";
+
+  const greetingMessage =
+    currentHour < 12
+      ? "Ready to make progress today?"
+      : currentHour < 18
+        ? "Here's what needs your attention."
+        : "Here's a quick look at your day's progress.";
   const taskGroups = await Promise.all(
     projects.map((project) => getTasks(project.id))
   );
@@ -254,9 +261,7 @@ export default async function Dashboard() {
         </p>
       )}
       <p className="mt-2 text-sm leading-6 text-gray-500">
-        {userProfile?.role === "freelancer"
-          ? "Manage your projects and keep client work moving."
-          : "Track your projects, tasks, reviews, and conversations."}
+        {greetingMessage}
       </p>
       {userProfile && (
         <span className="mt-2 inline-flex rounded-full bg-gray-100 px-2.5 py-1 text-xs font-medium capitalize text-gray-600">
