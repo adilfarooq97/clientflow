@@ -2,6 +2,7 @@ import { createClient } from "@/lib/supabase/server";
 
 export type ProfileSettings = {
   id: string;
+  email: string;
   full_name: string;
   role: "freelancer" | "client";
 };
@@ -32,5 +33,10 @@ export async function getProfileSettings(): Promise<ProfileSettings | null> {
     return null;
   }
 
-  return data as ProfileSettings;
+  return {
+    id: data.id,
+    email: user.email ?? "",
+    full_name: data.full_name,
+    role: data.role,
+  };
 }

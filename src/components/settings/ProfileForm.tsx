@@ -108,6 +108,16 @@ export default function ProfileForm({
 
       <div>
         <p className="text-xs font-medium uppercase tracking-wide text-gray-400">
+          Email
+        </p>
+
+        <p className="mt-1 text-sm font-medium text-gray-900">
+          {profile.email}
+        </p>
+      </div>
+
+      <div>
+        <p className="text-xs font-medium uppercase tracking-wide text-gray-400">
           Role
         </p>
 
