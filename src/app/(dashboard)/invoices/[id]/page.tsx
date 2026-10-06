@@ -6,6 +6,7 @@ import { getCurrentUserProfile } from "@/lib/supabase/auth";
 import { getInvoice } from "@/lib/supabase/invoices";
 import type { InvoiceStatus } from "@/types";
 
+
 const statusStyles: Record<InvoiceStatus, string> = {
   Draft: "bg-gray-100 text-gray-700",
   Pending: "bg-yellow-100 text-yellow-700",
@@ -32,6 +33,7 @@ export default async function InvoicePage({
   if (!invoice) {
     notFound();
   }
+
 
   const formatAmount = (amount: number) =>
     `$${amount.toLocaleString("en-US", {
