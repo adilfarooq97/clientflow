@@ -14,11 +14,11 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   title: {
-    default: "ClientFlow | One workspace from kickoff to approval",
-    template: "%s | ClientFlow",
+    default: "Souqivo — One workspace from kickoff to approval",
+    template: "%s | Souqivo",
   },
   description:
-    "Bring project plans, tasks, files, reviews, messages, and invoices together in one shared workspace for freelancers, agencies, and their clients.",
+    "Souqivo is a client collaboration workspace for freelancers, agencies, and their clients, bringing projects, tasks, reviews, files, messages, and invoices together.",
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {

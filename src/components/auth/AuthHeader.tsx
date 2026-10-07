@@ -7,7 +7,7 @@ export default function AuthHeader() {
         href="/"
         className="text-2xl font-bold tracking-tight text-gray-900"
       >
-        ClientFlow
+        Souqivo
       </Link>
 
       <p className="mt-3 text-sm leading-6 text-gray-500">

@@ -59,7 +59,7 @@ export default async function Sidebar() {
           href="/dashboard"
           className="w-fit rounded text-lg font-semibold tracking-tight text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-info"
         >
-          ClientFlow
+          Souqivo
         </Link>
 
         <div className="-mx-4 sm:mx-0 lg:mt-8">

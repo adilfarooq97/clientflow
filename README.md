@@ -1,8 +1,8 @@
-# ClientFlow
+# Souqivo
 
 **One workspace from kickoff to approval.**
 
-ClientFlow is a project collaboration workspace for freelancers, agencies, and their clients. It brings project planning, tasks, files, deliverable reviews, messaging, and invoices into a shared project context, with different management permissions for each role.
+Souqivo is a client collaboration workspace for freelancers, agencies, and their clients. It brings projects, tasks, reviews, files, messages, and invoices together in one shared workspace.
 
 ## Live Demo
 
@@ -188,7 +188,7 @@ The application expects a Supabase environment containing its tables, policies, 
 
 ## Project Status
 
-ClientFlow is a completed portfolio project and production-style prototype. It demonstrates a multi-role project workflow; it is not presented here as a commercial SaaS with customers or usage metrics.
+Souqivo is a completed portfolio project and production-style prototype. It demonstrates a multi-role project workflow; it is not presented here as a commercial SaaS with customers or usage metrics.
 
 ## Known Limitations
 

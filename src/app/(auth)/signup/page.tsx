@@ -79,7 +79,7 @@ export default function SignupPage() {
         </h1>
 
         <p className="mt-2 text-sm text-gray-500">
-          Create your ClientFlow account and get started.
+          Create your Souqivo account and get started.
         </p>
 
         {errorMessage && (

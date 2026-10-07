@@ -29,7 +29,7 @@ export default async function NewProjectPage() {
         </h1>
 
         <p className="mt-2 text-sm leading-6 text-gray-500">
-          Add a project to your ClientFlow workspace.
+          Add a project to your Souqivo workspace.
         </p>
       </div>
 

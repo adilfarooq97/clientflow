@@ -82,7 +82,7 @@ export default function LoginPage() {
         </h1>
 
         <p className="mt-2 text-sm text-gray-500">
-          Sign in to continue to your ClientFlow workspace.
+          Sign in to continue to your Souqivo workspace.
         </p>
 
         {authError && (

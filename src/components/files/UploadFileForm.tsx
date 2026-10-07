@@ -79,7 +79,7 @@ if (!response.ok) {
         </h1>
 
         <p className="mt-1 text-sm text-gray-500">
-          Upload a project file directly to ClientFlow.
+          Upload a project file directly to Souqivo.
         </p>
       </div>
 

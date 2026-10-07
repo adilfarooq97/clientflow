@@ -132,7 +132,7 @@ export default function Home() {
               href="/"
               className="rounded text-lg font-semibold tracking-tight text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-info"
             >
-              ClientFlow
+              Souqivo
             </Link>
 
             <div className="flex shrink-0 items-center gap-2 sm:gap-3">
@@ -198,7 +198,7 @@ export default function Home() {
             <div className="max-w-xl">
               <p className="inline-flex items-center gap-2 rounded-full border border-border bg-background px-3 py-1.5 text-xs font-medium text-muted-foreground">
                 <span className="h-2 w-2 rounded-full bg-success" aria-hidden="true" />
-                A shared workspace for client projects
+                Souqivo · client collaboration workspace
               </p>
 
               <h1 className="mt-6 text-4xl font-bold tracking-tight text-foreground sm:text-5xl lg:text-[3.5rem] lg:leading-[1.08]">
@@ -242,7 +242,7 @@ export default function Home() {
             <div className="max-w-2xl">
               <p className="text-base leading-7 text-muted-foreground">
                 Client work can quickly spread across task lists, file links,
-                feedback threads, and billing. ClientFlow gives each project a
+                feedback threads, and billing. Souqivo gives each project a
                 shared home, so freelancers and clients can find the work and
                 context they need without jumping between disconnected spaces.
               </p>
@@ -436,7 +436,7 @@ export default function Home() {
               href="/"
               className="rounded text-lg font-semibold tracking-tight text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-info"
             >
-              ClientFlow
+              Souqivo
             </Link>
             <p className="mt-3 text-sm leading-6 text-muted-foreground">
               One workspace for freelancers, agencies, and clients to move
@@ -450,7 +450,7 @@ export default function Home() {
             <Link href="/signup" className="text-muted-foreground hover:text-foreground">Create account</Link>
           </nav>
           <p className="border-t border-border pt-5 text-xs text-subtle-foreground md:col-span-2">
-            © {new Date().getFullYear()} ClientFlow
+            © {new Date().getFullYear()} Souqivo
           </p>
         </div>
       </footer>

@@ -17,7 +17,7 @@ const columns = [
 export default function ProductPreview() {
   return (
     <figure
-      aria-label="Illustrative preview of a ClientFlow project workspace"
+      aria-label="Illustrative preview of a Souqivo project workspace"
       className="relative mx-auto w-full max-w-2xl rounded-2xl border border-border bg-surface p-2 shadow-xl shadow-slate-900/5 sm:p-3"
     >
       <div className="overflow-hidden rounded-xl border border-border bg-background">
@@ -35,7 +35,7 @@ export default function ProductPreview() {
 
         <div className="grid min-h-[390px] sm:min-h-[440px] sm:grid-cols-[130px_1fr]">
           <aside className="hidden border-r border-border bg-surface p-3 sm:block">
-            <p className="truncate text-xs font-semibold text-foreground">ClientFlow</p>
+            <p className="truncate text-xs font-semibold text-foreground">Souqivo</p>
             <p className="mt-5 px-2 text-[10px] font-medium uppercase tracking-wider text-subtle-foreground">
               Workspace
             </p>
