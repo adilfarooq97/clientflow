@@ -43,6 +43,13 @@ export default async function InvoicePage({
       maximumFractionDigits: 2,
     })}`;
 
+  const formatDate = (date: string) =>
+    new Date(`${date}T00:00:00`).toLocaleDateString("en-US", {
+      month: "short",
+      day: "numeric",
+      year: "numeric",
+    });
+
   return (
     <div className="max-w-3xl space-y-6">
       <Link
@@ -88,7 +95,7 @@ export default async function InvoicePage({
             </p>
 
             <p className="mt-1 text-sm font-medium text-gray-900">
-              {invoice.issue_date}
+              {formatDate(invoice.issue_date)}
             </p>
           </div>
 
@@ -98,7 +105,7 @@ export default async function InvoicePage({
             </p>
 
             <p className="mt-1 text-sm font-medium text-gray-900">
-              {invoice.due_date}
+              {formatDate(invoice.due_date)}
             </p>
           </div>
 
