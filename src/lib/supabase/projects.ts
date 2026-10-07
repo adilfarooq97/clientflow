@@ -15,6 +15,7 @@ export async function getProjects(): Promise<Project[]> {
   const { data, error } = await supabase
     .from("projects")
     .select("*")
+    .eq("owner_id", user.id)
     .order("created_at", { ascending: false });
 
   if (error) {
@@ -133,19 +134,99 @@ export async function deleteProject(projectId: string) {
 export async function getAccessibleProjects(): Promise<Project[]> {
   const supabase = await createClient();
 
-  const { data, error } = await supabase
-    .from("projects")
-    .select("*")
-    .order("created_at", { ascending: false });
+  const {
+    data: { user },
+    error: authError,
+  } = await supabase.auth.getUser();
 
-  if (error) {
+  if (authError) {
     console.error(
       "Error fetching accessible projects:",
-      error
+      authError
     );
+    throw new Error("Unable to verify project access.");
+  }
 
+  if (!user) {
     return [];
   }
 
-  return data as Project[];
+  const { data: profile, error: profileError } = await supabase
+    .from("profiles")
+    .select("role")
+    .eq("id", user.id)
+    .maybeSingle();
+
+  if (profileError) {
+    console.error(
+      "Error fetching accessible projects:",
+      profileError
+    );
+    throw new Error("Unable to verify project access.");
+  }
+
+  if (profile?.role === "freelancer") {
+    const { data, error } = await supabase
+      .from("projects")
+      .select("*")
+      .eq("owner_id", user.id)
+      .order("created_at", { ascending: false });
+
+    if (error) {
+      console.error(
+        "Error fetching accessible projects:",
+        error
+      );
+      throw new Error("Unable to fetch accessible projects.");
+    }
+
+    return data as Project[];
+  }
+
+  if (profile?.role === "client") {
+    const { data: memberships, error: membershipsError } =
+      await supabase
+        .from("project_members")
+        .select("project_id")
+        .eq("user_id", user.id)
+        .eq("role", "client");
+
+    if (membershipsError) {
+      console.error(
+        "Error fetching accessible projects:",
+        membershipsError
+      );
+      throw new Error("Unable to verify project access.");
+    }
+
+    const projectIds = [
+      ...new Set(
+        (memberships ?? []).map(
+          (membership) => membership.project_id
+        )
+      ),
+    ];
+
+    if (projectIds.length === 0) {
+      return [];
+    }
+
+    const { data, error } = await supabase
+      .from("projects")
+      .select("*")
+      .in("id", projectIds)
+      .order("created_at", { ascending: false });
+
+    if (error) {
+      console.error(
+        "Error fetching accessible projects:",
+        error
+      );
+      throw new Error("Unable to fetch accessible projects.");
+    }
+
+    return data as Project[];
+  }
+
+  return [];
 }

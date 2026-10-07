@@ -117,6 +117,19 @@ export async function uploadProjectFile(
 
 export async function getFileUrl(filePath: string) {
   const supabase = await createClient();
+  const {
+    data: { user },
+    error: authError,
+  } = await supabase.auth.getUser();
+
+  if (authError) {
+    console.error("Error verifying file access:", authError);
+    throw new Error("Unable to verify file access.");
+  }
+
+  if (!user) {
+    throw new Error("You must be logged in to access this file.");
+  }
 
   const { data: file, error: fileError } = await supabase
     .from("files")
@@ -133,14 +146,43 @@ export async function getFileUrl(filePath: string) {
     throw new Error("File not found");
   }
 
-  const { data: project } = await supabase
+  const { data: project, error: projectError } = await supabase
     .from("projects")
-    .select("id")
+    .select("id, owner_id")
     .eq("id", file.project_id)
     .maybeSingle();
 
+  if (projectError) {
+    console.error("Error verifying file access:", projectError);
+    throw new Error("Unable to verify file access.");
+  }
+
   if (!project) {
-    throw new Error("You do not have access to this file");
+    throw new Error("Project not found.");
+  }
+
+  let hasAccess = project.owner_id === user.id;
+
+  if (!hasAccess) {
+    const { data: membership, error: membershipError } =
+      await supabase
+        .from("project_members")
+        .select("id")
+        .eq("project_id", project.id)
+        .eq("user_id", user.id)
+        .eq("role", "client")
+        .maybeSingle();
+
+    if (membershipError) {
+      console.error("Error verifying file access:", membershipError);
+      throw new Error("Unable to verify file access.");
+    }
+
+    hasAccess = Boolean(membership);
+  }
+
+  if (!hasAccess) {
+    throw new Error("You do not have access to this file.");
   }
 
   const { data: signedUrl, error } = await supabase.storage
