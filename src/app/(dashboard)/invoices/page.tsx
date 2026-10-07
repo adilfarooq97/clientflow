@@ -91,7 +91,9 @@ export default async function InvoicesPage({
           </h1>
 
           <p className="mt-2 text-sm leading-6 text-gray-500">
-            Create and track invoices for your client projects.
+            {userProfile?.role === "freelancer"
+              ? "Create and track invoices for your client projects."
+              : "Review invoices shared with you for your projects."}
           </p>
         </div>
 
