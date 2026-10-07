@@ -54,6 +54,12 @@ export default async function InvoicesPage({
       minimumFractionDigits: 2,
       maximumFractionDigits: 2,
     })}`;
+  const formatDate = (date: string) =>
+    new Date(`${date}T00:00:00`).toLocaleDateString("en-US", {
+      month: "short",
+      day: "numeric",
+      year: "numeric",
+    });
 
   const validStatuses: InvoiceStatus[] = [
     "Draft",
@@ -263,11 +269,11 @@ export default async function InvoicesPage({
                     </td>
 
                     <td className="px-4 py-4 text-gray-600">
-                      {invoice.issue_date}
+                      {formatDate(invoice.issue_date)}
                     </td>
 
                     <td className="px-4 py-4 text-gray-600">
-                      {invoice.due_date}
+                      {formatDate(invoice.due_date)}
                     </td>
 
                     <td className="px-4 py-4">
