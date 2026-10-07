@@ -50,10 +50,22 @@ export default function ProjectMembers({
                 key={member.id}
                 className="flex items-center justify-between rounded-lg border border-gray-100 p-3"
               >
-                <div>
-                  <p className="text-sm font-medium text-gray-900">
+                <div className="min-w-0">
+                  <p className="truncate text-sm font-medium text-gray-900">
                     {profile?.full_name ?? "Unknown user"}
                   </p>
+
+                  <p className="mt-0.5 text-xs capitalize text-gray-500">
+                    {member.role}
+                  </p>
+                </div>
+
+                <div className="flex items-center gap-3">
+                  {canManage && (
+                    <RemoveProjectMemberButton
+                      memberId={member.id}
+                    />
+                  )}
                 </div>
 
                 <div className="flex items-center gap-3">
