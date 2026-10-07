@@ -372,10 +372,16 @@ export default async function ProjectPage({
           </div>
 
           {recentActivity.length === 0 ? (
-            <div className="px-6 py-10 text-center">
-              <p className="text-sm text-gray-500">
-                No activity yet.
-              </p>
+            <div className="px-6 py-12 text-center">
+              <div className="mx-auto max-w-sm">
+                <h3 className="text-sm font-semibold text-gray-900">
+                  No activity yet
+                </h3>
+                <p className="mt-1 text-sm leading-6 text-gray-500">
+                  Activity will appear here as tasks, reviews, files, and messages
+                  are added to this project.
+                </p>
+              </div>
             </div>
           ) : (
             <div className="divide-y divide-gray-100 px-6">
