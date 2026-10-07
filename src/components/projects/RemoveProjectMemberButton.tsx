@@ -65,7 +65,7 @@ export default function RemoveProjectMemberButton({
         type="button"
         onClick={() => void handleRemove()}
         disabled={isRemoving}
-        className="text-xs font-medium text-gray-400 hover:text-red-600 disabled:cursor-not-allowed disabled:opacity-50"
+        className="rounded-md px-2 py-1 text-xs font-medium text-gray-400 transition-colors hover:bg-red-50 hover:text-red-600 disabled:cursor-not-allowed disabled:opacity-50"
       >
         {isRemoving ? "Removing..." : "Remove"}
       </button>
