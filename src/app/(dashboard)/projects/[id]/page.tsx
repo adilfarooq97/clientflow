@@ -413,7 +413,7 @@ export default async function ProjectPage({
             </p>
 
             <p className="mt-1 text-xs text-gray-500">
-              {pendingReviews.length} pending
+              {pendingReviews.length} pending · View reviews →
             </p>
           </Link>
 
@@ -430,7 +430,7 @@ export default async function ProjectPage({
             </p>
 
             <p className="mt-1 text-xs text-gray-500">
-              {imageFiles} images · {documentFiles} documents
+              {imageFiles} images · {documentFiles} documents · View files →
             </p>
           </Link>
 
@@ -447,7 +447,7 @@ export default async function ProjectPage({
             </p>
 
             <p className="mt-1 text-xs text-gray-500">
-              Project conversation
+              Project conversation · View messages →
             </p>
           </Link>
         </div>
