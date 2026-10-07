@@ -13,9 +13,12 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "ClientFlow | One workspace from kickoff to approval",
+  title: {
+    default: "ClientFlow | One workspace from kickoff to approval",
+    template: "%s | ClientFlow",
+  },
   description:
-    "A shared workspace for freelancers, agencies, and clients to manage projects from kickoff to approval.",
+    "Bring project plans, tasks, files, reviews, messages, and invoices together in one shared workspace for freelancers, agencies, and their clients.",
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
