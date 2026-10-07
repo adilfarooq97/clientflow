@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase/server";
 import { getCurrentUserProfile } from "@/lib/supabase/auth";
 import { getInvoicesForUser } from "@/lib/supabase/invoices";
+import { isValidInvoiceDateRange } from "@/lib/invoices";
 
 export async function GET() {
   const supabase = await createClient();
@@ -160,6 +161,16 @@ export async function POST(request: Request) {
   ) {
     return NextResponse.json(
       { error: "Due date is required." },
+      { status: 400 }
+    );
+  }
+
+  if (!isValidInvoiceDateRange(issue_date, due_date)) {
+    return NextResponse.json(
+      {
+        error:
+          "Dates must be valid calendar dates, and the due date cannot be before the issue date.",
+      },
       { status: 400 }
     );
   }
