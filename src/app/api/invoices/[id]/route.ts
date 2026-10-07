@@ -131,9 +131,9 @@ export async function PATCH(
     );
   }
 
-  if (invoice_number.trim().length > 100) {
+  if (invoice_number.trim().length > 50) {
     return NextResponse.json(
-      { error: "Invoice number must be 100 characters or less." },
+      { error: "Invoice number must be 50 characters or less." },
       { status: 400 }
     );
   }
