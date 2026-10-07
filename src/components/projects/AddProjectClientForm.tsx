@@ -73,21 +73,25 @@ export default function AddProjectClientForm({
 
       {selectedClient && (
         <div className="rounded-xl border border-gray-200 bg-gray-50 p-4">
-          <div className="flex items-center justify-between gap-4">
+          <div className="flex items-start justify-between gap-4">
             <div>
-              <p className="text-sm font-medium text-gray-900">
+              <p className="text-xs font-medium uppercase tracking-wide text-gray-500">
+                Selected client
+              </p>
+
+              <p className="mt-1 text-sm font-semibold text-gray-900">
                 {selectedClient.full_name}
               </p>
 
               <p className="mt-1 text-xs text-gray-500">
-                Selected client
+                This client will be given access to this project.
               </p>
             </div>
 
             <button
               type="button"
               onClick={() => setSelectedClient(null)}
-              className="text-xs font-medium text-gray-500 hover:text-gray-900"
+              className="text-xs font-medium text-gray-500 transition-colors hover:text-gray-900"
             >
               Clear
             </button>
