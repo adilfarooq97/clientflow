@@ -187,40 +187,42 @@ export default async function ProjectPage({
               {project.description || "No project description has been added yet."}
             </p>
 
-            {project.deadline && (
-              <div className="mt-4 flex flex-wrap items-center gap-2 text-sm">
-                <span className="text-gray-500">
-                  Deadline:
-                </span>
+            <div className="mt-4 flex flex-wrap items-center gap-2 text-sm">
+              <span className="text-gray-500">Deadline:</span>
 
-                <span className="font-medium text-gray-900">
-                  {deadlineDate?.toLocaleDateString("en-US", {
-                    month: "short",
-                    day: "numeric",
-                    year: "numeric",
-                  })}
-                </span>
-
-                {daysUntilDeadline !== null && (
-                  <span
-                    className={`rounded-full px-2.5 py-1 text-xs font-semibold ${daysUntilDeadline < 0
-                      ? "bg-red-100 text-red-700"
-                      : daysUntilDeadline <= 3
-                        ? "bg-amber-100 text-amber-700"
-                        : "bg-green-100 text-green-700"
-                      }`}
-                  >
-                    {daysUntilDeadline < 0
-                      ? "Overdue"
-                      : daysUntilDeadline === 0
-                        ? "Due today"
-                        : daysUntilDeadline === 1
-                          ? "Due tomorrow"
-                          : `${daysUntilDeadline} days left`}
+              {deadlineDate ? (
+                <>
+                  <span className="font-medium text-gray-900">
+                    {deadlineDate.toLocaleDateString("en-US", {
+                      month: "short",
+                      day: "numeric",
+                      year: "numeric",
+                    })}
                   </span>
-                )}
-              </div>
-            )}
+
+                  {daysUntilDeadline !== null && (
+                    <span
+                      className={`rounded-full px-2.5 py-1 text-xs font-semibold ${daysUntilDeadline < 0
+                          ? "bg-red-100 text-red-700"
+                          : daysUntilDeadline <= 3
+                            ? "bg-amber-100 text-amber-700"
+                            : "bg-green-100 text-green-700"
+                        }`}
+                    >
+                      {daysUntilDeadline < 0
+                        ? "Overdue"
+                        : daysUntilDeadline === 0
+                          ? "Due today"
+                          : daysUntilDeadline === 1
+                            ? "Due tomorrow"
+                            : `${daysUntilDeadline} days left`}
+                    </span>
+                  )}
+                </>
+              ) : (
+                <span className="text-gray-400">No deadline set</span>
+              )}
+            </div>
           </div>
 
           {userProfile?.role === "freelancer" && (
