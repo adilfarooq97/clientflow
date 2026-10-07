@@ -12,6 +12,7 @@ import AddProjectClientForm from "@/components/projects/AddProjectClientForm";
 import { getMemberProfiles } from "@/lib/supabase/users";
 import { getCurrentUserProfile } from "@/lib/supabase/auth";
 import ProjectNavigation from "@/components/projects/ProjectNavigation";
+import ActivityItem from "@/components/dashboard/ActivityItem";
 
 export default async function ProjectPage({
   params,
@@ -88,6 +89,52 @@ export default async function ProjectPage({
       (1000 * 60 * 60 * 24)
     )
     : null;
+
+  const recentActivity = [
+    ...reviews.map((review) => ({
+      id: `review-${review.id}`,
+      type: "review" as const,
+      title: review.title,
+      description:
+        review.status === "Approved"
+          ? "Review approved"
+          : review.status === "Changes Requested"
+            ? "Changes requested"
+            : "Review submitted",
+      timestamp: review.updated_at,
+      href: `/projects/${project.id}/reviews`,
+    })),
+    ...files.map((file) => ({
+      id: `file-${file.id}`,
+      type: "file" as const,
+      title: file.name,
+      description: "File uploaded",
+      timestamp: file.created_at,
+      href: `/projects/${project.id}/files`,
+    })),
+    ...messages.map((message) => ({
+      id: `message-${message.id}`,
+      type: "message" as const,
+      title: "New message",
+      description: message.content,
+      timestamp: message.created_at,
+      href: `/projects/${project.id}/messages`,
+    })),
+    ...tasks.map((task) => ({
+      id: `task-${task.id}`,
+      type: "task" as const,
+      title: task.title,
+      description: `Task moved to ${task.status}`,
+      timestamp: task.created_at,
+      href: `/projects/${project.id}/tasks`,
+    })),
+  ]
+    .sort(
+      (a, b) =>
+        new Date(b.timestamp).getTime() -
+        new Date(a.timestamp).getTime(),
+    )
+    .slice(0, 5);
   const projectStatusStyles = {
     Planning: "bg-gray-100 text-gray-700",
     "In Progress": "bg-blue-100 text-blue-700",
@@ -310,15 +357,41 @@ export default async function ProjectPage({
         </div>
       </div>
       <div className="mt-8">
-        <div className="mb-4">
-          <h2 className="text-lg font-semibold tracking-tight text-gray-900">
-            Project Activity
-          </h2>
+        <section className="rounded-xl border border-gray-200 bg-white">
+          <div className="border-b border-gray-200 px-6 py-5">
+            <div className="flex items-center justify-between">
+              <div>
+                <h2 className="text-lg font-semibold text-gray-900">
+                  Recent Activity
+                </h2>
+                <p className="mt-1 text-sm text-gray-500">
+                  Recent updates across this project.
+                </p>
+              </div>
+            </div>
+          </div>
 
-          <p className="mt-1 text-sm text-gray-500">
-            Quickly access the latest areas of this project.
-          </p>
-        </div>
+          {recentActivity.length === 0 ? (
+            <div className="px-6 py-10 text-center">
+              <p className="text-sm text-gray-500">
+                No activity yet.
+              </p>
+            </div>
+          ) : (
+            <div className="divide-y divide-gray-100 px-6">
+              {recentActivity.map((activity) => (
+                <ActivityItem
+                  key={activity.id}
+                  type={activity.type}
+                  title={activity.title}
+                  description={activity.description}
+                  time={activity.timestamp}
+                  href={activity.href}
+                />
+              ))}
+            </div>
+          )}
+        </section>
 
         <div className="grid gap-4 md:grid-cols-3">
           <Link
