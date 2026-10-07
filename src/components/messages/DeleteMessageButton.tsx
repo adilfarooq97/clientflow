@@ -5,10 +5,12 @@ import { useRouter } from "next/navigation";
 
 type DeleteMessageButtonProps = {
   messageId: string;
+  onDeleted: (messageId: string) => void;
 };
 
 export default function DeleteMessageButton({
   messageId,
+  onDeleted,
 }: DeleteMessageButtonProps) {
   const router = useRouter();
   const [isDeleting, setIsDeleting] = useState(false);
@@ -41,6 +43,7 @@ export default function DeleteMessageButton({
         );
       }
 
+      onDeleted(messageId);
       router.refresh();
     } catch (error) {
       console.error("Delete message error:", error);

@@ -60,21 +60,9 @@ export default function ProjectMembers({
                   <p className="truncate text-sm font-medium text-gray-900">
                     {profile?.full_name ?? "Unknown user"}
                   </p>
-
-                  <p className="mt-0.5 text-xs capitalize text-gray-500">
-                    {member.role}
-                  </p>
                 </div>
 
-                <div className="flex items-center gap-3">
-                  {canManage && (
-                    <RemoveProjectMemberButton
-                      memberId={member.id}
-                    />
-                  )}
-                </div>
-
-                <div className="flex items-center gap-3">
+                <div className="flex shrink-0 items-center gap-3">
                   <span className="rounded-full bg-gray-100 px-2 py-1 text-xs text-gray-600">
                     {member.role}
                   </span>

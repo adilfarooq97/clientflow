@@ -4,11 +4,13 @@ import DeleteMessageButton from "@/components/messages/DeleteMessageButton";
 type MessageBubbleProps = {
   message: Message;
   isOwn: boolean;
+  onDelete: (messageId: string) => void;
 };
 
 export default function MessageBubble({
   message,
   isOwn,
+  onDelete,
 }: MessageBubbleProps) {
   return (
     <div
@@ -36,7 +38,10 @@ export default function MessageBubble({
           }).format(new Date(message.created_at))}
         </p>
         {isOwn && (
-          <DeleteMessageButton messageId={message.id} />
+          <DeleteMessageButton
+            messageId={message.id}
+            onDeleted={onDelete}
+          />
         )}
       </div>
     </div>

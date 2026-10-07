@@ -3,15 +3,18 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Button from "@/components/ui/Button";
+import type { Message } from "@/types";
 
 type MessageComposerProps = {
   projectId: string;
+  onMessageSent: (message: Message) => void;
 };
 
 const MAX_LENGTH = 1000;
 
 export default function MessageComposer({
   projectId,
+  onMessageSent,
 }: MessageComposerProps) {
   const router = useRouter();
 
@@ -41,16 +44,43 @@ export default function MessageComposer({
         }),
       });
 
-      const data = await response
-  .json()
-  .catch(() => null);
+      const data: unknown = await response.json().catch(() => null);
 
-if (!response.ok) {
-  throw new Error(
-    data?.error || "Failed to send message"
-  );
-}
+      if (!response.ok) {
+        const error =
+          data &&
+          typeof data === "object" &&
+          "error" in data &&
+          typeof data.error === "string"
+            ? data.error
+            : "Failed to send message";
+        throw new Error(error);
+      }
 
+      if (
+        !data ||
+        typeof data !== "object" ||
+        !("id" in data) ||
+        typeof data.id !== "string" ||
+        !("project_id" in data) ||
+        typeof data.project_id !== "string" ||
+        !("sender_id" in data) ||
+        typeof data.sender_id !== "string" ||
+        !("content" in data) ||
+        typeof data.content !== "string" ||
+        !("created_at" in data) ||
+        typeof data.created_at !== "string"
+      ) {
+        throw new Error("The server returned an invalid message.");
+      }
+
+      onMessageSent({
+        id: data.id,
+        project_id: data.project_id,
+        sender_id: data.sender_id,
+        content: data.content,
+        created_at: data.created_at,
+      });
       setContent("");
       router.refresh();
     } catch (error) {

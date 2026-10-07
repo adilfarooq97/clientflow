@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState, useRef } from "react";
+import { useCallback, useEffect, useState, useRef } from "react";
 import { supabase } from "@/lib/supabase/client";
 import type { Message } from "@/types";
 import MessageBubble from "@/components/messages/MessageBubble";
@@ -23,6 +23,16 @@ export default function MessageThread({
     useState<Message[]>(initialMessages);
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
+  const addMessage = useCallback((newMessage: Message) => {
+    setMessages((currentMessages) => {
+      if (currentMessages.some((message) => message.id === newMessage.id)) {
+        return currentMessages;
+      }
+
+      return [...currentMessages, newMessage];
+    });
+  }, []);
+
   useEffect(() => {
     const channel = supabase
       .channel(`project-messages-${projectId}`)
@@ -37,17 +47,7 @@ export default function MessageThread({
         (payload) => {
           const newMessage = payload.new as Message;
 
-          setMessages((currentMessages) => {
-            const alreadyExists = currentMessages.some(
-              (message) => message.id === newMessage.id
-            );
-
-            if (alreadyExists) {
-              return currentMessages;
-            }
-
-            return [...currentMessages, newMessage];
-          });
+          addMessage(newMessage);
         }
       )
       .on(
@@ -71,7 +71,7 @@ export default function MessageThread({
     return () => {
       void supabase.removeChannel(channel);
     };
-  }, [projectId]);
+  }, [addMessage, projectId]);
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({
       behavior: "smooth",
@@ -99,6 +99,13 @@ export default function MessageThread({
               key={message.id}
               message={message}
               isOwn={message.sender_id === currentUserId}
+              onDelete={(messageId) =>
+                setMessages((currentMessages) =>
+                  currentMessages.filter(
+                    (currentMessage) => currentMessage.id !== messageId
+                  )
+                )
+              }
             />
           ))
         )}
@@ -107,7 +114,10 @@ export default function MessageThread({
 
       <div className="border-t border-gray-200 p-6">
         {canSend && (
-          <MessageComposer projectId={projectId} />
+          <MessageComposer
+            projectId={projectId}
+            onMessageSent={addMessage}
+          />
         )}
       </div>
     </>
