@@ -25,6 +25,57 @@ export async function DELETE(
 
   const { id } = await params;
 
+  const { data: member, error: memberError } = await supabase
+    .from("project_members")
+    .select("id, project_id")
+    .eq("id", id)
+    .maybeSingle();
+
+  if (memberError) {
+    console.error(
+      "Error fetching project member:",
+      memberError
+    );
+
+    return NextResponse.json(
+      { error: "Failed to verify project member" },
+      { status: 500 }
+    );
+  }
+
+  if (!member) {
+    return NextResponse.json(
+      { error: "Project member not found" },
+      { status: 404 }
+    );
+  }
+
+  const { data: project, error: projectError } = await supabase
+    .from("projects")
+    .select("id")
+    .eq("id", member.project_id)
+    .eq("owner_id", user.id)
+    .maybeSingle();
+
+  if (projectError) {
+    console.error(
+      "Error verifying project ownership:",
+      projectError
+    );
+
+    return NextResponse.json(
+      { error: "Failed to verify project ownership" },
+      { status: 500 }
+    );
+  }
+
+  if (!project) {
+    return NextResponse.json(
+      { error: "Forbidden" },
+      { status: 403 }
+    );
+  }
+
   try {
     await removeProjectMember(id);
 
