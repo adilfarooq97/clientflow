@@ -25,11 +25,20 @@ export async function DELETE(
 
   const { id } = await params;
 
-  const { data: message } = await supabase
+  const { data: message, error: messageError } = await supabase
     .from("messages")
-    .select("id, sender_id")
+    .select("id, sender_id, project_id")
     .eq("id", id)
     .maybeSingle();
+
+  if (messageError) {
+    console.error("Error fetching message:", messageError);
+
+    return NextResponse.json(
+      { error: "Unable to verify message access." },
+      { status: 500 }
+    );
+  }
 
   if (!message) {
     return NextResponse.json(
@@ -46,6 +55,57 @@ export async function DELETE(
       },
       { status: 403 }
     );
+  }
+
+  const { data: project, error: projectError } = await supabase
+    .from("projects")
+    .select("id, owner_id")
+    .eq("id", message.project_id)
+    .maybeSingle();
+
+  if (projectError) {
+    console.error("Error verifying message access:", projectError);
+
+    return NextResponse.json(
+      { error: "Unable to verify message access." },
+      { status: 500 }
+    );
+  }
+
+  if (!project) {
+    return NextResponse.json(
+      { error: "Project not found." },
+      { status: 404 }
+    );
+  }
+
+  if (project.owner_id !== user.id) {
+    const { data: membership, error: membershipError } =
+      await supabase
+        .from("project_members")
+        .select("id")
+        .eq("project_id", message.project_id)
+        .eq("user_id", user.id)
+        .maybeSingle();
+
+    if (membershipError) {
+      console.error(
+        "Error verifying message access:",
+        membershipError
+      );
+
+      return NextResponse.json(
+        { error: "Unable to verify message access." },
+        { status: 500 }
+      );
+    }
+
+    if (!membership) {
+      return NextResponse.json(
+        { error: "You do not have access to this project." },
+        { status: 403 }
+      );
+    }
   }
 
   try {
