@@ -6,7 +6,7 @@ Souqivo is a client collaboration workspace for freelancers, agencies, and their
 
 ## Live Demo
 
-**Live demo:** [Add production URL]
+**[souqivo.com](https://souqivo.com)**
 
 ## Screenshots
 
