@@ -19,3 +19,12 @@ export function getFileType(mimeType: string): FileType {
 
   return "other";
 }
+
+export function isExternalFileUrl(fileUrl: string) {
+  try {
+    const url = new URL(fileUrl);
+    return url.protocol === "http:" || url.protocol === "https:";
+  } catch {
+    return false;
+  }
+}

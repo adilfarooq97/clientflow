@@ -4,7 +4,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import type { FileType } from "@/types";
 import Button from "@/components/ui/Button";
-import Input from "@/components/ui/Input";
+import FormField from "@/components/ui/FormField";
 
 type CreateFileFormProps = {
   projectId: string;
@@ -86,42 +86,24 @@ export default function CreateFileForm({
         </p>
       </div>
 
-      <div>
-        <label
-          htmlFor="name"
-          className="mb-2 block text-sm font-medium text-gray-700"
-        >
-          File name
-        </label>
+      <FormField
+        id="name"
+        label="File name"
+        value={name}
+        disabled={isLoading}
+        onChange={(event) => setName(event.target.value)}
+        placeholder="Homepage design"
+      />
 
-        <Input
-          id="name"
-          label=""
-          value={name}
-          onChange={(event) => setName(event.target.value)}
-          placeholder="Homepage design"
-          disabled={isLoading}
-        />
-      </div>
-
-      <div>
-        <label
-          htmlFor="fileUrl"
-          className="mb-2 block text-sm font-medium text-gray-700"
-        >
-          File URL
-        </label>
-
-        <Input
-          id="fileUrl"
-          label=""
-          type="url"
-          value={fileUrl}
-          onChange={(event) => setFileUrl(event.target.value)}
-          placeholder="https://..."
-          disabled={isLoading}
-        />
-      </div>
+      <FormField
+        id="fileUrl"
+        label="File URL"
+        type="url"
+        value={fileUrl}
+        disabled={isLoading}
+        onChange={(event) => setFileUrl(event.target.value)}
+        placeholder="https://..."
+      />
 
       <div>
         <label
@@ -138,7 +120,7 @@ export default function CreateFileForm({
             setFileType(event.target.value as FileType)
           }
           disabled={isLoading}
-          className="w-full rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm outline-none focus:border-gray-500 focus:ring-1 focus:ring-gray-500 disabled:cursor-not-allowed disabled:bg-gray-100"
+          className="mt-2 w-full rounded-lg border border-border bg-surface px-3 py-2.5 text-sm text-foreground outline-none focus-visible:border-info focus-visible:ring-2 focus-visible:ring-info/20 disabled:cursor-not-allowed disabled:bg-surface-muted"
         >
           <option value="image">Image</option>
           <option value="document">Document</option>
@@ -148,7 +130,7 @@ export default function CreateFileForm({
       </div>
 
       {error && (
-        <p className="text-sm text-red-600">
+        <p className="text-sm text-danger" role="alert">
           {error}
         </p>
       )}

@@ -2,6 +2,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { getAccessibleProjects } from "@/lib/supabase/projects";
 import { getFiles, getFileUrl } from "@/lib/supabase/files";
+import { isExternalFileUrl } from "@/lib/files";
 import FileCard from "@/components/files/FileCard";
 import { getCurrentUserProfile } from "@/lib/supabase/auth";
 import ProjectNavigation from "@/components/projects/ProjectNavigation";
@@ -29,12 +30,19 @@ export default async function FilesPage({
   const filesWithUrls = (
     await Promise.all(
       files.map(async (file) => {
+        if (isExternalFileUrl(file.file_url)) {
+          return {
+            file,
+            fileUrl: file.file_url,
+          };
+        }
+
         try {
           const signedUrl = await getFileUrl(file.file_url);
 
           return {
             file,
-            signedUrl,
+            fileUrl: signedUrl,
           };
         } catch (error) {
           console.error(
@@ -49,11 +57,10 @@ export default async function FilesPage({
   ).filter(
     (
       item
-    ): item is {
-      file: (typeof files)[number];
-      signedUrl: string;
-    } => item !== null
+    ): item is { file: (typeof files)[number]; fileUrl: string } =>
+      item !== null
   );
+  const unavailableFileCount = files.length - filesWithUrls.length;
 
   return (
     <div className="space-y-6">
@@ -112,17 +119,29 @@ export default async function FilesPage({
           }
         />
       ) : (
-        <div className="grid gap-4 sm:grid-cols-2">
-          {filesWithUrls.map(({ file, signedUrl }) => (
-            <FileCard
-              key={file.id}
-              file={{
-                ...file,
-                file_url: signedUrl,
-              }}
-              canManage={profile?.role === "freelancer"}
-            />
-          ))}
+        <div className="space-y-4">
+          {unavailableFileCount > 0 && (
+            <p
+              className="rounded-lg bg-warning-muted p-3 text-sm text-warning"
+              role="status"
+            >
+              {unavailableFileCount === 1
+                ? "1 file could not be opened. Please try again later."
+                : `${unavailableFileCount} files could not be opened. Please try again later.`}
+            </p>
+          )}
+          <div className="grid gap-4 sm:grid-cols-2">
+            {filesWithUrls.map(({ file, fileUrl }) => (
+              <FileCard
+                key={file.id}
+                file={{
+                  ...file,
+                  file_url: fileUrl,
+                }}
+                canManage={profile?.role === "freelancer"}
+              />
+            ))}
+          </div>
         </div>
       )}
     </div>

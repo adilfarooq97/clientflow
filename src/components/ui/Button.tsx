@@ -5,6 +5,7 @@ type ButtonProps = {
   type?: "button" | "submit" | "reset";
   disabled?: boolean;
   onClick?: () => void;
+  "aria-pressed"?: boolean;
 };
 
 export default function Button({
@@ -14,6 +15,7 @@ export default function Button({
   type = "button",
   disabled = false,
   onClick,
+  "aria-pressed": ariaPressed,
 }: ButtonProps) {
   const variantClasses = {
     primary:
@@ -31,6 +33,7 @@ export default function Button({
       type={type}
       disabled={disabled}
       onClick={onClick}
+      aria-pressed={ariaPressed}
       className={`inline-flex min-h-10 items-center justify-center rounded-lg px-4 py-2 text-sm font-medium transition-colors focus-visible:outline-none disabled:pointer-events-none disabled:opacity-50 ${variantClasses[variant]} ${className}`}
     >
       {children}

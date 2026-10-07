@@ -7,6 +7,7 @@ type FormFieldProps = {
   placeholder?: string;
   value?: string;
   error?: string;
+  disabled?: boolean;
   onChange?: (
     event: React.ChangeEvent<HTMLInputElement>
   ) => void;
@@ -19,6 +20,7 @@ export default function FormField({
   placeholder,
   value,
   error,
+  disabled = false,
   onChange,
 }: FormFieldProps) {
   return (
@@ -29,6 +31,7 @@ export default function FormField({
         type={type}
         placeholder={placeholder}
         value={value}
+        disabled={disabled}
         onChange={onChange}
         aria-invalid={Boolean(error)}
         aria-describedby={error ? `${id}-error` : undefined}

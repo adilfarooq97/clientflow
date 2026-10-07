@@ -14,7 +14,7 @@ export async function getMessages(
 
   if (error) {
     console.error("Error fetching messages:", error);
-    return [];
+    throw new Error("Unable to load project messages.");
   }
 
   return data as Message[];

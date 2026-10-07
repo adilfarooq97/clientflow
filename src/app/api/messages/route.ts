@@ -66,9 +66,15 @@ export async function GET(request: Request) {
     );
   }
 
-  const messages = await getMessages(projectId);
-
-  return NextResponse.json(messages);
+  try {
+    const messages = await getMessages(projectId);
+    return NextResponse.json(messages);
+  } catch {
+    return NextResponse.json(
+      { error: "Unable to load project messages." },
+      { status: 500 }
+    );
+  }
 }
 
 export async function POST(request: Request) {

@@ -4,11 +4,13 @@ import {
   createFile,
   getFiles,
 } from "@/lib/supabase/files";
+import { isExternalFileUrl } from "@/lib/files";
 import type { FileType } from "@/types";
 
 const allowedFileTypes: FileType[] = [
   "image",
   "document",
+  "video",
   "other",
 ];
 
@@ -71,9 +73,15 @@ export async function GET(request: Request) {
     );
   }
 
-  const files = await getFiles(projectId);
-
-  return NextResponse.json(files);
+  try {
+    const files = await getFiles(projectId);
+    return NextResponse.json(files);
+  } catch {
+    return NextResponse.json(
+      { error: "Unable to load project files." },
+      { status: 500 }
+    );
+  }
 }
 
 export async function POST(request: Request) {
@@ -168,11 +176,9 @@ export async function POST(request: Request) {
     );
   }
 
-  try {
-    new URL(file_url);
-  } catch {
+  if (!isExternalFileUrl(file_url.trim())) {
     return NextResponse.json(
-      { error: "File URL must be a valid URL." },
+      { error: "File URL must be a valid HTTP or HTTPS URL." },
       { status: 400 }
     );
   }

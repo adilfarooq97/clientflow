@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { getProjects } from "@/lib/supabase/projects";
-import UploadFileForm from "@/components/files/UploadFileForm";
+import ProjectFileForm from "@/components/files/ProjectFileForm";
 
 export default async function NewFilePage({
   params,
@@ -26,7 +26,7 @@ export default async function NewFilePage({
         ← Back to files
       </Link>
 
-      <UploadFileForm projectId={project.id} />
+      <ProjectFileForm projectId={project.id} />
     </div>
   );
 }

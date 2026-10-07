@@ -81,11 +81,14 @@ if (!project) {
     );
   }
 
+  let uploadedPath: string | null = null;
+
   try {
     const uploadedFile = await uploadProjectFile(
       projectId,
       file
     );
+    uploadedPath = uploadedFile.path;
 
     const projectFile = await createFile({
       project_id: projectId,
@@ -101,6 +104,16 @@ if (!project) {
     );
   } catch (error) {
     console.error("Error uploading file:", error);
+
+    if (uploadedPath) {
+      const { error: cleanupError } = await supabase.storage
+        .from("project-files")
+        .remove([uploadedPath]);
+
+      if (cleanupError) {
+        console.error("Error cleaning up uploaded file:", cleanupError);
+      }
+    }
 
     return NextResponse.json(
       { error: "Failed to upload file" },

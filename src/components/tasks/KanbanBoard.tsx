@@ -32,11 +32,13 @@ export default function KanbanBoard({
   const [activeTaskId, setActiveTaskId] = useState<string | null>(
     null
   );
+  const [errorMessage, setErrorMessage] = useState("");
   const activeTask = tasks.find(
     (task) => task.id === activeTaskId
   );
   const handleDragEnd = async (event: DragEndEvent) => {
     setActiveTaskId(null);
+    setErrorMessage("");
 
     if (!canManage) {
       return;
@@ -47,11 +49,14 @@ export default function KanbanBoard({
     if (!over) return;
 
     const taskId = String(active.id);
-    const newStatus = String(over.id) as TaskStatus;
+    const targetId = String(over.id);
 
     const task = tasks.find((item) => item.id === taskId);
+    const targetColumn = columns.find((column) => column === targetId);
+    const targetTask = tasks.find((item) => item.id === targetId);
+    const newStatus = targetColumn ?? targetTask?.status;
 
-    if (!task || !columns.includes(newStatus)) return;
+    if (!task || !newStatus) return;
 
     if (task.status === newStatus) return;
 
@@ -87,6 +92,11 @@ export default function KanbanBoard({
       );
     } catch (error) {
       console.error("Error moving task:", error);
+      setErrorMessage(
+        error instanceof Error
+          ? error.message
+          : "Unable to update task status. Please try again."
+      );
     }
   };
 
@@ -105,6 +115,14 @@ export default function KanbanBoard({
       }}
       onDragEnd={canManage ? handleDragEnd : undefined}
     >
+      {errorMessage && (
+        <p
+          className="mb-4 rounded-lg bg-danger-muted p-3 text-sm text-danger"
+          role="alert"
+        >
+          {errorMessage}
+        </p>
+      )}
       <div className="flex snap-x snap-mandatory gap-4 overflow-x-auto pb-3 md:grid md:grid-cols-2 md:overflow-visible md:pb-0 xl:grid-cols-4">
         {columns.map((column) => {
           const columnTasks = tasks.filter(

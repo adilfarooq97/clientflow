@@ -1,5 +1,6 @@
 import { createClient } from "@/lib/supabase/server";
 import type { ProjectFile, FileType } from "@/types";
+import { isExternalFileUrl } from "@/lib/files";
 
 export async function getFiles(
   projectId: string
@@ -14,7 +15,7 @@ export async function getFiles(
 
   if (error) {
     console.error("Error fetching files:", error);
-    return [];
+    throw new Error("Unable to load project files.");
   }
 
   return data as ProjectFile[];
@@ -57,17 +58,19 @@ export async function deleteFile(fileId: string) {
     throw new Error(fetchError.message);
   }
 
-  const { error: storageError } = await supabase.storage
-    .from("project-files")
-    .remove([file.file_url]);
+  if (!isExternalFileUrl(file.file_url)) {
+    const { error: storageError } = await supabase.storage
+      .from("project-files")
+      .remove([file.file_url]);
 
-  if (storageError) {
-    console.error(
-      "Error deleting storage file:",
-      storageError
-    );
+    if (storageError) {
+      console.error(
+        "Error deleting storage file:",
+        storageError
+      );
 
-    throw new Error(storageError.message);
+      throw new Error(storageError.message);
+    }
   }
 
   const { error: deleteError } = await supabase

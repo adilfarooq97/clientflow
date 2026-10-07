@@ -120,8 +120,9 @@ export async function PATCH(
         client_comment: clientComment,
       })
       .eq("id", id)
+      .eq("status", "Pending")
       .select()
-      .single();
+      .maybeSingle();
 
     if (error) {
       console.error("Error responding to review:", error);
@@ -129,6 +130,39 @@ export async function PATCH(
       return NextResponse.json(
         { error: "Unable to respond to review." },
         { status: 500 }
+      );
+    }
+
+    if (!data) {
+      const { data: currentReview, error: currentReviewError } =
+        await supabase
+          .from("reviews")
+          .select("status")
+          .eq("id", id)
+          .maybeSingle();
+
+      if (currentReviewError || !currentReview) {
+        console.error(
+          "Unable to verify review response status:",
+          currentReviewError
+        );
+
+        return NextResponse.json(
+          { error: "Unable to respond to review." },
+          { status: 500 }
+        );
+      }
+
+      if (currentReview.status === "Pending") {
+        return NextResponse.json(
+          { error: "Unable to respond to review." },
+          { status: 500 }
+        );
+      }
+
+      return NextResponse.json(
+        { error: "This review has already been responded to." },
+        { status: 409 }
       );
     }
 
