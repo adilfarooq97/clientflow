@@ -10,7 +10,10 @@ import { getAccessibleProjects } from "@/lib/supabase/projects";
 import { getCurrentUserProfile } from "@/lib/supabase/auth";
 
 export default async function Dashboard() {
-  const projects = await getAccessibleProjects();
+  const [projects, userProfile] = await Promise.all([
+    getAccessibleProjects(),
+    getCurrentUserProfile(),
+  ]);
   const recentProjects = [...projects]
     .sort(
       (a, b) =>
@@ -18,7 +21,6 @@ export default async function Dashboard() {
         new Date(a.created_at).getTime()
     )
     .slice(0, 3);
-  const userProfile = await getCurrentUserProfile();
   const currentHour = new Date().getHours();
 
   const greeting =
@@ -34,11 +36,13 @@ export default async function Dashboard() {
       : currentHour < 18
         ? "Here's what needs your attention."
         : "Here's a quick look at your day's progress.";
-  const taskGroups = await Promise.all(
-    projects.map((project) => getTasks(project.id))
-  );
-
-  const tasks = taskGroups.flat();
+  const projectIds = projects.map((project) => project.id);
+  const [tasks, reviews, messages, files] = await Promise.all([
+    getTasks(projectIds),
+    getReviews(projectIds),
+    getMessages(projectIds),
+    getFiles(projectIds),
+  ]);
   const recentTaskActivities = tasks
     .sort(
       (a, b) =>
@@ -63,14 +67,6 @@ export default async function Dashboard() {
         href: `/projects/${task.project_id}/tasks`,
       };
     });
-
-  const reviewGroups = await Promise.all(
-    projects.map((project) => getReviews(project.id))
-  );
-  const messageGroups = await Promise.all(
-    projects.map((project) => getMessages(project.id))
-  );
-  const messages = messageGroups.flat();
 
   const recentMessageActivities = messages
     .sort(
@@ -97,12 +93,6 @@ export default async function Dashboard() {
       };
     });
 
-  const fileGroups = await Promise.all(
-    projects.map((project) => getFiles(project.id))
-  );
-
-  const files = fileGroups.flat();
-
   const recentFileActivities = files
     .sort(
       (a, b) =>
@@ -128,7 +118,6 @@ export default async function Dashboard() {
       };
     });
 
-  const reviews = reviewGroups.flat();
   const recentActivities = reviews
     .sort(
       (a, b) =>

@@ -2,14 +2,21 @@ import { createClient } from "@/lib/supabase/server";
 import type { Review, ReviewStatus } from "@/types";
 
 export async function getReviews(
-  projectId: string
+  projectId: string | string[]
 ): Promise<Review[]> {
+  const projectIds =
+    typeof projectId === "string" ? [projectId] : projectId;
+
+  if (projectIds.length === 0) {
+    return [];
+  }
+
   const supabase = await createClient();
 
   const { data, error } = await supabase
     .from("reviews")
     .select("*")
-    .eq("project_id", projectId)
+    .in("project_id", projectIds)
     .order("created_at", { ascending: false });
 
   if (error) {
