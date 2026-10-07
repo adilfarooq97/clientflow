@@ -30,10 +30,12 @@ export default function FormField({
         placeholder={placeholder}
         value={value}
         onChange={onChange}
+        aria-invalid={Boolean(error)}
+        aria-describedby={error ? `${id}-error` : undefined}
       />
 
       {error && (
-        <p className="mt-1 text-sm text-red-600">
+        <p id={`${id}-error`} className="mt-1.5 text-sm text-danger" role="alert">
           {error}
         </p>
       )}

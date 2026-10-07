@@ -17,13 +17,13 @@ export default function Button({
 }: ButtonProps) {
   const variantClasses = {
     primary:
-      "bg-gray-900 text-white hover:bg-gray-800",
+      "border border-transparent bg-primary text-white hover:bg-primary-hover focus-visible:ring-2 focus-visible:ring-info",
 
     secondary:
-      "border bg-white text-gray-900 hover:bg-gray-50",
+      "border border-border bg-surface text-foreground hover:bg-surface-muted focus-visible:ring-2 focus-visible:ring-info",
 
     danger:
-      "bg-red-600 text-white hover:bg-red-700",
+      "border border-transparent bg-danger text-white hover:bg-red-700 focus-visible:ring-2 focus-visible:ring-danger",
   };
 
   return (
@@ -31,7 +31,7 @@ export default function Button({
       type={type}
       disabled={disabled}
       onClick={onClick}
-      className={`rounded-lg px-4 py-2 text-sm font-medium ${variantClasses[variant]} ${className}`}
+      className={`inline-flex min-h-10 items-center justify-center rounded-lg px-4 py-2 text-sm font-medium transition-colors focus-visible:outline-none disabled:pointer-events-none disabled:opacity-50 ${variantClasses[variant]} ${className}`}
     >
       {children}
     </button>

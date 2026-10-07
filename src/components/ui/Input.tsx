@@ -11,18 +11,21 @@ export default function Input({
   type = "text",
   id,
   disabled = false,
+  className = "",
   ...inputProps
 }: InputProps) {
   const [showPassword, setShowPassword] = useState(false);
 
   return (
     <div className="space-y-2">
-      <label
-        htmlFor={id}
-        className="text-sm font-medium text-gray-700"
-      >
-        {label}
-      </label>
+      {label && (
+        <label
+          htmlFor={id}
+          className="block text-sm font-medium text-foreground"
+        >
+          {label}
+        </label>
+      )}
 
       <div className="relative">
         <input
@@ -34,7 +37,7 @@ export default function Input({
               : type
           }
           disabled={disabled}
-          className="w-full rounded-lg border border-gray-300 px-3 py-2.5 pr-20 text-sm leading-6 text-gray-900 outline-none transition focus:border-gray-900 focus:ring-2 focus:ring-gray-200"
+          className={`min-h-10 w-full rounded-lg border border-border bg-surface px-3 py-2 text-sm leading-6 text-foreground outline-none transition placeholder:text-subtle-foreground hover:border-slate-300 focus-visible:border-info focus-visible:ring-2 focus-visible:ring-info/20 aria-invalid:border-danger aria-invalid:focus-visible:ring-danger/20 disabled:cursor-not-allowed disabled:bg-surface-muted disabled:text-muted-foreground disabled:opacity-70 ${type === "password" ? "pr-20" : ""} ${className}`}
         />
 
         {type === "password" && (
@@ -43,7 +46,9 @@ export default function Input({
             onClick={() =>
               setShowPassword(!showPassword)
             }
-            className="absolute right-3 top-1/2 -translate-y-1/2 text-sm font-medium text-gray-500 hover:text-gray-900"
+            disabled={disabled}
+            aria-label={showPassword ? "Hide password" : "Show password"}
+            className="absolute right-3 top-1/2 -translate-y-1/2 rounded text-sm font-medium text-muted-foreground hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-info disabled:pointer-events-none disabled:opacity-50"
           >
             {showPassword ? "Hide" : "Show"}
           </button>

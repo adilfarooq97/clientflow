@@ -2,6 +2,8 @@ import Link from "next/link";
 import type { Project } from "@/types/project";
 import Card from "@/components/ui/Card";
 import Progress from "@/components/ui/Progress";
+import Badge from "@/components/ui/Badge";
+import StatusBadge from "@/components/ui/StatusBadge";
 
 type ProjectCardProps = {
   project: Project;
@@ -12,19 +14,12 @@ export default function ProjectCard({
 }: ProjectCardProps) {
   const isCompleted = project.status === "Completed";
 
-  const statusStyles = {
-    Planning: "bg-gray-100 text-gray-700",
-    "In Progress": "bg-blue-100 text-blue-700",
-    Review: "bg-yellow-100 text-yellow-700",
-    Completed: "bg-green-100 text-green-700",
-  };
-
   return (
     <Link
       href={`/projects/${project.id}`}
-      className="block rounded-xl border border-gray-200 bg-white p-5 transition hover:-translate-y-0.5 hover:border-gray-300 hover:shadow-sm"
+      className="block rounded-xl focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-info focus-visible:ring-offset-2"
     >
-      <Card>
+      <Card className="h-full transition-shadow hover:shadow-sm">
         <div className="flex items-start justify-between gap-4">
           <div>
             <h3 className="font-semibold tracking-tight text-gray-900">
@@ -63,21 +58,12 @@ export default function ProjectCard({
           </span>
 
           <div className="flex items-center gap-2">
-            <span
-              className={`rounded-full px-2.5 py-1 text-xs font-medium ${isCompleted
-                ? "bg-green-100 text-green-700"
-                : "bg-blue-100 text-blue-700"
-                }`}
-            >
+            <Badge variant={isCompleted ? "success" : "info"}>
               {isCompleted ? "Completed" : "Active"}
-            </span>
-
-            <span
-              className={`rounded-full px-2.5 py-1 text-xs font-semibold ${statusStyles[project.status]
-                }`}
-            >
-              {project.status}
-            </span>
+            </Badge>
+            <StatusBadge
+              status={project.status}
+            />
           </div>
         </div>
       </Card>

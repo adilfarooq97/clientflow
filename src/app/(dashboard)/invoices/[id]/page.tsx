@@ -5,15 +5,8 @@ import DeleteInvoiceButton from "@/components/invoices/DeleteInvoiceButton";
 import { getCurrentUserProfile } from "@/lib/supabase/auth";
 import { getInvoice } from "@/lib/supabase/invoices";
 import { getMemberProfiles } from "@/lib/supabase/users";
-import type { InvoiceStatus } from "@/types";
 import { getDisplayInvoiceStatus } from "@/lib/invoices";
-
-const statusStyles: Record<InvoiceStatus, string> = {
-  Draft: "bg-gray-100 text-gray-700",
-  Pending: "bg-yellow-100 text-yellow-700",
-  Paid: "bg-green-100 text-green-700",
-  Overdue: "bg-red-100 text-red-700",
-};
+import StatusBadge from "@/components/ui/StatusBadge";
 
 export default async function InvoicePage({
   params,
@@ -77,11 +70,7 @@ export default async function InvoicePage({
             </h1>
           </div>
 
-          <span
-            className={`w-fit rounded-full px-3 py-1.5 text-xs font-semibold ${statusStyles[displayStatus]}`}
-          >
-            {displayStatus}
-          </span>
+          <StatusBadge status={displayStatus} />
         </div>
 
         <div className="mt-8 grid gap-6 sm:grid-cols-2">

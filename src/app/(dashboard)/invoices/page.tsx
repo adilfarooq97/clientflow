@@ -4,13 +4,7 @@ import { getCurrentUserProfile } from "@/lib/supabase/auth";
 import { getInvoices } from "@/lib/supabase/invoices";
 import type { InvoiceStatus } from "@/types";
 import { getDisplayInvoiceStatus } from "@/lib/invoices";
-
-const statusStyles: Record<InvoiceStatus, string> = {
-  Draft: "bg-gray-100 text-gray-700",
-  Pending: "bg-yellow-100 text-yellow-700",
-  Paid: "bg-green-100 text-green-700",
-  Overdue: "bg-red-100 text-red-700",
-};
+import StatusBadge from "@/components/ui/StatusBadge";
 
 export default async function InvoicesPage({
   searchParams,
@@ -279,11 +273,9 @@ export default async function InvoicesPage({
                     </td>
 
                     <td className="px-4 py-4">
-                      <span
-                        className={`rounded-full px-2.5 py-1 text-xs font-medium ${statusStyles[getDisplayInvoiceStatus(invoice)]}`}
-                      >
-                        {getDisplayInvoiceStatus(invoice)}
-                      </span>
+                      <StatusBadge
+                        status={getDisplayInvoiceStatus(invoice)}
+                      />
                     </td>
                   </tr>
                 ))}
