@@ -114,12 +114,12 @@ export async function POST(request: Request) {
     );
   }
 
-  if (invoice_number.trim().length > 100) {
-    return NextResponse.json(
-      { error: "Invoice number must be 100 characters or less." },
-      { status: 400 }
-    );
-  }
+  if (invoice_number.trim().length > 50) {
+  return NextResponse.json(
+    { error: "Invoice number must be 50 characters or less." },
+    { status: 400 }
+  );
+}
 
   if (typeof description !== "string") {
     return NextResponse.json(
