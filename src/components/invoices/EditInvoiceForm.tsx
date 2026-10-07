@@ -51,8 +51,15 @@ export default function EditInvoiceForm({
 
     setError("");
 
-    if (!invoiceNumber.trim()) {
+    const trimmedInvoiceNumber = invoiceNumber.trim();
+
+    if (!trimmedInvoiceNumber) {
       setError("Invoice number is required.");
+      return;
+    }
+
+    if (trimmedInvoiceNumber.length > 50) {
+      setError("Invoice number must be 50 characters or fewer.");
       return;
     }
 
@@ -93,7 +100,7 @@ export default function EditInvoiceForm({
             "Content-Type": "application/json",
           },
           body: JSON.stringify({
-            invoice_number: invoiceNumber.trim(),
+            invoice_number: trimmedInvoiceNumber,
             description: description.trim(),
             amount: numericAmount,
             status,
