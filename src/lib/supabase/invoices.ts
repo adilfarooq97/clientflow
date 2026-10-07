@@ -118,7 +118,7 @@ export async function getInvoices(): Promise<Invoice[]> {
 
   if (authError) {
     console.error("Error fetching invoices:", authError);
-    return [];
+    throw new Error("Unable to fetch invoices.");
   }
 
   if (!user) {
@@ -132,7 +132,7 @@ export async function getInvoices(): Promise<Invoice[]> {
 
   if (error) {
     console.error("Error fetching invoices:", error);
-    return [];
+    throw new Error("Unable to fetch invoices.");
   }
 
   return data ?? [];
@@ -150,7 +150,7 @@ export async function getInvoice(
 
   if (authError) {
     console.error("Error fetching invoice:", authError);
-    return null;
+    throw new Error("Unable to fetch invoice.");
   }
 
   if (!user) {
@@ -162,7 +162,7 @@ export async function getInvoice(
 
   if (scopeError || !scope) {
     console.error("Error fetching invoice:", scopeError);
-    return null;
+    throw new Error("Unable to fetch invoice.");
   }
 
   if (scope.ownedProjectIds.length > 0) {
@@ -175,7 +175,7 @@ export async function getInvoice(
 
     if (error) {
       console.error("Error fetching invoice:", error);
-      return null;
+      throw new Error("Unable to fetch invoice.");
     }
 
     if (data) {
@@ -194,7 +194,7 @@ export async function getInvoice(
 
     if (error) {
       console.error("Error fetching invoice:", error);
-      return null;
+      throw new Error("Unable to fetch invoice.");
     }
 
     return data as Invoice | null;
