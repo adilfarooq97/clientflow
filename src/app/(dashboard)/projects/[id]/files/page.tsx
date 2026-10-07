@@ -5,6 +5,7 @@ import { getFiles, getFileUrl } from "@/lib/supabase/files";
 import FileCard from "@/components/files/FileCard";
 import { getCurrentUserProfile } from "@/lib/supabase/auth";
 import ProjectNavigation from "@/components/projects/ProjectNavigation";
+import EmptyState from "@/components/ui/EmptyState";
 
 
 export default async function FilesPage({
@@ -90,30 +91,26 @@ export default async function FilesPage({
       </div>
 
       {filesWithUrls.length === 0 ? (
-        <div className="rounded-xl border border-dashed border-gray-300 bg-white p-10 text-center">
-          <h2 className="font-semibold text-gray-900">
-            {files.length === 0
-              ? "No files yet"
-              : "Files are unavailable"}
-          </h2>
-
-          <p className="mt-2 text-sm text-gray-500">
-            {files.length === 0
+        <EmptyState
+          title={files.length === 0 ? "No files yet" : "Files are unavailable"}
+          description={
+            files.length === 0
               ? profile?.role === "freelancer"
                 ? "Add your first project file."
                 : "No project files have been uploaded yet."
-              : "Some project files could not be loaded. Please try again later."}
-          </p>
-
-          {profile?.role === "freelancer" && files.length === 0 && (
-            <Link
-              href={`/projects/${project.id}/files/new`}
-              className="mt-4 inline-block text-sm font-medium text-gray-900 underline"
-            >
-              Add a file
-            </Link>
-          )}
-        </div>
+              : "Some project files could not be loaded. Please try again later."
+          }
+          action={
+            profile?.role === "freelancer" && files.length === 0 ? (
+              <Link
+                href={`/projects/${project.id}/files/new`}
+                className="text-sm font-medium text-primary underline underline-offset-4 hover:text-primary-hover"
+              >
+                Add a file
+              </Link>
+            ) : undefined
+          }
+        />
       ) : (
         <div className="grid gap-4 sm:grid-cols-2">
           {filesWithUrls.map(({ file, signedUrl }) => (

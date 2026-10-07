@@ -5,6 +5,7 @@ import { getInvoices } from "@/lib/supabase/invoices";
 import type { InvoiceStatus } from "@/types";
 import { getDisplayInvoiceStatus } from "@/lib/invoices";
 import StatusBadge from "@/components/ui/StatusBadge";
+import EmptyState from "@/components/ui/EmptyState";
 
 export default async function InvoicesPage({
   searchParams,
@@ -172,43 +173,33 @@ export default async function InvoicesPage({
       )}
 
       {invoices.length === 0 ? (
-        <div className="rounded-xl border border-gray-200 bg-white p-8 text-center">
-          <h2 className="text-lg font-semibold text-gray-900">
-            No invoices yet
-          </h2>
-
-          <p className="mx-auto mt-2 max-w-md text-sm leading-6 text-gray-500">
-            {userProfile?.role === "freelancer"
+        <EmptyState
+          title="No invoices yet"
+          description={
+            userProfile?.role === "freelancer"
               ? "Create your first invoice to start tracking client payments."
-              : "Invoices shared with you will appear here."}
-          </p>
-
-          {userProfile?.role === "freelancer" && (
-            <div className="mt-5">
+              : "Invoices shared with you will appear here."
+          }
+          action={
+            userProfile?.role === "freelancer" ? (
               <Link href="/invoices/new">
                 <Button>Create your first invoice</Button>
               </Link>
-            </div>
-          )}
-        </div>
+            ) : undefined
+          }
+        />
       ) : filteredInvoices.length === 0 ? (
-        <div className="rounded-xl border border-gray-200 bg-white p-8 text-center">
-          <h2 className="text-lg font-semibold text-gray-900">
-            No {selectedStatus.toLowerCase()} invoices
-          </h2>
-
-          <p className="mx-auto mt-2 max-w-md text-sm leading-6 text-gray-500">
-            There are no invoices matching this status.
-          </p>
-
-          <div className="mt-5">
+        <EmptyState
+          title={`No ${selectedStatus.toLowerCase()} invoices`}
+          description="There are no invoices matching this status."
+          action={
             <Link href="/invoices">
               <Button variant="secondary">
                 View all invoices
               </Button>
             </Link>
-          </div>
-        </div>
+          }
+        />
       ) : (
         <div className="overflow-hidden rounded-xl border border-gray-200 bg-white">
           <div className="overflow-x-auto">

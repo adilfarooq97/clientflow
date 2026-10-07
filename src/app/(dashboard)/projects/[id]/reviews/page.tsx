@@ -6,6 +6,7 @@ import ReviewCard from "@/components/reviews/ReviewCard";
 import { getCurrentUserProfile } from "@/lib/supabase/auth";
 import Button from "@/components/ui/Button";
 import ProjectNavigation from "@/components/projects/ProjectNavigation";
+import EmptyState from "@/components/ui/EmptyState";
 
 
 export default async function ReviewsPage({
@@ -71,23 +72,21 @@ export default async function ReviewsPage({
       )}
 
       {reviews.length === 0 ? (
-        <div className="rounded-xl border border-dashed border-gray-300 bg-white p-10 text-center">
-          <h2 className="font-semibold text-gray-900">
-            No reviews yet
-          </h2>
-
-          <p className="mt-2 text-sm text-gray-500">
-            {profile?.role === "freelancer"
+        <EmptyState
+          title="No reviews yet"
+          description={
+            profile?.role === "freelancer"
               ? "Create your first review submission for this project."
-              : "No review submissions have been added to this project yet."}
-          </p>
-
-          {profile?.role === "freelancer" && (
-            <Link href={`/projects/${project.id}/reviews/new`}>
-              <Button>New Review</Button>
-            </Link>
-          )}
-        </div>
+              : "No review submissions have been added to this project yet."
+          }
+          action={
+            profile?.role === "freelancer" ? (
+              <Link href={`/projects/${project.id}/reviews/new`}>
+                <Button>New Review</Button>
+              </Link>
+            ) : undefined
+          }
+        />
       ) : (
         <div className="grid gap-4">
           {reviews.map((review) => (

@@ -13,6 +13,7 @@ import { getMemberProfiles } from "@/lib/supabase/users";
 import { getCurrentUserProfile } from "@/lib/supabase/auth";
 import ProjectNavigation from "@/components/projects/ProjectNavigation";
 import ActivityItem from "@/components/dashboard/ActivityItem";
+import StatusBadge from "@/components/ui/StatusBadge";
 
 export default async function ProjectPage({
   params,
@@ -142,12 +143,6 @@ export default async function ProjectPage({
         new Date(a.timestamp).getTime(),
     )
     .slice(0, 5);
-  const projectStatusStyles = {
-    Planning: "bg-gray-100 text-gray-700",
-    "In Progress": "bg-blue-100 text-blue-700",
-    Review: "bg-yellow-100 text-yellow-700",
-    Completed: "bg-green-100 text-green-700",
-  };
   return (
     <div className="p-8">
       <Link
@@ -176,11 +171,7 @@ export default async function ProjectPage({
                 {project.name}
               </h1>
 
-              <span
-                className={`rounded-full px-3 py-1.5 text-xs font-semibold ${projectStatusStyles[project.status]}`}
-              >
-                {project.status}
-              </span>
+              <StatusBadge status={project.status} />
             </div>
 
             <p className="mt-3 max-w-2xl text-sm leading-7 text-gray-600">

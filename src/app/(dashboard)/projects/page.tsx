@@ -3,6 +3,8 @@ import { getAccessibleProjects } from "@/lib/supabase/projects";
 import { getCurrentUserProfile } from "@/lib/supabase/auth";
 import type { ProjectStatus } from "@/types";
 import ProjectStatusFilter from "@/components/projects/ProjectStatusFilter";
+import EmptyState from "@/components/ui/EmptyState";
+import Button from "@/components/ui/Button";
 
 export default async function ProjectsPage() {
   const projects = await getAccessibleProjects();
@@ -54,30 +56,21 @@ export default async function ProjectsPage() {
       </div>
 
       {projects.length === 0 ? (
-        <div className="rounded-xl border border-dashed border-gray-300 bg-white p-10 text-center">
-          <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-gray-100 text-gray-500">
-            <span className="text-lg font-semibold">P</span>
-          </div>
-
-          <h2 className="text-lg font-semibold tracking-tight text-gray-900">
-            No projects yet
-          </h2>
-
-          <p className="mt-2 text-sm leading-6 text-gray-500">
-            {isFreelancer
+        <EmptyState
+          title="No projects yet"
+          description={
+            isFreelancer
               ? "Create your first project to start organizing tasks, reviews, files, and client communication."
-              : "You have not been added to any projects yet. Projects you have access to will appear here."}
-          </p>
-
-          {isFreelancer && (
-            <Link
-              href="/projects/new"
-              className="mt-5 inline-flex rounded-lg bg-gray-900 px-4 py-2 text-sm font-medium text-white transition hover:bg-gray-800"
-            >
-              Create Project
-            </Link>
-          )}
-        </div>
+              : "You have not been added to any projects yet. Projects you have access to will appear here."
+          }
+          action={
+            isFreelancer ? (
+              <Link href="/projects/new">
+                <Button>Create Project</Button>
+              </Link>
+            ) : undefined
+          }
+        />
       ) : (
         <>
           <div className="mb-6 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
