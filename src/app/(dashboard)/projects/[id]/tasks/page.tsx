@@ -25,6 +25,12 @@ export default async function ProjectTasksPage({
   }
 
   const tasks = await getTasks(project.id);
+  const taskCounts = {
+    total: tasks.length,
+    todo: tasks.filter((task) => task.status === "Todo").length,
+    inProgress: tasks.filter((task) => task.status === "In Progress").length,
+    done: tasks.filter((task) => task.status === "Done").length,
+  };
 
   return (
     <div>
@@ -55,6 +61,43 @@ export default async function ProjectTasksPage({
               <Button>New Task</Button>
             </Link>
           )}
+        </div>
+      </div>
+      <div className="mb-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+        <div className="rounded-xl border border-gray-200 bg-white p-5">
+          <p className="text-sm font-medium text-gray-500">
+            Total Tasks
+          </p>
+          <p className="mt-2 text-2xl font-bold text-gray-900">
+            {taskCounts.total}
+          </p>
+        </div>
+
+        <div className="rounded-xl border border-gray-200 bg-white p-5">
+          <p className="text-sm font-medium text-gray-500">
+            To Do
+          </p>
+          <p className="mt-2 text-2xl font-bold text-gray-900">
+            {taskCounts.todo}
+          </p>
+        </div>
+
+        <div className="rounded-xl border border-gray-200 bg-white p-5">
+          <p className="text-sm font-medium text-gray-500">
+            In Progress
+          </p>
+          <p className="mt-2 text-2xl font-bold text-gray-900">
+            {taskCounts.inProgress}
+          </p>
+        </div>
+
+        <div className="rounded-xl border border-gray-200 bg-white p-5">
+          <p className="text-sm font-medium text-gray-500">
+            Completed
+          </p>
+          <p className="mt-2 text-2xl font-bold text-gray-900">
+            {taskCounts.done}
+          </p>
         </div>
       </div>
 
