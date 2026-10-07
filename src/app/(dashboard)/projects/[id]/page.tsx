@@ -124,7 +124,7 @@ export default async function ProjectPage({
       id: `task-${task.id}`,
       type: "task" as const,
       title: task.title,
-      description: `Task moved to ${task.status}`,
+      description: `Task created in ${task.status}`,
       timestamp: task.created_at,
       href: `/projects/${project.id}/tasks`,
     })),
