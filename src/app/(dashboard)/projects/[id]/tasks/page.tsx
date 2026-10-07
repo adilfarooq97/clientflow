@@ -101,7 +101,32 @@ export default async function ProjectTasksPage({
         </div>
       </div>
 
-      <KanbanBoardWrapper tasks={tasks} canManage={profile?.role === "freelancer"} />
+      {tasks.length === 0 ? (
+        <div className="rounded-xl border border-dashed border-gray-200 bg-white px-6 py-12 text-center">
+          <h2 className="text-base font-semibold text-gray-900">
+            No tasks yet
+          </h2>
+
+          <p className="mx-auto mt-1 max-w-md text-sm leading-6 text-gray-500">
+            {profile?.role === "freelancer"
+              ? "Create your first task to start organizing the work for this project."
+              : "Tasks will appear here when work is added to this project."}
+          </p>
+
+          {profile?.role === "freelancer" && (
+            <div className="mt-5">
+              <Link href={`/projects/${project.id}/tasks/new`}>
+                <Button>New Task</Button>
+              </Link>
+            </div>
+          )}
+        </div>
+      ) : (
+        <KanbanBoardWrapper
+          tasks={tasks}
+          canManage={profile?.role === "freelancer"}
+        />
+      )}
     </div>
   );
 }
