@@ -183,7 +183,7 @@ export default async function ProjectPage({
               </span>
             </div>
 
-            <p className="mt-3 max-w-2xl text-sm leading-7 text-gray-500">
+            <p className="mt-3 max-w-2xl text-sm leading-7 text-gray-600">
               {project.description || "No project description has been added yet."}
             </p>
 
@@ -203,10 +203,10 @@ export default async function ProjectPage({
                   {daysUntilDeadline !== null && (
                     <span
                       className={`rounded-full px-2.5 py-1 text-xs font-semibold ${daysUntilDeadline < 0
-                          ? "bg-red-100 text-red-700"
-                          : daysUntilDeadline <= 3
-                            ? "bg-amber-100 text-amber-700"
-                            : "bg-green-100 text-green-700"
+                        ? "bg-red-100 text-red-700"
+                        : daysUntilDeadline <= 3
+                          ? "bg-amber-100 text-amber-700"
+                          : "bg-green-100 text-green-700"
                         }`}
                     >
                       {daysUntilDeadline < 0
