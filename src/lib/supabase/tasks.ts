@@ -12,7 +12,7 @@ export async function getTasks(projectId: string): Promise<Task[]> {
 
   if (error) {
     console.error("Error fetching tasks:", error);
-    return [];
+    throw new Error("Unable to fetch project tasks.");
   }
 
   return data as Task[];

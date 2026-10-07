@@ -40,7 +40,7 @@ export async function getNotifications(): Promise<Notification[]> {
       error
     );
 
-    return [];
+    throw new Error("Unable to fetch notifications.");
   }
 
   return data as Notification[];

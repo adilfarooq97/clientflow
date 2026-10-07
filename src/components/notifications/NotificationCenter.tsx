@@ -3,6 +3,23 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import type { Notification } from "@/lib/supabase/notifications";
+import Alert from "@/components/ui/Alert";
+
+async function fetchNotifications(): Promise<Notification[]> {
+  const response = await fetch("/api/notifications");
+
+  if (!response.ok) {
+    throw new Error("Unable to load notifications.");
+  }
+
+  const data: unknown = await response.json();
+
+  if (!Array.isArray(data)) {
+    throw new Error("Invalid notifications response.");
+  }
+
+  return data;
+}
 
 function formatNotificationTime(
   createdAt: string
@@ -51,35 +68,53 @@ export default function NotificationCenter() {
   >([]);
   const [isOpen, setIsOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
+  const [loadError, setLoadError] = useState("");
+  const [actionError, setActionError] = useState("");
 
   useEffect(() => {
-    const loadNotifications = async () => {
-      try {
-        const response = await fetch(
-          "/api/notifications"
-        );
+    let isMounted = true;
 
-        if (!response.ok) {
-          return;
-        }
-
-        const data = await response.json();
-
-        if (Array.isArray(data)) {
+    fetchNotifications()
+      .then((data) => {
+        if (isMounted) {
           setNotifications(data);
+          setLoadError("");
         }
-      } catch (error) {
-        console.error(
-          "Error loading notifications:",
-          error
-        );
-      } finally {
-        setIsLoading(false);
-      }
-    };
+      })
+      .catch((error) => {
+        console.error("Error loading notifications:", error);
+        if (isMounted) {
+          setLoadError("Unable to load notifications. Please try again.");
+        }
+      })
+      .finally(() => {
+        if (isMounted) {
+          setIsLoading(false);
+        }
+      });
 
-    loadNotifications();
+    return () => {
+      isMounted = false;
+    };
   }, []);
+
+  const retryLoadingNotifications = () => {
+    setIsLoading(true);
+    setLoadError("");
+
+    fetchNotifications()
+      .then((data) => {
+        setNotifications(data);
+        setLoadError("");
+      })
+      .catch((error) => {
+        console.error("Error loading notifications:", error);
+        setLoadError("Unable to load notifications. Please try again.");
+      })
+      .finally(() => {
+        setIsLoading(false);
+      });
+  };
 
   const unreadCount = notifications.filter(
     (notification) => !notification.is_read
@@ -88,6 +123,8 @@ export default function NotificationCenter() {
   const markAsRead = async (
     notificationId: string
   ) => {
+    setActionError("");
+
     try {
       const response = await fetch(
         `/api/notifications/${notificationId}`,
@@ -97,6 +134,7 @@ export default function NotificationCenter() {
       );
 
       if (!response.ok) {
+        setActionError("Unable to update notification. Please try again.");
         return;
       }
 
@@ -112,6 +150,7 @@ export default function NotificationCenter() {
         "Error marking notification as read:",
         error
       );
+      setActionError("Unable to update notification. Please try again.");
     }
   };
 
@@ -124,8 +163,10 @@ export default function NotificationCenter() {
       return;
     }
 
+    setActionError("");
+
     try {
-      await Promise.all(
+      const responses = await Promise.all(
         unreadNotifications.map((notification) =>
           fetch(`/api/notifications/${notification.id}`, {
             method: "PATCH",
@@ -133,17 +174,30 @@ export default function NotificationCenter() {
         )
       );
 
+      const updatedIds = new Set(
+        unreadNotifications
+          .filter((_, index) => responses[index].ok)
+          .map((notification) => notification.id)
+      );
+
       setNotifications((currentNotifications) =>
         currentNotifications.map((notification) => ({
           ...notification,
-          is_read: true,
+          is_read: notification.is_read || updatedIds.has(notification.id),
         }))
       );
+
+      if (updatedIds.size !== unreadNotifications.length) {
+        setActionError(
+          "Some notifications could not be updated. Please try again."
+        );
+      }
     } catch (error) {
       console.error(
         "Error marking all notifications as read:",
         error
       );
+      setActionError("Unable to update notifications. Please try again.");
     }
   };
 
@@ -191,10 +245,29 @@ export default function NotificationCenter() {
           </div>
 
           <div className="max-h-96 overflow-y-auto">
+            {actionError && (
+              <Alert tone="danger" className="m-3">
+                {actionError}
+              </Alert>
+            )}
+
             {isLoading ? (
               <p className="p-4 text-sm text-gray-500">
                 Loading notifications...
               </p>
+            ) : loadError ? (
+              <div className="p-4">
+                <p className="text-sm text-danger" role="alert">
+                  {loadError}
+                </p>
+                <button
+                  type="button"
+                  onClick={retryLoadingNotifications}
+                  className="mt-2 text-sm font-medium text-foreground underline underline-offset-4"
+                >
+                  Try again
+                </button>
+              </div>
             ) : notifications.length === 0 ? (
               <p className="p-4 text-sm text-gray-500">
                 You have no notifications.

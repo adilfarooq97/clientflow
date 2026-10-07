@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase/server";
 import { deleteTask, updateTask } from "@/lib/supabase/tasks";
 import { getCurrentUserProfile } from "@/lib/supabase/auth";
+import { isValidCalendarDate } from "@/lib/dates";
 
 
 export async function PATCH(
@@ -78,6 +79,13 @@ export async function PATCH(
     try {
       body = await request.json();
     } catch {
+      return NextResponse.json(
+        { error: "Invalid request body." },
+        { status: 400 }
+      );
+    }
+
+    if (!body || typeof body !== "object" || Array.isArray(body)) {
       return NextResponse.json(
         { error: "Invalid request body." },
         { status: 400 }
@@ -170,6 +178,17 @@ export async function PATCH(
     ) {
       return NextResponse.json(
         { error: "Invalid due date." },
+        { status: 400 }
+      );
+    }
+
+    if (
+      typeof due_date === "string" &&
+      due_date !== "" &&
+      !isValidCalendarDate(due_date)
+    ) {
+      return NextResponse.json(
+        { error: "Due date must be a valid calendar date." },
         { status: 400 }
       );
     }

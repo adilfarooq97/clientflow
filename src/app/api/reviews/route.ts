@@ -64,9 +64,15 @@ export async function GET(request: Request) {
     );
   }
 
-  const reviews = await getReviews(projectId);
-
-  return NextResponse.json(reviews);
+  try {
+    const reviews = await getReviews(projectId);
+    return NextResponse.json(reviews);
+  } catch {
+    return NextResponse.json(
+      { error: "Unable to load project reviews." },
+      { status: 500 }
+    );
+  }
 }
 
 export async function POST(request: Request) {

@@ -16,7 +16,13 @@ export async function GET() {
     );
   }
 
-  const notifications = await getNotifications();
-
-  return NextResponse.json(notifications);
+  try {
+    const notifications = await getNotifications();
+    return NextResponse.json(notifications);
+  } catch {
+    return NextResponse.json(
+      { error: "Unable to load notifications." },
+      { status: 500 }
+    );
+  }
 }

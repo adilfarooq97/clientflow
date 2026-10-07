@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase/server";
 import { createTask, getTasks } from "@/lib/supabase/tasks";
 import { getCurrentUserProfile } from "@/lib/supabase/auth";
+import { isValidCalendarDate } from "@/lib/dates";
 
 
 
@@ -65,9 +66,15 @@ export async function GET(request: Request) {
     );
   }
 
-  const tasks = await getTasks(projectId);
-
-  return NextResponse.json(tasks);
+  try {
+    const tasks = await getTasks(projectId);
+    return NextResponse.json(tasks);
+  } catch {
+    return NextResponse.json(
+      { error: "Unable to load project tasks." },
+      { status: 500 }
+    );
+  }
 }
 
 export async function POST(request: Request) {
@@ -100,18 +107,18 @@ export async function POST(request: Request) {
     );
   }
 
-  let body: {
-    project_id?: unknown;
-    title?: unknown;
-    description?: unknown;
-    status?: unknown;
-    priority?: unknown;
-    due_date?: unknown;
-  };
+  let body: unknown;
 
   try {
     body = await request.json();
   } catch {
+    return NextResponse.json(
+      { error: "Invalid request body." },
+      { status: 400 }
+    );
+  }
+
+  if (!body || typeof body !== "object" || Array.isArray(body)) {
     return NextResponse.json(
       { error: "Invalid request body." },
       { status: 400 }
@@ -125,7 +132,7 @@ export async function POST(request: Request) {
     status,
     priority,
     due_date,
-  } = body;
+  } = body as Record<string, unknown>;
 
   if (typeof project_id !== "string" || !project_id) {
     return NextResponse.json(
@@ -218,6 +225,17 @@ export async function POST(request: Request) {
   ) {
     return NextResponse.json(
       { error: "Invalid due date." },
+      { status: 400 }
+    );
+  }
+
+  if (
+    typeof due_date === "string" &&
+    due_date !== "" &&
+    !isValidCalendarDate(due_date)
+  ) {
+    return NextResponse.json(
+      { error: "Due date must be a valid calendar date." },
       { status: 400 }
     );
   }

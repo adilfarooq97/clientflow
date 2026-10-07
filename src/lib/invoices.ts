@@ -1,19 +1,13 @@
 import type { Invoice, InvoiceStatus } from "@/types";
+import { isValidCalendarDate } from "@/lib/dates";
 
 export function isValidInvoiceDateRange(
   issueDate: string,
   dueDate: string
 ): boolean {
-  const isCalendarDate = (date: string) =>
-    /^\d{4}-\d{2}-\d{2}$/.test(date) &&
-    !Number.isNaN(Date.parse(`${date}T00:00:00.000Z`)) &&
-    new Date(`${date}T00:00:00.000Z`)
-      .toISOString()
-      .startsWith(date);
-
   return (
-    isCalendarDate(issueDate) &&
-    isCalendarDate(dueDate) &&
+    isValidCalendarDate(issueDate) &&
+    isValidCalendarDate(dueDate) &&
     dueDate >= issueDate
   );
 }

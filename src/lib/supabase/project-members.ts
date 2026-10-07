@@ -21,7 +21,7 @@ export async function getProjectMembers(
       error
     );
 
-    return [];
+    throw new Error("Unable to fetch project members.");
   }
 
   return data as ProjectMember[];

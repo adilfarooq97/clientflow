@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase/server";
 import { getCurrentUserProfile } from "@/lib/supabase/auth";
+import { isValidCalendarDate } from "@/lib/dates";
 
 export async function POST(request: Request) {
   const supabase = await createClient();
@@ -63,6 +64,13 @@ export async function POST(request: Request) {
     );
   }
 
+  if (name.trim().length > 200) {
+    return NextResponse.json(
+      { error: "Project name must be 200 characters or fewer." },
+      { status: 400 }
+    );
+  }
+
   if (
     description !== undefined &&
     typeof description !== "string"
@@ -74,12 +82,33 @@ export async function POST(request: Request) {
   }
 
   if (
+    typeof description === "string" &&
+    description.trim().length > 5000
+  ) {
+    return NextResponse.json(
+      { error: "Description must be 5,000 characters or fewer." },
+      { status: 400 }
+    );
+  }
+
+  if (
     deadline !== undefined &&
     deadline !== null &&
     typeof deadline !== "string"
   ) {
     return NextResponse.json(
       { error: "Project deadline is invalid." },
+      { status: 400 }
+    );
+  }
+
+  if (
+    typeof deadline === "string" &&
+    deadline !== "" &&
+    !isValidCalendarDate(deadline)
+  ) {
+    return NextResponse.json(
+      { error: "Project deadline must be a valid calendar date." },
       { status: 400 }
     );
   }

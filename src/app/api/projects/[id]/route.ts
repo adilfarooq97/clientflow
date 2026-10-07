@@ -3,6 +3,7 @@ import { createClient } from "@/lib/supabase/server";
 import { updateProject, deleteProject } from "@/lib/supabase/projects";
 import { getCurrentUserProfile } from "@/lib/supabase/auth";
 import type { ProjectStatus } from "@/types";
+import { isValidCalendarDate } from "@/lib/dates";
 
 const allowedStatuses: ProjectStatus[] = [
   "Planning",
@@ -98,12 +99,29 @@ export async function PATCH(
       );
     }
 
+    if (name.trim().length > 200) {
+      return NextResponse.json(
+        { error: "Project name must be 200 characters or fewer." },
+        { status: 400 }
+      );
+    }
+
     if (
       description !== undefined &&
       typeof description !== "string"
     ) {
       return NextResponse.json(
         { error: "Project description must be text." },
+        { status: 400 }
+      );
+    }
+
+    if (
+      typeof description === "string" &&
+      description.trim().length > 5000
+    ) {
+      return NextResponse.json(
+        { error: "Description must be 5,000 characters or fewer." },
         { status: 400 }
       );
     }
@@ -137,6 +155,17 @@ export async function PATCH(
     ) {
       return NextResponse.json(
         { error: "Project deadline is invalid." },
+        { status: 400 }
+      );
+    }
+
+    if (
+      typeof deadline === "string" &&
+      deadline !== "" &&
+      !isValidCalendarDate(deadline)
+    ) {
+      return NextResponse.json(
+        { error: "Project deadline must be a valid calendar date." },
         { status: 400 }
       );
     }

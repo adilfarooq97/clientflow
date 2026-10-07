@@ -14,7 +14,7 @@ export async function getReviews(
 
   if (error) {
     console.error("Error fetching reviews:", error);
-    return [];
+    throw new Error("Unable to fetch project reviews.");
   }
 
   return data as Review[];
