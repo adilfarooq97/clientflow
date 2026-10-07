@@ -56,21 +56,22 @@ export default function DeleteFileButton({
     }
   };
 
-  {
-    error && (
-      <p className="text-sm text-red-600">
-        {error}
-      </p>
-    )
-  }
   return (
-    <Button
-      type="button"
-      variant="danger"
-      onClick={handleDelete}
-      disabled={isLoading}
-    >
-      {isLoading ? "Deleting..." : "Delete"}
-    </Button>
+    <>
+      {error && (
+        <p className="text-sm text-red-600" role="alert">
+          {error}
+        </p>
+      )}
+
+      <Button
+        type="button"
+        variant="danger"
+        onClick={handleDelete}
+        disabled={isLoading}
+      >
+        {isLoading ? "Deleting..." : "Delete"}
+      </Button>
+    </>
   );
 }

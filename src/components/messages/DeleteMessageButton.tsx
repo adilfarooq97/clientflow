@@ -54,22 +54,22 @@ export default function DeleteMessageButton({
       setIsDeleting(false);
     }
   };
-  {
-    error && (
-      <p className="mt-1 text-xs text-red-500">
-        {error}
-      </p>
-    )
-  }
-
   return (
-    <button
-      type="button"
-      onClick={handleDelete}
-      disabled={isDeleting}
-      className="mt-1 text-xs text-gray-400 hover:text-red-600 disabled:cursor-not-allowed disabled:opacity-50"
-    >
-      {isDeleting ? "Deleting..." : "Delete"}
-    </button>
+    <>
+      {error && (
+        <p className="mt-1 text-xs text-red-500" role="alert">
+          {error}
+        </p>
+      )}
+
+      <button
+        type="button"
+        onClick={handleDelete}
+        disabled={isDeleting}
+        className="mt-1 text-xs text-gray-400 hover:text-red-600 disabled:cursor-not-allowed disabled:opacity-50"
+      >
+        {isDeleting ? "Deleting..." : "Delete"}
+      </button>
+    </>
   );
 }

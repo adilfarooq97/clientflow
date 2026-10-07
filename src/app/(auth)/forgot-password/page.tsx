@@ -52,7 +52,7 @@ export default function ForgotPasswordPage() {
             </p>
 
             <p className="mt-1 text-sm text-green-700">
-              We've sent a password reset link to{" "}
+              We&apos;ve sent a password reset link to{" "}
               {email}.
             </p>
           </div>

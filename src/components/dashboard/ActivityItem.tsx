@@ -5,6 +5,7 @@ import {
   FileText,
   MessageSquare,
 } from "lucide-react";
+import type { ReactNode } from "react";
 
 type ActivityType = "review" | "task" | "message" | "file";
 
@@ -50,21 +51,12 @@ function formatRelativeTime(time: string) {
   return new Date(time).toLocaleDateString();
 }
 
-function getActivityIcon(type: ActivityType) {
-  if (type === "review") {
-    return CheckCircle2;
-  }
-
-  if (type === "task") {
-    return ClipboardList;
-  }
-
-  if (type === "message") {
-    return MessageSquare;
-  }
-
-  return FileText;
-}
+const activityIcons: Record<ActivityType, ReactNode> = {
+  review: <CheckCircle2 className="h-4 w-4" aria-hidden="true" />,
+  task: <ClipboardList className="h-4 w-4" aria-hidden="true" />,
+  message: <MessageSquare className="h-4 w-4" aria-hidden="true" />,
+  file: <FileText className="h-4 w-4" aria-hidden="true" />,
+};
 
 export default function ActivityItem({
   type,
@@ -73,14 +65,12 @@ export default function ActivityItem({
   time,
   href,
 }: ActivityItemProps) {
-  const Icon = getActivityIcon(type);
   const relativeTime = formatRelativeTime(time);
-
 
   const content = (
     <div className="flex items-start gap-4 rounded-lg py-4 transition-colors hover:bg-gray-50">
       <div className="mt-0.5 flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-gray-100 text-gray-600">
-        <Icon className="h-4 w-4" aria-hidden="true" />
+        {activityIcons[type]}
       </div>
 
       <div className="min-w-0 flex-1">

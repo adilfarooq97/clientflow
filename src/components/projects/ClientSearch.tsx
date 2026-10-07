@@ -23,8 +23,6 @@ export default function ClientSearch({
     const trimmedSearch = search.trim();
 
     if (!trimmedSearch) {
-      setClients([]);
-      setIsLoading(false);
       return;
     }
 
@@ -70,6 +68,9 @@ export default function ClientSearch({
     };
   }, [search]);
 
+  const visibleClients = search.trim() ? clients : [];
+  const showLoading = Boolean(search.trim()) && isLoading;
+
   return (
     <div className="space-y-3">
       <label
@@ -88,7 +89,7 @@ export default function ClientSearch({
         className="w-full rounded-xl border border-gray-200 bg-white px-4 py-3 text-sm outline-none transition focus:border-gray-400 focus:ring-2 focus:ring-gray-100"
       />
 
-      {isLoading && (
+      {showLoading && (
         <div className="rounded-lg border border-gray-100 bg-gray-50 px-4 py-3">
           <p className="text-sm text-gray-500">
             Searching for clients...
@@ -96,24 +97,23 @@ export default function ClientSearch({
         </div>
       )}
 
-      {!isLoading &&
+      {!showLoading &&
         search.trim() &&
-        clients.length === 0 && (
+        visibleClients.length === 0 && (
           <p className="text-sm text-gray-500">
             No clients found.
           </p>
         )}
 
-      {clients.length > 0 && (
+      {visibleClients.length > 0 && (
         <div className="overflow-hidden rounded-xl border border-gray-200">
-          {clients.map((client) => (
+          {visibleClients.map((client) => (
             <button
               key={client.id}
               type="button"
               onClick={() => {
                 onSelect(client);
                 setSearch("");
-                setClients([]);
               }}
               className="flex w-full items-center justify-between border-b border-gray-100 px-4 py-3 text-left last:border-b-0 hover:bg-gray-50"
             >

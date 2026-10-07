@@ -3,8 +3,6 @@ import { notFound } from "next/navigation";
 import { getAccessibleProjects } from "@/lib/supabase/projects";
 import { getTasks } from "@/lib/supabase/tasks";
 import Button from "@/components/ui/Button";
-import type { TaskStatus } from "@/types";
-import TaskCard from "@/components/tasks/TaskCard";
 import KanbanBoardWrapper from "@/components/tasks/KanbanBoardWrapper";
 import { getCurrentUserProfile } from "@/lib/supabase/auth";
 import ProjectNavigation from "@/components/projects/ProjectNavigation";

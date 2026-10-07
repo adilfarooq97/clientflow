@@ -25,7 +25,7 @@ export default function DashboardError({
         </h1>
 
         <p className="mt-2 text-sm leading-6 text-gray-500">
-          We couldn't load this part of ClientFlow. Please try again.
+          We couldn&apos;t load this part of ClientFlow. Please try again.
         </p>
 
         <button
