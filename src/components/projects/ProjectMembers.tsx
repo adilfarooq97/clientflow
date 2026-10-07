@@ -36,9 +36,15 @@ export default function ProjectMembers({
 
       <div className="mt-5 space-y-3">
         {members.length === 0 ? (
-          <p className="text-sm text-gray-500">
-            No members have been added yet.
-          </p>
+          <div className="rounded-lg border border-dashed border-gray-200 bg-gray-50 px-4 py-6 text-center">
+            <p className="text-sm font-medium text-gray-700">
+              No project members yet
+            </p>
+
+            <p className="mt-1 text-xs leading-5 text-gray-500">
+              Add a client to give them access to this project.
+            </p>
+          </div>
         ) : (
           members.map((member) => {
             const profile = profiles.find(
