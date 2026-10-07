@@ -5,6 +5,8 @@ import { useRouter } from "next/navigation";
 import type { FileType } from "@/types";
 import Button from "@/components/ui/Button";
 import FormField from "@/components/ui/FormField";
+import SelectField from "@/components/ui/SelectField";
+import Alert from "@/components/ui/Alert";
 
 type CreateFileFormProps = {
   projectId: string;
@@ -105,34 +107,23 @@ export default function CreateFileForm({
         placeholder="https://..."
       />
 
-      <div>
-        <label
-          htmlFor="fileType"
-          className="mb-2 block text-sm font-medium text-gray-700"
-        >
-          File type
-        </label>
-
-        <select
+      <SelectField
           id="fileType"
+          label="File type"
           value={fileType}
           onChange={(event) =>
             setFileType(event.target.value as FileType)
           }
           disabled={isLoading}
-          className="mt-2 w-full rounded-lg border border-border bg-surface px-3 py-2.5 text-sm text-foreground outline-none focus-visible:border-info focus-visible:ring-2 focus-visible:ring-info/20 disabled:cursor-not-allowed disabled:bg-surface-muted"
         >
           <option value="image">Image</option>
           <option value="document">Document</option>
           <option value="video">Video</option>
           <option value="other">Other</option>
-        </select>
-      </div>
+      </SelectField>
 
       {error && (
-        <p className="text-sm text-danger" role="alert">
-          {error}
-        </p>
+        <Alert tone="danger">{error}</Alert>
       )}
 
       <div className="flex gap-3">

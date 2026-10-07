@@ -1,13 +1,16 @@
+import type { InputHTMLAttributes } from "react";
 import Input from "@/components/ui/Input";
 
-type FormFieldProps = {
+type FormFieldProps = Omit<
+  InputHTMLAttributes<HTMLInputElement>,
+  "id" | "value" | "onChange" | "type"
+> & {
   id: string;
   label: string;
   type?: string;
-  placeholder?: string;
   value?: string;
   error?: string;
-  disabled?: boolean;
+  helperText?: string;
   onChange?: (
     event: React.ChangeEvent<HTMLInputElement>
   ) => void;
@@ -21,11 +24,14 @@ export default function FormField({
   value,
   error,
   disabled = false,
+  helperText,
   onChange,
+  ...inputProps
 }: FormFieldProps) {
   return (
-    <div>
+    <div className="space-y-2">
       <Input
+        {...inputProps}
         id={id}
         label={label}
         type={type}
@@ -34,11 +40,24 @@ export default function FormField({
         disabled={disabled}
         onChange={onChange}
         aria-invalid={Boolean(error)}
-        aria-describedby={error ? `${id}-error` : undefined}
+        aria-describedby={
+          [
+            helperText ? `${id}-help` : null,
+            error ? `${id}-error` : null,
+          ]
+            .filter(Boolean)
+            .join(" ") || undefined
+        }
       />
 
+      {helperText && (
+        <p id={`${id}-help`} className="text-xs leading-5 text-muted-foreground">
+          {helperText}
+        </p>
+      )}
+
       {error && (
-        <p id={`${id}-error`} className="mt-1.5 text-sm text-danger" role="alert">
+        <p id={`${id}-error`} className="text-sm text-danger" role="alert">
           {error}
         </p>
       )}

@@ -61,7 +61,7 @@ export default function DeleteProjectButton({
   return (
     <div>
       {error && (
-        <p className="mb-2 rounded-lg border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-700">
+        <p className="mb-2 rounded-lg border border-danger/20 bg-danger-muted px-3 py-2 text-sm text-danger" role="alert">
           {error}
         </p>
       )}

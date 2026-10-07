@@ -4,7 +4,9 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import type { Review } from "@/types";
 import Button from "@/components/ui/Button";
-import Input from "@/components/ui/Input";
+import FormField from "@/components/ui/FormField";
+import TextareaField from "@/components/ui/TextareaField";
+import Alert from "@/components/ui/Alert";
 
 type EditReviewFormProps = {
   review: Review;
@@ -82,61 +84,34 @@ export default function EditReviewForm({
         </p>
       </div>
 
-      <div>
-        <label
-          htmlFor="title"
-          className="mb-2 block text-sm font-medium text-gray-700"
-        >
-          Review title
-        </label>
-
-        <Input
+      <FormField
           id="title"
-          label=""
+          label="Review title"
           value={title}
           onChange={(event) => setTitle(event.target.value)}
           disabled={isLoading}
         />
-      </div>
 
-      <div>
-        <label
-          htmlFor="description"
-          className="mb-2 block text-sm font-medium text-gray-700"
-        >
-          Description
-        </label>
-
-        <textarea
+      <TextareaField
           id="description"
+          label="Description"
           value={description}
           onChange={(event) => setDescription(event.target.value)}
           disabled={isLoading}
           rows={4}
-          className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm outline-none focus:border-gray-500 focus:ring-1 focus:ring-gray-500 disabled:cursor-not-allowed disabled:bg-gray-100"
         />
-      </div>
 
-      <div>
-        <label
-          htmlFor="fileUrl"
-          className="mb-2 block text-sm font-medium text-gray-700"
-        >
-          File URL
-        </label>
-
-        <Input
+      <FormField
           id="fileUrl"
-          label=""
+          label="File URL"
           type="url"
           value={fileUrl}
           onChange={(event) => setFileUrl(event.target.value)}
           disabled={isLoading}
         />
-      </div>
 
       {error && (
-        <p className="text-sm text-red-600">{error}</p>
+        <Alert tone="danger">{error}</Alert>
       )}
 
       <div className="flex gap-3">

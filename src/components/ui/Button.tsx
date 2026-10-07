@@ -1,6 +1,6 @@
 type ButtonProps = {
   children: React.ReactNode;
-  variant?: "primary" | "secondary" | "danger";
+  variant?: "primary" | "secondary" | "danger" | "outline" | "ghost";
   className?: string;
   type?: "button" | "submit" | "reset";
   disabled?: boolean;
@@ -25,7 +25,13 @@ export default function Button({
       "border border-border bg-surface text-foreground hover:bg-surface-muted focus-visible:ring-2 focus-visible:ring-info",
 
     danger:
-      "border border-transparent bg-danger text-white hover:bg-red-700 focus-visible:ring-2 focus-visible:ring-danger",
+      "border border-transparent bg-danger text-white hover:brightness-90 focus-visible:ring-2 focus-visible:ring-danger",
+
+    outline:
+      "border border-border bg-transparent text-foreground hover:bg-surface-muted focus-visible:ring-2 focus-visible:ring-info",
+
+    ghost:
+      "border border-transparent bg-transparent text-muted-foreground hover:bg-surface-muted hover:text-foreground focus-visible:ring-2 focus-visible:ring-info",
   };
 
   return (

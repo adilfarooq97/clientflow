@@ -68,22 +68,22 @@ export default function ActivityItem({
   const relativeTime = formatRelativeTime(time);
 
   const content = (
-    <div className="flex items-start gap-4 rounded-lg py-4 transition-colors hover:bg-gray-50">
-      <div className="mt-0.5 flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-gray-100 text-gray-600">
+    <div className="flex items-start gap-4 rounded-lg py-4 transition-colors hover:bg-surface-muted">
+      <div className="mt-0.5 flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-surface-muted text-muted-foreground">
         {activityIcons[type]}
       </div>
 
       <div className="min-w-0 flex-1">
-        <p className="text-sm font-medium text-gray-900">
+        <p className="text-sm font-medium text-foreground">
           {title}
         </p>
 
-        <p className="mt-1 text-sm text-gray-500">
+        <p className="mt-1 text-sm text-muted-foreground">
           {description}
         </p>
       </div>
 
-      <span className="shrink-0 text-xs text-gray-400">
+      <span className="shrink-0 text-xs text-subtle-foreground">
         {relativeTime}
       </span>
     </div>
@@ -96,7 +96,7 @@ export default function ActivityItem({
   return (
     <Link
       href={href}
-      className="block rounded-lg transition hover:bg-gray-50"
+      className="block rounded-lg transition hover:bg-surface-muted"
     >
       {content}
     </Link>

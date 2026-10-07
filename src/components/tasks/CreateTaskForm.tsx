@@ -3,7 +3,10 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Button from "@/components/ui/Button";
-import Input from "@/components/ui/Input";
+import FormField from "@/components/ui/FormField";
+import SelectField from "@/components/ui/SelectField";
+import TextareaField from "@/components/ui/TextareaField";
+import Alert from "@/components/ui/Alert";
 import type { TaskPriority, TaskStatus } from "@/types";
 
 type CreateTaskFormProps = {
@@ -78,69 +81,45 @@ export default function CreateTaskForm({
   return (
     <form onSubmit={handleSubmit} className="space-y-5">
       <div>
-        <label className="mb-2 block text-sm font-medium text-gray-700">
-          Task title
-        </label>
-
-        <Input
-          label=""
+        <FormField
+          id="task-title"
+          label="Task title"
           value={title}
           onChange={(event) => setTitle(event.target.value)}
           placeholder="e.g. Create homepage design"
           disabled={isLoading}
         />
-
-        {error && (
-          <p className="mt-1 text-sm text-red-600">
-            {error}
-          </p>
-        )}
       </div>
 
-      <div>
-        <label className="mb-2 block text-sm font-medium text-gray-700">
-          Description
-        </label>
-
-        <textarea
-          value={description}
-          onChange={(event) =>
-            setDescription(event.target.value)
-          }
-          placeholder="Describe what needs to be done..."
-          rows={4}
-          disabled={isLoading}
-          className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm outline-none transition focus:border-gray-900 focus:ring-1 focus:ring-gray-900 disabled:bg-gray-100"
-        />
-      </div>
+      <TextareaField
+        id="task-description"
+        label="Description"
+        value={description}
+        onChange={(event) => setDescription(event.target.value)}
+        placeholder="Describe what needs to be done..."
+        rows={4}
+        disabled={isLoading}
+      />
 
       <div className="grid gap-4 sm:grid-cols-2">
-        <div>
-          <label className="mb-2 block text-sm font-medium text-gray-700">
-            Status
-          </label>
-
-          <select
+        <SelectField
+          id="task-status"
+          label="Status"
             value={status}
             onChange={(event) =>
               setStatus(event.target.value as TaskStatus)
             }
             disabled={isLoading}
-            className="w-full rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm outline-none focus:border-gray-900 focus:ring-1 focus:ring-gray-900 disabled:bg-gray-100"
           >
             <option value="Todo">Todo</option>
             <option value="In Progress">In Progress</option>
             <option value="Review">Review</option>
             <option value="Done">Done</option>
-          </select>
-        </div>
+        </SelectField>
 
-        <div>
-          <label className="mb-2 block text-sm font-medium text-gray-700">
-            Priority
-          </label>
-
-          <select
+        <SelectField
+          id="task-priority"
+          label="Priority"
             value={priority}
             onChange={(event) =>
               setPriority(
@@ -148,28 +127,23 @@ export default function CreateTaskForm({
               )
             }
             disabled={isLoading}
-            className="w-full rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm outline-none focus:border-gray-900 focus:ring-1 focus:ring-gray-900 disabled:bg-gray-100"
           >
             <option value="Low">Low</option>
             <option value="Medium">Medium</option>
             <option value="High">High</option>
-          </select>
-        </div>
+        </SelectField>
       </div>
 
-      <div>
-        <label className="mb-2 block text-sm font-medium text-gray-700">
-          Due date
-        </label>
-
-        <input
-          type="date"
+      <FormField
+        id="task-due-date"
+        label="Due date"
+        type="date"
           value={dueDate}
           onChange={(event) => setDueDate(event.target.value)}
-          disabled={isLoading}
-          className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm outline-none focus:border-gray-900 focus:ring-1 focus:ring-gray-900 disabled:bg-gray-100"
-        />
-      </div>
+        disabled={isLoading}
+      />
+
+      {error && <Alert tone="danger">{error}</Alert>}
 
       <div className="flex justify-end gap-3">
         <Button

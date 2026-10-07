@@ -6,6 +6,7 @@ import Button from "@/components/ui/Button";
 import KanbanBoardWrapper from "@/components/tasks/KanbanBoardWrapper";
 import { getCurrentUserProfile } from "@/lib/supabase/auth";
 import ProjectNavigation from "@/components/projects/ProjectNavigation";
+import PageHeader from "@/components/ui/PageHeader";
 
 
 export default async function ProjectTasksPage({
@@ -42,24 +43,19 @@ export default async function ProjectTasksPage({
 
         <ProjectNavigation projectId={project.id} />
 
-        <div className="mt-4 flex items-center justify-between">
-          <div>
-            <h1 className="text-2xl font-bold text-gray-900">
-              {project.name} Tasks
-            </h1>
-            <p className="mt-1 text-sm text-gray-500">
-              {profile?.role === "freelancer"
-                ? "Manage tasks and track project progress."
-                : "View tasks and track project progress."}
-            </p>
-          </div>
-
-          {profile?.role === "freelancer" && (
+        <PageHeader
+          title={`${project.name} tasks`}
+          description={
+            profile?.role === "freelancer"
+              ? "Manage tasks and track project progress."
+              : "View tasks and track project progress."
+          }
+          action={profile?.role === "freelancer" ? (
             <Link href={`/projects/${project.id}/tasks/new`}>
               <Button>New Task</Button>
             </Link>
-          )}
-        </div>
+          ) : undefined}
+        />
       </div>
       <div className="mb-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
         <div className="rounded-xl border border-gray-200 bg-white p-5">

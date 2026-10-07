@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Button from "@/components/ui/Button";
+import Alert from "@/components/ui/Alert";
 
 type UploadFileFormProps = {
   projectId: string;
@@ -118,9 +119,7 @@ if (!response.ok) {
       )}
 
       {error && (
-        <p className="text-sm text-red-600">
-          {error}
-        </p>
+        <Alert tone="danger">{error}</Alert>
       )}
 
       <div className="flex gap-3">

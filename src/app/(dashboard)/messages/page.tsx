@@ -25,7 +25,7 @@ export default async function MessagesPage({
   const messages = await getMessages(project.id);
 
   return (
-    <div className="p-8">
+    <div className="space-y-6">
       <Link
         href={`/projects/${project.id}`}
         className="text-sm text-gray-500 hover:text-gray-900"

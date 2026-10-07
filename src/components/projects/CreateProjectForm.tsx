@@ -4,6 +4,9 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Button from "@/components/ui/Button";
 import FormField from "@/components/ui/FormField";
+import SelectField from "@/components/ui/SelectField";
+import TextareaField from "@/components/ui/TextareaField";
+import Alert from "@/components/ui/Alert";
 import type { ProjectStatus } from "@/types";
 
 export default function CreateProjectForm() {
@@ -91,87 +94,41 @@ export default function CreateProjectForm() {
         }
       />
 
-      <div>
-        <label
-          htmlFor="description"
-          className="text-sm font-medium text-gray-700"
-        >
-          Description
-          <span className="ml-1 font-normal text-gray-400">
-            (optional)
-          </span>
-        </label>
+      <TextareaField
+        id="description"
+        label="Description (optional)"
+        value={description}
+        onChange={(event) => setDescription(event.target.value)}
+        placeholder="Describe the project..."
+        rows={4}
+        maxLength={5000}
+        helperText={`${description.length}/5000 characters`}
+      />
 
-        <textarea
-          id="description"
-          value={description}
-          onChange={(event) =>
-            setDescription(event.target.value)
-          }
-          placeholder="Describe the project..."
-          rows={4}
-          maxLength={5000}
-          className="mt-2 w-full rounded-lg border border-gray-300 bg-white px-3 py-2.5 text-sm leading-6 text-gray-900 outline-none transition focus:border-gray-900 focus:ring-2 focus:ring-gray-200"
-        />
-      </div>
-      <p className="mt-1 text-right text-xs text-gray-400">
-        {description.length}/5000
-      </p>
-
-      <div>
-        <label
-          htmlFor="status"
-          className="text-sm font-medium text-gray-700"
-        >
-          Status
-          <span className="ml-1 font-normal text-gray-400">
-            (optional)
-          </span>
-        </label>
-
-        <select
-          id="status"
-          value={status}
-          onChange={(event) =>
-            setStatus(
-              event.target.value as ProjectStatus
-            )
-          }
-          className="mt-2 w-full rounded-lg border border-gray-300 bg-white px-3 py-2.5 text-sm text-gray-900 outline-none transition focus:border-gray-900 focus:ring-2 focus:ring-gray-200"
-        >
+      <SelectField
+        id="status"
+        label="Status (optional)"
+        value={status}
+        onChange={(event) =>
+          setStatus(event.target.value as ProjectStatus)
+        }
+      >
           <option value="Planning">Planning</option>
           <option value="In Progress">In Progress</option>
           <option value="Review">Review</option>
           <option value="Completed">Completed</option>
-        </select>
-      </div>
+      </SelectField>
 
-      <div>
-        <label
-          htmlFor="deadline"
-          className="text-sm font-medium text-gray-700"
-        >
-          Deadline
-          <span className="ml-1 font-normal text-gray-400">
-            (optional)
-          </span>
-        </label>
-
-        <input
-          id="deadline"
-          type="date"
-          value={deadline}
-          onChange={(event) =>
-            setDeadline(event.target.value)
-          }
-          className="mt-2 w-full rounded-lg border border-gray-300 bg-white px-3 py-2.5 text-sm text-gray-900 outline-none transition focus:border-gray-900 focus:ring-2 focus:ring-gray-200"
-        />
-      </div>
+      <FormField
+        id="deadline"
+        label="Deadline (optional)"
+        type="date"
+        value={deadline}
+        onChange={(event) => setDeadline(event.target.value)}
+      />
 
       {error && (
-        <p className="rounded-lg border border-red-200 bg-red-50 px-3 py-2 text-sm leading-6 text-red-700">
-          {error}
-        </p>
+        <Alert tone="danger">{error}</Alert>
       )}
 
       <Button

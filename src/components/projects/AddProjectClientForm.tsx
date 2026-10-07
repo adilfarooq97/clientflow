@@ -6,6 +6,7 @@ import ClientSearch, {
   type ClientProfile,
 } from "@/components/projects/ClientSearch";
 import Button from "@/components/ui/Button";
+import Alert from "@/components/ui/Alert";
 
 type AddProjectClientFormProps = {
   projectId: string;
@@ -110,9 +111,7 @@ export default function AddProjectClientForm({
       )}
 
       {error && (
-        <p className="text-sm text-red-600">
-          {error}
-        </p>
+        <Alert tone="danger">{error}</Alert>
       )}
     </div>
   );

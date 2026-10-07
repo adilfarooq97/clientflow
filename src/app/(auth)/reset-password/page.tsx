@@ -6,6 +6,7 @@ import Button from "@/components/ui/Button";
 import AuthHeader from "@/components/auth/AuthHeader";
 import AuthCard from "@/components/auth/AuthCard";
 import FormField from "@/components/ui/FormField";
+import Alert from "@/components/ui/Alert";
 import { supabase } from "@/lib/supabase/client";
 
 export default function ResetPasswordPage() {
@@ -73,31 +74,31 @@ export default function ResetPasswordPage() {
             Verifying your reset link...
           </p>
         ) : !hasSession ? (
-          <div className="mt-6 rounded-lg bg-red-50 p-4">
-            <p className="text-sm text-red-800" role="alert">
+          <Alert tone="danger" className="mt-6">
+            <p>
               This password reset link is invalid or has expired. Request a new
               link to continue.
             </p>
             <Link
               href="/forgot-password"
-              className="mt-3 inline-block text-sm font-medium text-gray-900 hover:underline"
+              className="mt-3 inline-block font-medium text-current underline underline-offset-4"
             >
               Request a new reset link
             </Link>
-          </div>
+          </Alert>
         ) : isUpdated ? (
-          <div className="mt-6 rounded-lg bg-green-50 p-4" role="status">
-            <p className="text-sm text-green-800">
+          <Alert tone="success" className="mt-6">
+            <p>
               Your password has been updated. You can now sign in with your new
               password.
             </p>
             <Link
               href="/login"
-              className="mt-3 inline-block text-sm font-medium text-gray-900 hover:underline"
+              className="mt-3 inline-block font-medium text-current underline underline-offset-4"
             >
               Back to sign in
             </Link>
-          </div>
+          </Alert>
         ) : (
           <form onSubmit={handleSubmit} className="mt-7 space-y-5">
             <FormField

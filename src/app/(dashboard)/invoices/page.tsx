@@ -1,5 +1,6 @@
 import Link from "next/link";
 import Button from "@/components/ui/Button";
+import PageHeader from "@/components/ui/PageHeader";
 import { getCurrentUserProfile } from "@/lib/supabase/auth";
 import { getInvoices } from "@/lib/supabase/invoices";
 import type { InvoiceStatus } from "@/types";
@@ -79,25 +80,19 @@ export default async function InvoicesPage({
 
   return (
     <div className="space-y-8">
-      <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
-        <div>
-          <h1 className="text-2xl font-semibold tracking-tight text-gray-900">
-            Invoices
-          </h1>
-
-          <p className="mt-2 text-sm leading-6 text-gray-500">
-            {userProfile?.role === "freelancer"
-              ? "Create and track invoices for your client projects."
-              : "Review invoices shared with you for your projects."}
-          </p>
-        </div>
-
-        {userProfile?.role === "freelancer" && (
+      <PageHeader
+        title="Invoices"
+        description={
+          userProfile?.role === "freelancer"
+            ? "Create and track invoices for your client projects."
+            : "Review invoices shared with you for your projects."
+        }
+        action={userProfile?.role === "freelancer" ? (
           <Link href="/invoices/new">
             <Button>New Invoice</Button>
           </Link>
-        )}
-      </div>
+        ) : undefined}
+      />
 
       <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
         <div className="rounded-xl border border-gray-200 bg-white p-5">

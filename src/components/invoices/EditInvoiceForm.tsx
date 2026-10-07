@@ -4,7 +4,10 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import type { Invoice, InvoiceStatus } from "@/types";
 import Button from "@/components/ui/Button";
-import Input from "@/components/ui/Input";
+import FormField from "@/components/ui/FormField";
+import SelectField from "@/components/ui/SelectField";
+import TextareaField from "@/components/ui/TextareaField";
+import Alert from "@/components/ui/Alert";
 
 type EditInvoiceFormProps = {
   invoice: Invoice;
@@ -136,91 +139,46 @@ export default function EditInvoiceForm({
       onSubmit={handleSubmit}
       className="max-w-2xl space-y-6 rounded-xl border border-gray-200 bg-white p-6"
     >
-      <div>
-        <h1 className="text-xl font-semibold text-gray-900">
-          Edit Invoice
-        </h1>
-
-        <p className="mt-1 text-sm text-gray-500">
-          Update the invoice details and payment status.
-        </p>
-      </div>
-
-      <div>
-        <label
-          htmlFor="invoiceNumber"
-          className="mb-2 block text-sm font-medium text-gray-700"
-        >
-          Invoice number
-        </label>
-
-        <Input
+      <FormField
           id="invoiceNumber"
-          label=""
+          label="Invoice number"
           value={invoiceNumber}
           onChange={(event) =>
             setInvoiceNumber(event.target.value)
           }
           disabled={isLoading}
         />
-      </div>
 
-      <div>
-        <label
-          htmlFor="description"
-          className="mb-2 block text-sm font-medium text-gray-700"
-        >
-          Description
-        </label>
-
-        <textarea
+      <TextareaField
           id="description"
+          label="Description"
           value={description}
           onChange={(event) =>
             setDescription(event.target.value)
           }
           disabled={isLoading}
           rows={4}
-          className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm outline-none focus:border-gray-500 focus:ring-1 focus:ring-gray-500 disabled:cursor-not-allowed disabled:bg-gray-100"
         />
-      </div>
 
-      <div>
-        <label
-          htmlFor="amount"
-          className="mb-2 block text-sm font-medium text-gray-700"
-        >
-          Amount
-        </label>
-
-        <Input
+      <FormField
           id="amount"
-          label=""
           type="number"
+          label="Amount"
           min="0"
           step="0.01"
           value={amount}
           onChange={(event) => setAmount(event.target.value)}
           disabled={isLoading}
         />
-      </div>
 
-      <div>
-        <label
-          htmlFor="status"
-          className="mb-2 block text-sm font-medium text-gray-700"
-        >
-          Status
-        </label>
-
-        <select
+      <SelectField
           id="status"
+          label="Status"
           value={status}
           onChange={(event) =>
             setStatus(event.target.value as InvoiceStatus)
           }
           disabled={isLoading}
-          className="w-full rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm outline-none focus:border-gray-500 focus:ring-1 focus:ring-gray-500 disabled:cursor-not-allowed disabled:bg-gray-100"
         >
           {statuses.map((invoiceStatus) => (
             <option
@@ -230,21 +188,12 @@ export default function EditInvoiceForm({
               {invoiceStatus}
             </option>
           ))}
-        </select>
-      </div>
+      </SelectField>
 
       <div className="grid gap-4 sm:grid-cols-2">
-        <div>
-          <label
-            htmlFor="issueDate"
-            className="mb-2 block text-sm font-medium text-gray-700"
-          >
-            Issue date
-          </label>
-
-          <Input
+        <FormField
             id="issueDate"
-            label=""
+            label="Issue date"
             type="date"
             value={issueDate}
             onChange={(event) =>
@@ -252,19 +201,10 @@ export default function EditInvoiceForm({
             }
             disabled={isLoading}
           />
-        </div>
 
-        <div>
-          <label
-            htmlFor="dueDate"
-            className="mb-2 block text-sm font-medium text-gray-700"
-          >
-            Due date
-          </label>
-
-          <Input
+        <FormField
             id="dueDate"
-            label=""
+            label="Due date"
             type="date"
             value={dueDate}
             onChange={(event) =>
@@ -272,11 +212,10 @@ export default function EditInvoiceForm({
             }
             disabled={isLoading}
           />
-        </div>
       </div>
 
       {error && (
-        <p className="text-sm text-red-600">{error}</p>
+        <Alert tone="danger">{error}</Alert>
       )}
 
       <div className="flex gap-3">

@@ -2,6 +2,7 @@ import { notFound, redirect } from "next/navigation";
 import EditInvoiceForm from "@/components/invoices/EditInvoiceForm";
 import { getCurrentUserProfile } from "@/lib/supabase/auth";
 import { getInvoice } from "@/lib/supabase/invoices";
+import PageHeader from "@/components/ui/PageHeader";
 
 export default async function EditInvoicePage({
   params,
@@ -29,15 +30,11 @@ export default async function EditInvoicePage({
 
   return (
     <div className="space-y-6">
-      <div>
-        <p className="text-sm font-medium text-gray-500">
-          Invoice {invoice.invoice_number}
-        </p>
-
-        <h1 className="mt-1 text-2xl font-semibold tracking-tight text-gray-900">
-          Edit Invoice
-        </h1>
-      </div>
+      <PageHeader
+        title="Edit invoice"
+        eyebrow={`Invoice ${invoice.invoice_number}`}
+        description="Update the invoice details and payment status."
+      />
 
       <EditInvoiceForm invoice={invoice} />
     </div>

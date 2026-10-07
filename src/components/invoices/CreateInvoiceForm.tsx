@@ -4,7 +4,10 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import type { Project } from "@/types";
 import Button from "@/components/ui/Button";
-import Input from "@/components/ui/Input";
+import FormField from "@/components/ui/FormField";
+import SelectField from "@/components/ui/SelectField";
+import TextareaField from "@/components/ui/TextareaField";
+import Alert from "@/components/ui/Alert";
 
 type ClientOption = {
   id: string;
@@ -140,33 +143,15 @@ export default function CreateInvoiceForm({
       onSubmit={handleSubmit}
       className="max-w-2xl space-y-6 rounded-xl border border-gray-200 bg-white p-6"
     >
-      <div>
-        <h1 className="text-xl font-semibold text-gray-900">
-          New Invoice
-        </h1>
-
-        <p className="mt-1 text-sm text-gray-500">
-          Create an invoice for a client project.
-        </p>
-      </div>
-
-      <div>
-        <label
-          htmlFor="project"
-          className="mb-2 block text-sm font-medium text-gray-700"
-        >
-          Project
-        </label>
-
-        <select
+      <SelectField
           id="project"
+          label="Project"
           value={projectId}
           onChange={(event) => {
             setProjectId(event.target.value);
             setClientId("");
           }}
           disabled={isLoading}
-          className="w-full rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm outline-none focus:border-gray-500 focus:ring-1 focus:ring-gray-500 disabled:cursor-not-allowed disabled:bg-gray-100"
         >
           <option value="">Select a project</option>
 
@@ -175,23 +160,14 @@ export default function CreateInvoiceForm({
               {project.name}
             </option>
           ))}
-        </select>
-      </div>
+      </SelectField>
 
-      <div>
-        <label
-          htmlFor="client"
-          className="mb-2 block text-sm font-medium text-gray-700"
-        >
-          Client
-        </label>
-
-        <select
+      <SelectField
           id="client"
+          label="Client"
           value={clientId}
           onChange={(event) => setClientId(event.target.value)}
           disabled={isLoading}
-          className="w-full rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm outline-none focus:border-gray-500 focus:ring-1 focus:ring-gray-500 disabled:cursor-not-allowed disabled:bg-gray-100"
         >
           <option value="">Select a client</option>
 
@@ -200,20 +176,11 @@ export default function CreateInvoiceForm({
               {client.full_name}
             </option>
           ))}
-        </select>
-      </div>
+      </SelectField>
 
-      <div>
-        <label
-          htmlFor="invoiceNumber"
-          className="mb-2 block text-sm font-medium text-gray-700"
-        >
-          Invoice number
-        </label>
-
-        <Input
+      <FormField
           id="invoiceNumber"
-          label=""
+          label="Invoice number"
           value={invoiceNumber}
           onChange={(event) =>
             setInvoiceNumber(event.target.value)
@@ -221,18 +188,10 @@ export default function CreateInvoiceForm({
           placeholder="INV-001"
           disabled={isLoading}
         />
-      </div>
 
-      <div>
-        <label
-          htmlFor="description"
-          className="mb-2 block text-sm font-medium text-gray-700"
-        >
-          Description
-        </label>
-
-        <textarea
+      <TextareaField
           id="description"
+          label="Description"
           value={description}
           onChange={(event) =>
             setDescription(event.target.value)
@@ -240,21 +199,11 @@ export default function CreateInvoiceForm({
           disabled={isLoading}
           rows={4}
           placeholder="Website design and development"
-          className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm outline-none focus:border-gray-500 focus:ring-1 focus:ring-gray-500 disabled:cursor-not-allowed disabled:bg-gray-100"
         />
-      </div>
 
-      <div>
-        <label
-          htmlFor="amount"
-          className="mb-2 block text-sm font-medium text-gray-700"
-        >
-          Amount
-        </label>
-
-        <Input
+      <FormField
           id="amount"
-          label=""
+          label="Amount"
           type="number"
           min="0"
           step="0.01"
@@ -263,20 +212,11 @@ export default function CreateInvoiceForm({
           placeholder="1500.00"
           disabled={isLoading}
         />
-      </div>
 
       <div className="grid gap-4 sm:grid-cols-2">
-        <div>
-          <label
-            htmlFor="issueDate"
-            className="mb-2 block text-sm font-medium text-gray-700"
-          >
-            Issue date
-          </label>
-
-          <Input
+        <FormField
             id="issueDate"
-            label=""
+            label="Issue date"
             type="date"
             value={issueDate}
             onChange={(event) =>
@@ -284,19 +224,10 @@ export default function CreateInvoiceForm({
             }
             disabled={isLoading}
           />
-        </div>
 
-        <div>
-          <label
-            htmlFor="dueDate"
-            className="mb-2 block text-sm font-medium text-gray-700"
-          >
-            Due date
-          </label>
-
-          <Input
+        <FormField
             id="dueDate"
-            label=""
+            label="Due date"
             type="date"
             value={dueDate}
             onChange={(event) =>
@@ -304,11 +235,10 @@ export default function CreateInvoiceForm({
             }
             disabled={isLoading}
           />
-        </div>
       </div>
 
       {error && (
-        <p className="text-sm text-red-600">{error}</p>
+        <Alert tone="danger">{error}</Alert>
       )}
 
       <div className="flex gap-3">

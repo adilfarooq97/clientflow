@@ -251,7 +251,7 @@ export default async function Dashboard() {
       ];
 
   return (
-    <div className="p-4 sm:p-6 lg:p-8">
+    <div>
       <h1 className="text-2xl font-bold tracking-tight text-gray-900">
         {greeting} 👋
       </h1>
@@ -308,32 +308,32 @@ export default async function Dashboard() {
         </div>
 
         <div className="mt-6 grid gap-4 sm:grid-cols-3">
-          <div className="rounded-lg bg-yellow-50 p-4">
-            <p className="text-sm text-yellow-700">
+          <div className="rounded-lg bg-warning-muted p-4">
+            <p className="text-sm text-warning">
               Pending
             </p>
 
-            <p className="mt-1 text-2xl font-bold text-yellow-900">
+            <p className="mt-1 text-2xl font-bold text-warning">
               {pendingReviews.length}
             </p>
           </div>
 
-          <div className="rounded-lg bg-green-50 p-4">
-            <p className="text-sm text-green-700">
+          <div className="rounded-lg bg-success-muted p-4">
+            <p className="text-sm text-success">
               Approved
             </p>
 
-            <p className="mt-1 text-2xl font-bold text-green-900">
+            <p className="mt-1 text-2xl font-bold text-success">
               {approvedReviews.length}
             </p>
           </div>
 
-          <div className="rounded-lg bg-red-50 p-4">
-            <p className="text-sm text-red-700">
+          <div className="rounded-lg bg-danger-muted p-4">
+            <p className="text-sm text-danger">
               Changes Requested
             </p>
 
-            <p className="mt-1 text-2xl font-bold text-red-900">
+            <p className="mt-1 text-2xl font-bold text-danger">
               {changesRequestedReviews.length}
             </p>
           </div>

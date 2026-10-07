@@ -7,6 +7,8 @@ import FileCard from "@/components/files/FileCard";
 import { getCurrentUserProfile } from "@/lib/supabase/auth";
 import ProjectNavigation from "@/components/projects/ProjectNavigation";
 import EmptyState from "@/components/ui/EmptyState";
+import PageHeader from "@/components/ui/PageHeader";
+import Button from "@/components/ui/Button";
 
 
 export default async function FilesPage({
@@ -64,37 +66,29 @@ export default async function FilesPage({
 
   return (
     <div className="space-y-6">
-      <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-        <div>
-          <Link
-            href={`/projects/${project.id}`}
-            className="text-sm text-gray-500 hover:text-gray-900"
-          >
-            ← Back to project
-          </Link>
+      <div className="space-y-4">
+        <Link
+          href={`/projects/${project.id}`}
+          className="text-sm text-muted-foreground hover:text-foreground"
+        >
+          ← Back to project
+        </Link>
 
-          <ProjectNavigation projectId={project.id} />
+        <ProjectNavigation projectId={project.id} />
 
-          <h1 className="mt-2 text-2xl font-bold text-gray-900">
-            Files
-          </h1>
-
-          <p className="mt-1 text-sm text-gray-500">
-            {project.name} ·{" "}
-            {files.length === 1
-              ? "1 file"
-              : `${files.length} files`}
-          </p>
-        </div>
-
-        {profile?.role === "freelancer" && (
-          <Link
-            href={`/projects/${project.id}/files/new`}
-            className="rounded-lg bg-gray-900 px-4 py-2 text-sm font-medium text-white transition hover:bg-gray-800"
-          >
-            + Add File
-          </Link>
-        )}
+        <PageHeader
+          title="Files"
+          description={`${project.name} · ${
+            files.length === 1 ? "1 file" : `${files.length} files`
+          }`}
+          action={
+            profile?.role === "freelancer" ? (
+              <Link href={`/projects/${project.id}/files/new`}>
+                <Button>Add File</Button>
+              </Link>
+            ) : undefined
+          }
+        />
       </div>
 
       {filesWithUrls.length === 0 ? (

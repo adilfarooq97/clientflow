@@ -5,6 +5,7 @@ import { getMessages } from "@/lib/supabase/messages";
 import { getCurrentUser } from "@/lib/supabase/auth";
 import MessageThread from "@/components/messages/MessageThread";
 import ProjectNavigation from "@/components/projects/ProjectNavigation";
+import PageHeader from "@/components/ui/PageHeader";
 
 export default async function MessagesPage({
   params,
@@ -31,24 +32,18 @@ export default async function MessagesPage({
 
   return (
     <div className="space-y-6">
-      <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-        <div>
-          <Link
-            href={`/projects/${project.id}`}
-            className="text-sm text-gray-500 hover:text-gray-900"
-          >
-            ← Back to project
-          </Link>
-          <ProjectNavigation projectId={project.id} />
-
-          <h1 className="mt-2 text-2xl font-bold text-gray-900">
-            Messages
-          </h1>
-
-          <p className="mt-1 text-sm text-gray-500">
-            {project.name} · Project conversation
-          </p>
-        </div>
+      <div className="space-y-4">
+        <Link
+          href={`/projects/${project.id}`}
+          className="text-sm text-muted-foreground hover:text-foreground"
+        >
+          ← Back to project
+        </Link>
+        <ProjectNavigation projectId={project.id} />
+        <PageHeader
+          title="Messages"
+          description={`${project.name} · Project conversation`}
+        />
       </div>
 
       <div className="rounded-2xl border border-gray-200 bg-white">

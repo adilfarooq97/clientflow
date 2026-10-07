@@ -60,7 +60,7 @@ export default function DeleteMessageButton({
   return (
     <>
       {error && (
-        <p className="mt-1 text-xs text-red-500" role="alert">
+        <p className="mt-1 text-xs text-danger" role="alert">
           {error}
         </p>
       )}
@@ -69,7 +69,7 @@ export default function DeleteMessageButton({
         type="button"
         onClick={handleDelete}
         disabled={isDeleting}
-        className="mt-1 text-xs text-gray-400 hover:text-red-600 disabled:cursor-not-allowed disabled:opacity-50"
+        className="mt-1 text-xs text-muted-foreground hover:text-danger disabled:cursor-not-allowed disabled:opacity-50"
       >
         {isDeleting ? "Deleting..." : "Delete"}
       </button>

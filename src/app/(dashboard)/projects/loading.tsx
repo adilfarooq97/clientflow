@@ -1,6 +1,6 @@
 export default function ProjectsLoading() {
   return (
-    <div className="p-4 sm:p-6 lg:p-8">
+    <div className="space-y-6">
       <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
         <div>
           <div className="h-7 w-28 animate-pulse rounded-md bg-gray-200" />

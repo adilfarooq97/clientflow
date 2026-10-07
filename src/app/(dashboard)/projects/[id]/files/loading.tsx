@@ -1,6 +1,6 @@
 export default function FilesLoading() {
   return (
-    <div className="p-4 sm:p-6 lg:p-8">
+    <div className="space-y-6">
       <div className="h-4 w-36 animate-pulse rounded bg-gray-200" />
 
       <div className="mt-6 h-10 w-full animate-pulse rounded-lg bg-gray-100" />

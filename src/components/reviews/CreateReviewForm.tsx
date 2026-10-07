@@ -3,7 +3,9 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Button from "@/components/ui/Button";
-import Input from "@/components/ui/Input";
+import FormField from "@/components/ui/FormField";
+import TextareaField from "@/components/ui/TextareaField";
+import Alert from "@/components/ui/Alert";
 
 type CreateReviewFormProps = {
   projectId: string;
@@ -81,54 +83,28 @@ export default function CreateReviewForm({
         </p>
       </div>
 
-      <div>
-        <label
-          htmlFor="title"
-          className="mb-2 block text-sm font-medium text-gray-700"
-        >
-          Review title
-        </label>
-
-        <Input
+      <FormField
           id="title"
-          label=""
+          label="Review title"
           value={title}
           onChange={(event) => setTitle(event.target.value)}
           placeholder="Homepage design"
           disabled={isLoading}
         />
-      </div>
 
-      <div>
-        <label
-          htmlFor="description"
-          className="mb-2 block text-sm font-medium text-gray-700"
-        >
-          Description
-        </label>
-
-        <textarea
+      <TextareaField
           id="description"
+          label="Description"
           value={description}
           onChange={(event) => setDescription(event.target.value)}
           placeholder="Describe what you're sending for review..."
           disabled={isLoading}
           rows={4}
-          className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm outline-none transition focus:border-gray-500 focus:ring-1 focus:ring-gray-500 disabled:cursor-not-allowed disabled:bg-gray-100"
         />
-      </div>
 
-      <div>
-        <label
-          htmlFor="fileUrl"
-          className="mb-2 block text-sm font-medium text-gray-700"
-        >
-          File URL
-        </label>
-
-        <Input
+      <FormField
           id="fileUrl"
-          label=""
+          label="File URL"
           type="url"
           value={fileUrl}
           onChange={(event) => setFileUrl(event.target.value)}
@@ -139,12 +115,9 @@ export default function CreateReviewForm({
         <p className="mt-1 text-xs text-gray-500">
           For now, paste a link to the design or deliverable.
         </p>
-      </div>
 
       {error && (
-        <p className="text-sm text-red-600">
-          {error}
-        </p>
+        <Alert tone="danger">{error}</Alert>
       )}
 
       <div className="flex gap-3">

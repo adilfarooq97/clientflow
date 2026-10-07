@@ -69,7 +69,7 @@ export default function DeleteInvoiceButton({
       </Button>
 
       {error && (
-        <p className="mt-2 text-sm text-red-600">
+        <p className="mt-2 text-sm text-danger" role="alert">
           {error}
         </p>
       )}

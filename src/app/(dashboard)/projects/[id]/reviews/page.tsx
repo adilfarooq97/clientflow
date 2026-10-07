@@ -7,6 +7,8 @@ import { getCurrentUserProfile } from "@/lib/supabase/auth";
 import Button from "@/components/ui/Button";
 import ProjectNavigation from "@/components/projects/ProjectNavigation";
 import EmptyState from "@/components/ui/EmptyState";
+import PageHeader from "@/components/ui/PageHeader";
+import Alert from "@/components/ui/Alert";
 
 
 export default async function ReviewsPage({
@@ -31,44 +33,40 @@ export default async function ReviewsPage({
 
   return (
     <div className="space-y-6">
-      <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-        <div>
-          <Link
-            href={`/projects/${project.id}`}
-            className="text-sm text-gray-500 hover:text-gray-900"
-          >
-            ← Back to project
-          </Link>
+      <div className="space-y-4">
+        <Link
+          href={`/projects/${project.id}`}
+          className="text-sm text-muted-foreground hover:text-foreground"
+        >
+          ← Back to project
+        </Link>
 
-          <ProjectNavigation projectId={project.id} />
+        <ProjectNavigation projectId={project.id} />
 
-          <h1 className="mt-2 text-2xl font-bold text-gray-900">
-            Design Reviews
-          </h1>
-
-          <p className="mt-1 text-sm text-gray-500">
-            {project.name}
-          </p>
-        </div>
-
-        {profile?.role === "freelancer" && (
-          <Link href={`/projects/${project.id}/reviews/new`}>
-            <Button>New Review</Button>
-          </Link>
-        )}
+        <PageHeader
+          title="Design reviews"
+          description={project.name}
+          action={
+            profile?.role === "freelancer" ? (
+              <Link href={`/projects/${project.id}/reviews/new`}>
+                <Button>New Review</Button>
+              </Link>
+            ) : undefined
+          }
+        />
       </div>
       {profile?.role === "client" && pendingReviews.length > 0 && (
-        <div className="rounded-xl border border-yellow-200 bg-yellow-50 p-4">
-          <p className="text-sm font-semibold text-yellow-900">
+        <Alert tone="warning">
+          <p className="text-sm font-semibold text-warning">
             {pendingReviews.length === 1
               ? "1 review is waiting for your approval."
               : `${pendingReviews.length} reviews are waiting for your approval.`}
           </p>
 
-          <p className="mt-1 text-sm text-yellow-800">
+          <p className="mt-1 text-sm text-warning">
             Review the submitted work and approve it or request changes.
           </p>
-        </div>
+        </Alert>
       )}
 
       {reviews.length === 0 ? (

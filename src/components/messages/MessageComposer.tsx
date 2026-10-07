@@ -128,8 +128,8 @@ export default function MessageComposer({
           <p
             className={`mt-1 text-xs ${
               content.length >= MAX_LENGTH
-                ? "text-red-600"
-                : "text-gray-400"
+                ? "text-danger"
+                : "text-subtle-foreground"
             }`}
           >
             {content.length}/{MAX_LENGTH}
@@ -146,7 +146,7 @@ export default function MessageComposer({
       </div>
 
       {error && (
-        <p className="text-sm text-red-600">
+        <p className="text-sm text-danger" role="alert">
           {error}
         </p>
       )}

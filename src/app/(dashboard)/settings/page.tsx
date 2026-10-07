@@ -1,34 +1,31 @@
 import { getProfileSettings } from "@/lib/supabase/settings";
 import ProfileForm from "@/components/settings/ProfileForm";
+import PageHeader from "@/components/ui/PageHeader";
+import Alert from "@/components/ui/Alert";
 
 export default async function SettingsPage() {
   const profile = await getProfileSettings();
 
   if (!profile) {
     return (
-      <div className="m-4 rounded-xl border border-gray-200 bg-white p-6 sm:m-6 lg:m-8">
+      <div className="rounded-xl border border-border bg-surface p-6">
         <h1 className="text-xl font-semibold text-gray-900">
           Settings
         </h1>
 
-        <p className="mt-2 text-sm text-gray-500">
-          Unable to load your profile.
-        </p>
+        <div className="mt-4">
+          <Alert tone="danger">Unable to load your profile.</Alert>
+        </div>
       </div>
     );
   }
 
   return (
-    <div className="space-y-6 p-4 sm:p-6 lg:p-8">
-      <div>
-        <h1 className="text-2xl font-semibold text-gray-900">
-          Settings
-        </h1>
-
-        <p className="mt-1 text-sm text-gray-500">
-          Manage your profile information.
-        </p>
-      </div>
+    <div className="space-y-6">
+      <PageHeader
+        title="Settings"
+        description="Manage your profile information."
+      />
 
       <section className="max-w-2xl rounded-xl border border-gray-200 bg-white p-6">
         <div>

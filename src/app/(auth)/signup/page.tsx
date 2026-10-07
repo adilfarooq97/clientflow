@@ -7,6 +7,8 @@ import Button from "@/components/ui/Button";
 import AuthHeader from "@/components/auth/AuthHeader";
 import AuthCard from "@/components/auth/AuthCard";
 import FormField from "@/components/ui/FormField";
+import SelectField from "@/components/ui/SelectField";
+import Alert from "@/components/ui/Alert";
 import type { UserRole } from "@/types";
 import { supabase } from "@/lib/supabase/client";
 
@@ -81,18 +83,15 @@ export default function SignupPage() {
         </p>
 
         {errorMessage && (
-          <p
-            className="mt-5 rounded-lg bg-danger/10 p-3 text-sm text-danger"
-            role="alert"
-          >
+          <Alert tone="danger" className="mt-5">
             {errorMessage}
-          </p>
+          </Alert>
         )}
 
         {successMessage && (
-          <div className="mt-6 rounded-lg bg-green-50 p-4" role="status">
-            <p className="text-sm text-green-800">{successMessage}</p>
-          </div>
+          <Alert tone="success" className="mt-6">
+            {successMessage}
+          </Alert>
         )}
 
         <form
@@ -108,26 +107,17 @@ export default function SignupPage() {
             onChange={(event) => setName(event.target.value)}
           />
 
-          <div>
-            <label
-              htmlFor="role"
-              className="text-sm font-medium text-gray-700"
-            >
-              Account type
-            </label>
-
-            <select
+          <SelectField
               id="role"
+              label="Account type"
               value={role}
               onChange={(event) =>
                 setRole(event.target.value as UserRole)
               }
-              className="mt-2 w-full rounded-lg border border-gray-300 bg-white px-3 py-2.5 text-sm text-gray-900 outline-none transition focus:border-gray-900 focus:ring-2 focus:ring-gray-200"
             >
               <option value="freelancer">Freelancer / Agency</option>
               <option value="client">Client</option>
-            </select>
-          </div>
+          </SelectField>
 
           <FormField
             id="email"

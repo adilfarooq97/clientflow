@@ -2,6 +2,8 @@ import { getClients } from "@/lib/supabase/client-data";
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import { getCurrentUserProfile } from "@/lib/supabase/auth";
+import PageHeader from "@/components/ui/PageHeader";
+import EmptyState from "@/components/ui/EmptyState";
 
 export default async function ClientsPage() {
   const profile = await getCurrentUserProfile();
@@ -13,27 +15,17 @@ export default async function ClientsPage() {
   const clients = await getClients();
 
   return (
-    <div className="space-y-6 p-4 sm:p-6 lg:p-8">
-      <div>
-        <h1 className="text-2xl font-semibold text-gray-900">
-          Clients
-        </h1>
-
-        <p className="mt-1 text-sm text-gray-500">
-          Clients connected to your projects.
-        </p>
-      </div>
+    <div className="space-y-6">
+      <PageHeader
+        title="Clients"
+        description="Clients connected to your projects."
+      />
 
       {clients.length === 0 ? (
-        <div className="rounded-xl border border-gray-200 bg-white p-8 text-center">
-          <h2 className="text-lg font-semibold text-gray-900">
-            No clients yet
-          </h2>
-
-          <p className="mt-2 text-sm text-gray-500">
-            Add a client to one of your projects to see them here.
-          </p>
-        </div>
+        <EmptyState
+          title="No clients yet"
+          description="Add a client to one of your projects to see them here."
+        />
       ) : (
         <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
           {clients.map((client) => (

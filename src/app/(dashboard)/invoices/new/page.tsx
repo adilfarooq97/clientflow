@@ -6,6 +6,7 @@ import { getProjectMembers } from "@/lib/supabase/project-members";
 import { getMemberProfiles } from "@/lib/supabase/users";
 import CreateInvoiceForm from "@/components/invoices/CreateInvoiceForm";
 import Button from "@/components/ui/Button";
+import PageHeader from "@/components/ui/PageHeader";
 
 export default async function NewInvoicePage() {
   const userProfile = await getCurrentUserProfile();
@@ -50,15 +51,11 @@ export default async function NewInvoicePage() {
 
   return (
     <div className="space-y-6">
-      <div>
-        <p className="text-sm font-medium text-gray-500">
-          Invoices
-        </p>
-
-        <h1 className="mt-1 text-2xl font-semibold tracking-tight text-gray-900">
-          Create invoice
-        </h1>
-      </div>
+      <PageHeader
+        title="Create invoice"
+        eyebrow="Invoices"
+        description="Create an invoice for a client project."
+      />
 
       {invoiceProjects.length === 0 ? (
         <div className="max-w-2xl rounded-xl border border-dashed border-gray-300 bg-white p-10 text-center">

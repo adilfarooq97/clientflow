@@ -144,7 +144,7 @@ export default async function ProjectPage({
     )
     .slice(0, 5);
   return (
-    <div className="p-8">
+    <div className="space-y-8">
       <Link
         href="/dashboard"
         className="text-sm font-medium text-gray-500 transition-colors hover:text-gray-900"
@@ -194,10 +194,10 @@ export default async function ProjectPage({
                   {daysUntilDeadline !== null && (
                     <span
                       className={`rounded-full px-2.5 py-1 text-xs font-semibold ${daysUntilDeadline < 0
-                        ? "bg-red-100 text-red-700"
+                        ? "bg-danger-muted text-danger"
                         : daysUntilDeadline <= 3
-                          ? "bg-amber-100 text-amber-700"
-                          : "bg-green-100 text-green-700"
+                          ? "bg-warning-muted text-warning"
+                          : "bg-success-muted text-success"
                         }`}
                     >
                       {daysUntilDeadline < 0

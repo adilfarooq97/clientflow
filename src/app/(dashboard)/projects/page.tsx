@@ -5,6 +5,7 @@ import type { ProjectStatus } from "@/types";
 import ProjectStatusFilter from "@/components/projects/ProjectStatusFilter";
 import EmptyState from "@/components/ui/EmptyState";
 import Button from "@/components/ui/Button";
+import PageHeader from "@/components/ui/PageHeader";
 
 export default async function ProjectsPage() {
   const projects = await getAccessibleProjects();
@@ -21,39 +22,21 @@ export default async function ProjectsPage() {
       (project) => project.status === "Completed"
     ).length,
   };
+  const projectCountDescription = `${projects.length} ${
+    projects.length === 1 ? "project" : "projects"
+  } ${isFreelancer ? "in your workspace." : "available to you."}`;
 
   return (
-    <div className="p-4 sm:p-6 lg:p-8">
-      <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
-        <div>
-          <div className="flex items-center gap-3">
-            <h1 className="text-2xl font-bold tracking-tight text-gray-900">
-              Projects
-            </h1>
-
-            <span className="rounded-full bg-gray-100 px-2.5 py-1 text-xs font-medium text-gray-600">
-              {projects.length}
-            </span>
-          </div>
-
-          <p className="mt-2 text-sm leading-6 text-gray-500">
-            {isFreelancer
-              ? `${projects.length} ${projects.length === 1 ? "project" : "projects"
-              } in your workspace.`
-              : `${projects.length} ${projects.length === 1 ? "project" : "projects"
-              } available to you.`}
-          </p>
-        </div>
-
-        {isFreelancer && (
-          <Link
-            href="/projects/new"
-            className="rounded-lg bg-gray-900 px-4 py-2 text-sm font-medium text-white transition hover:bg-gray-800"
-          >
-            + New Project
+    <div className="space-y-6">
+      <PageHeader
+        title="Projects"
+        description={projectCountDescription}
+        action={isFreelancer ? (
+          <Link href="/projects/new">
+            <Button>New Project</Button>
           </Link>
-        )}
-      </div>
+        ) : undefined}
+      />
 
       {projects.length === 0 ? (
         <EmptyState
@@ -93,12 +76,12 @@ export default async function ProjectsPage() {
 
                   <span
                     className={`h-2.5 w-2.5 rounded-full ${status === "Planning"
-                      ? "bg-gray-400"
+                      ? "bg-subtle-foreground"
                       : status === "In Progress"
-                        ? "bg-blue-500"
+                        ? "bg-info"
                         : status === "Review"
-                          ? "bg-yellow-500"
-                          : "bg-green-500"
+                          ? "bg-warning"
+                          : "bg-success"
                       }`}
                     aria-hidden="true"
                   />

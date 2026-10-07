@@ -6,6 +6,7 @@ import Button from "@/components/ui/Button";
 import AuthHeader from "@/components/auth/AuthHeader";
 import AuthCard from "@/components/auth/AuthCard";
 import FormField from "@/components/ui/FormField";
+import Alert from "@/components/ui/Alert";
 import { supabase } from "@/lib/supabase/client";
 
 export default function ForgotPasswordPage() {
@@ -62,16 +63,16 @@ export default function ForgotPasswordPage() {
         </p>
 
         {isSubmitted ? (
-          <div className="mt-6 rounded-lg bg-green-50 p-4">
-            <p className="text-sm font-medium text-green-800">
+          <Alert tone="success" className="mt-6">
+            <p className="font-medium">
               Check your email
             </p>
 
-            <p className="mt-1 text-sm text-green-700">
+            <p className="mt-1">
               If an account exists for {email}, a password reset link has
               been sent.
             </p>
-          </div>
+          </Alert>
         ) : (
           <form
             onSubmit={handleSubmit}

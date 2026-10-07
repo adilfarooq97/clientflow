@@ -21,7 +21,7 @@ export default async function DashboardLayout({
       <div className="flex min-w-0 flex-1 flex-col">
         <Navbar />
 
-        <main className="min-w-0 flex-1">
+        <main className="mx-auto w-full max-w-screen-2xl min-w-0 flex-1 p-4 sm:p-6 lg:p-8">
           {children}
         </main>
       </div>
