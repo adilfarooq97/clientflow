@@ -158,12 +158,44 @@ function CheckList({ items }: { items: string[] }) {
 export default function Home() {
   const jsonLd = {
     "@context": "https://schema.org",
-    "@type": "SoftwareApplication",
-    name: "Souqivo",
-    applicationCategory: "BusinessApplication",
-    operatingSystem: "Web",
-    url: "https://souqivo.com",
-    description,
+    "@graph": [
+      {
+        "@type": "WebSite",
+        "@id": "https://souqivo.com/#website",
+        url: "https://souqivo.com/",
+        name: "Souqivo",
+        inLanguage: "en-US",
+        mainEntity: {
+          "@id": "https://souqivo.com/#software",
+        },
+      },
+      {
+        "@type": "SoftwareApplication",
+        "@id": "https://souqivo.com/#software",
+        name: "Souqivo",
+        url: "https://souqivo.com/",
+        mainEntityOfPage: {
+          "@id": "https://souqivo.com/#website",
+        },
+        applicationCategory: "BusinessApplication",
+        applicationSubCategory: "Client collaboration workspace",
+        operatingSystem: "Web",
+        description:
+          "A web workspace for freelancers, agencies, and clients to manage client projects, tasks, design reviews, feedback and approvals, files, messaging, notifications, and invoices together.",
+        audience: {
+          "@type": "Audience",
+          audienceType: "Freelancers, agencies, and clients",
+        },
+        featureList: [
+          "Project management and Kanban task boards",
+          "Design review with client feedback, approval, or change requests",
+          "Project files and deliverables",
+          "Project messaging and notifications",
+          "Project invoices",
+          "Role-based access for freelancers, agencies, and clients",
+        ],
+      },
+    ],
   };
 
   return (
@@ -295,9 +327,11 @@ export default function Home() {
             <div className="max-w-2xl">
               <p className="text-base leading-7 text-muted-foreground">
                 Client work can quickly spread across task lists, file links,
-                feedback threads, and billing. Souqivo gives each project a
-                shared home, so freelancers and clients can find the work and
-                context they need without jumping between disconnected spaces.
+                feedback threads, messages, notifications, and billing.
+                Souqivo gives each project a shared home, connecting project
+                planning with client reviews and approvals, files, messaging,
+                and invoices so freelancers and clients can follow the work
+                without jumping between disconnected spaces.
               </p>
               <Link
                 href="#features"

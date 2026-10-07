@@ -1,0 +1,16 @@
+# Souqivo
+
+Canonical URL: https://souqivo.com/
+
+Souqivo is a web-based client collaboration workspace for freelancers, agencies, and clients to manage project work from kickoff to approval.
+
+Souqivo brings project management and Kanban tasks together with design reviews, client feedback and approvals, files and deliverables, project messaging, notifications, and invoices. It provides role-based access for freelancers/agencies and clients, including client access to projects they belong to.
+
+Positioning: One workspace from kickoff to approval.
+
+## Public information
+
+- [Homepage and product overview](https://souqivo.com/)
+- [Sitemap](https://souqivo.com/sitemap.xml)
+
+Private workspace and project routes require authentication and are not public product-information pages.
