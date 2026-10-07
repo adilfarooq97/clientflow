@@ -6,7 +6,7 @@ export default async function SettingsPage() {
 
   if (!profile) {
     return (
-      <div className="rounded-xl border border-gray-200 bg-white p-6">
+      <div className="m-4 rounded-xl border border-gray-200 bg-white p-6 sm:m-6 lg:m-8">
         <h1 className="text-xl font-semibold text-gray-900">
           Settings
         </h1>
@@ -19,7 +19,7 @@ export default async function SettingsPage() {
   }
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 p-4 sm:p-6 lg:p-8">
       <div>
         <h1 className="text-2xl font-semibold text-gray-900">
           Settings

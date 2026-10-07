@@ -156,6 +156,8 @@ export default function NotificationCenter() {
           ? `, ${unreadCount} unread`
           : ""
           }`}
+        aria-expanded={isOpen}
+        aria-controls="notification-panel"
         className="relative rounded-lg p-2 text-gray-500 transition hover:bg-gray-100 hover:text-gray-900"
       >
         <span aria-hidden="true">🔔</span>
@@ -168,7 +170,10 @@ export default function NotificationCenter() {
       </button>
 
       {isOpen && (
-        <div className="absolute right-0 z-50 mt-2 w-80 overflow-hidden rounded-xl border border-gray-200 bg-white shadow-lg">
+        <div
+          id="notification-panel"
+          className="absolute right-0 z-50 mt-2 w-80 max-w-[calc(100vw-2rem)] overflow-hidden rounded-xl border border-gray-200 bg-white shadow-lg"
+        >
           <div className="flex items-center justify-between border-b border-gray-200 px-4 py-3">
             <h2 className="text-sm font-semibold text-gray-900">
               Notifications

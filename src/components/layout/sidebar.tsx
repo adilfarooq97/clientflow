@@ -15,6 +15,14 @@ const freelancerNavigation = [
     label: "Invoices",
     href: "/invoices",
   },
+  {
+    label: "Clients",
+    href: "/clients",
+  },
+  {
+    label: "Settings",
+    href: "/settings",
+  },
 ];
 
 const clientNavigation = [
@@ -25,6 +33,10 @@ const clientNavigation = [
   {
     label: "Projects",
     href: "/projects",
+  },
+  {
+    label: "Settings",
+    href: "/settings",
   },
 ];
 

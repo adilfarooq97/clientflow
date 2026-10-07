@@ -1,11 +1,19 @@
 import { getClients } from "@/lib/supabase/client-data";
 import Link from "next/link";
+import { redirect } from "next/navigation";
+import { getCurrentUserProfile } from "@/lib/supabase/auth";
 
 export default async function ClientsPage() {
+  const profile = await getCurrentUserProfile();
+
+  if (!profile || profile.role !== "freelancer") {
+    redirect("/dashboard");
+  }
+
   const clients = await getClients();
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 p-4 sm:p-6 lg:p-8">
       <div>
         <h1 className="text-2xl font-semibold text-gray-900">
           Clients

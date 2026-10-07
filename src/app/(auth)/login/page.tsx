@@ -19,7 +19,6 @@ export default function LoginPage() {
   const [passwordError, setPasswordError] = useState("");
   const [authError, setAuthError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
-  const [rememberMe, setRememberMe] = useState(false);
 
   const handleSubmit = async (
     event: React.FormEvent<HTMLFormElement>
@@ -116,20 +115,7 @@ export default function LoginPage() {
             onChange={(event) => setPassword(event.target.value)}
           />
 
-          <div className="flex items-center justify-between">
-            <label className="flex items-center gap-2 text-sm text-gray-600">
-              <input
-                type="checkbox"
-                checked={rememberMe}
-                onChange={(event) =>
-                  setRememberMe(event.target.checked)
-                }
-                className="h-4 w-4 rounded border-gray-300"
-              />
-
-              Remember me
-            </label>
-
+          <div className="flex justify-end">
             <Link
               href="/forgot-password"
               className="text-sm font-medium text-gray-700 hover:text-gray-900 hover:underline"

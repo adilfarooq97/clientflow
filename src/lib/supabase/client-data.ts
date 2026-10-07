@@ -39,7 +39,7 @@ export async function getClients(): Promise<ClientSummary[]> {
       "Error fetching projects for clients:",
       projectsError
     );
-    return [];
+    throw new Error("Unable to load clients.");
   }
 
   if (projects.length === 0) {
@@ -62,7 +62,7 @@ export async function getClients(): Promise<ClientSummary[]> {
       "Error fetching project clients:",
       membersError
     );
-    return [];
+    throw new Error("Unable to load clients.");
   }
 
   if (members.length === 0) {
@@ -90,7 +90,7 @@ const profiles = (data ?? []) as ClientProfile[];
       "Error fetching client profiles:",
       profilesError
     );
-    return [];
+    throw new Error("Unable to load clients.");
   }
 
  return profiles

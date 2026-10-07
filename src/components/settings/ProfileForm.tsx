@@ -4,7 +4,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import type { ProfileSettings } from "@/lib/supabase/settings";
 import Button from "@/components/ui/Button";
-import Input from "@/components/ui/Input";
+import FormField from "@/components/ui/FormField";
 
 type ProfileFormProps = {
   profile: ProfileSettings;
@@ -87,24 +87,13 @@ export default function ProfileForm({
       onSubmit={handleSubmit}
       className="mt-6 space-y-5"
     >
-      <div>
-        <label
-          htmlFor="fullName"
-          className="mb-2 block text-sm font-medium text-gray-700"
-        >
-          Full name
-        </label>
-
-        <Input
-          id="fullName"
-          label=""
-          value={fullName}
-          onChange={(event) =>
-            setFullName(event.target.value)
-          }
-          disabled={isLoading}
-        />
-      </div>
+      <FormField
+        id="fullName"
+        label="Full name"
+        value={fullName}
+        onChange={(event) => setFullName(event.target.value)}
+        disabled={isLoading}
+      />
 
       <div>
         <p className="text-xs font-medium uppercase tracking-wide text-gray-400">
@@ -127,13 +116,13 @@ export default function ProfileForm({
       </div>
 
       {error && (
-        <p className="text-sm text-red-600">
+        <p className="text-sm text-danger" role="alert">
           {error}
         </p>
       )}
 
       {success && (
-        <p className="text-sm text-green-600">
+        <p className="text-sm text-success" role="status">
           {success}
         </p>
       )}
