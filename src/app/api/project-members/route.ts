@@ -66,9 +66,9 @@ export async function POST(request: Request) {
     );
   }
 
-  if (!["client", "freelancer"].includes(role)) {
+  if (role !== "client") {
     return NextResponse.json(
-      { error: "Invalid member role" },
+      { error: "Only client members can be added through this endpoint" },
       { status: 400 }
     );
   }
