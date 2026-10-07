@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase/server";
 import { getCurrentUserProfile } from "@/lib/supabase/auth";
+import { getInvoicesForUser } from "@/lib/supabase/invoices";
 
 export async function GET() {
   const supabase = await createClient();
@@ -16,10 +17,7 @@ export async function GET() {
     );
   }
 
-  const { data, error } = await supabase
-    .from("invoices")
-    .select("*")
-    .order("created_at", { ascending: false });
+  const { data, error } = await getInvoicesForUser(user.id);
 
   if (error) {
     console.error("Error fetching invoices:", error);
@@ -30,7 +28,7 @@ export async function GET() {
     );
   }
 
-  return NextResponse.json(data);
+  return NextResponse.json(data ?? []);
 }
 
 export async function POST(request: Request) {

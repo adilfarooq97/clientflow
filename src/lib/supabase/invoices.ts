@@ -1,20 +1,141 @@
 import { createClient } from "@/lib/supabase/server";
 import type { Invoice, InvoiceStatus } from "@/types";
 
-export async function getInvoices(): Promise<Invoice[]> {
+type InvoiceReadScope = {
+  ownedProjectIds: string[];
+  clientProjectIds: string[];
+};
+
+type InvoiceListResult = {
+  data: Invoice[] | null;
+  error: unknown | null;
+};
+
+async function getInvoiceReadScope(
+  supabase: Awaited<ReturnType<typeof createClient>>,
+  userId: string
+): Promise<{
+  data: InvoiceReadScope | null;
+  error: unknown | null;
+}> {
+  const { data: ownedProjects, error: ownedProjectsError } =
+    await supabase
+      .from("projects")
+      .select("id")
+      .eq("owner_id", userId);
+
+  if (ownedProjectsError) {
+    return { data: null, error: ownedProjectsError };
+  }
+
+  const { data: clientMemberships, error: membershipsError } =
+    await supabase
+      .from("project_members")
+      .select("project_id")
+      .eq("user_id", userId)
+      .eq("role", "client");
+
+  if (membershipsError) {
+    return { data: null, error: membershipsError };
+  }
+
+  return {
+    data: {
+      ownedProjectIds: (ownedProjects ?? []).map(
+        (project) => project.id
+      ),
+      clientProjectIds: (clientMemberships ?? []).map(
+        (membership) => membership.project_id
+      ),
+    },
+    error: null,
+  };
+}
+
+async function queryInvoicesForUser(
+  supabase: Awaited<ReturnType<typeof createClient>>,
+  userId: string
+): Promise<InvoiceListResult> {
+  const { data: scope, error: scopeError } =
+    await getInvoiceReadScope(supabase, userId);
+
+  if (scopeError || !scope) {
+    return { data: null, error: scopeError };
+  }
+
+  const invoices: Invoice[] = [];
+
+  if (scope.ownedProjectIds.length > 0) {
+    const { data, error } = await supabase
+      .from("invoices")
+      .select("*")
+      .in("project_id", scope.ownedProjectIds);
+
+    if (error) {
+      return { data: null, error };
+    }
+
+    invoices.push(...(data as Invoice[]));
+  }
+
+  if (scope.clientProjectIds.length > 0) {
+    const { data, error } = await supabase
+      .from("invoices")
+      .select("*")
+      .eq("client_id", userId)
+      .in("project_id", scope.clientProjectIds);
+
+    if (error) {
+      return { data: null, error };
+    }
+
+    invoices.push(...(data as Invoice[]));
+  }
+
+  const uniqueInvoices = Array.from(
+    new Map(invoices.map((invoice) => [invoice.id, invoice])).values()
+  ).sort((first, second) =>
+    second.created_at.localeCompare(first.created_at)
+  );
+
+  return { data: uniqueInvoices, error: null };
+}
+
+export async function getInvoicesForUser(
+  userId: string
+): Promise<InvoiceListResult> {
   const supabase = await createClient();
 
-  const { data, error } = await supabase
-    .from("invoices")
-    .select("*")
-    .order("created_at", { ascending: false });
+  return queryInvoicesForUser(supabase, userId);
+}
+
+export async function getInvoices(): Promise<Invoice[]> {
+  const supabase = await createClient();
+  const {
+    data: { user },
+    error: authError,
+  } = await supabase.auth.getUser();
+
+  if (authError) {
+    console.error("Error fetching invoices:", authError);
+    return [];
+  }
+
+  if (!user) {
+    return [];
+  }
+
+  const { data, error } = await queryInvoicesForUser(
+    supabase,
+    user.id
+  );
 
   if (error) {
     console.error("Error fetching invoices:", error);
     return [];
   }
 
-  return data as Invoice[];
+  return data ?? [];
 }
 
 export async function getInvoice(
@@ -22,18 +143,64 @@ export async function getInvoice(
 ): Promise<Invoice | null> {
   const supabase = await createClient();
 
-  const { data, error } = await supabase
-    .from("invoices")
-    .select("*")
-    .eq("id", invoiceId)
-    .maybeSingle();
+  const {
+    data: { user },
+    error: authError,
+  } = await supabase.auth.getUser();
 
-  if (error) {
-    console.error("Error fetching invoice:", error);
+  if (authError) {
+    console.error("Error fetching invoice:", authError);
     return null;
   }
 
-  return data as Invoice | null;
+  if (!user) {
+    return null;
+  }
+
+  const { data: scope, error: scopeError } =
+    await getInvoiceReadScope(supabase, user.id);
+
+  if (scopeError || !scope) {
+    console.error("Error fetching invoice:", scopeError);
+    return null;
+  }
+
+  if (scope.ownedProjectIds.length > 0) {
+    const { data, error } = await supabase
+      .from("invoices")
+      .select("*")
+      .eq("id", invoiceId)
+      .in("project_id", scope.ownedProjectIds)
+      .maybeSingle();
+
+    if (error) {
+      console.error("Error fetching invoice:", error);
+      return null;
+    }
+
+    if (data) {
+      return data as Invoice;
+    }
+  }
+
+  if (scope.clientProjectIds.length > 0) {
+    const { data, error } = await supabase
+      .from("invoices")
+      .select("*")
+      .eq("id", invoiceId)
+      .eq("client_id", user.id)
+      .in("project_id", scope.clientProjectIds)
+      .maybeSingle();
+
+    if (error) {
+      console.error("Error fetching invoice:", error);
+      return null;
+    }
+
+    return data as Invoice | null;
+  }
+
+  return null;
 }
 
 export async function createInvoice(invoice: {
