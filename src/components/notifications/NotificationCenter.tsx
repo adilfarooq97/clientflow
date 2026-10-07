@@ -21,6 +21,19 @@ async function fetchNotifications(): Promise<Notification[]> {
   return data;
 }
 
+function getNotificationHref(notification: Notification): string {
+  switch (notification.type) {
+    case "review":
+      return `/projects/${notification.project_id}/reviews`;
+    case "task":
+      return `/projects/${notification.project_id}/tasks`;
+    case "message":
+      return `/projects/${notification.project_id}/messages`;
+    case "invoice":
+      return "/invoices";
+  }
+}
+
 function formatNotificationTime(
   createdAt: string
 ) {
@@ -284,7 +297,7 @@ export default function NotificationCenter() {
                   >
                     {notification.project_id ? (
                       <Link
-                        href={`/projects/${notification.project_id}`}
+                        href={getNotificationHref(notification)}
                         onClick={() =>
                           markAsRead(notification.id)
                         }

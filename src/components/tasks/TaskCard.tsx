@@ -110,9 +110,7 @@ export default function TaskCard({ task, canManage = true }: TaskCardProps) {
               )}
 
               <div className="mt-3 text-xs text-gray-400">
-                {task.due_date
-                  ? `Due ${task.due_date}`
-                  : "No due date"}
+                {formatDueDate(task.due_date)}
               </div>
             </div>
           )}

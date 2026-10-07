@@ -35,6 +35,10 @@ const clientNavigation = [
     href: "/projects",
   },
   {
+    label: "Invoices",
+    href: "/invoices",
+  },
+  {
     label: "Settings",
     href: "/settings",
   },

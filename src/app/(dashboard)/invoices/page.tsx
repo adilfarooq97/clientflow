@@ -7,6 +7,8 @@ import type { InvoiceStatus } from "@/types";
 import { getDisplayInvoiceStatus } from "@/lib/invoices";
 import StatusBadge from "@/components/ui/StatusBadge";
 import EmptyState from "@/components/ui/EmptyState";
+import { getAccessibleProjects } from "@/lib/supabase/projects";
+import { getMemberProfiles } from "@/lib/supabase/users";
 
 export default async function InvoicesPage({
   searchParams,
@@ -15,10 +17,23 @@ export default async function InvoicesPage({
 }) {
   const { status } = await searchParams;
 
-  const [userProfile, invoices] = await Promise.all([
+  const [userProfile, invoices, projects] = await Promise.all([
     getCurrentUserProfile(),
     getInvoices(),
+    getAccessibleProjects(),
   ]);
+  const clientProfiles =
+    userProfile?.role === "freelancer"
+      ? await getMemberProfiles([
+          ...new Set(invoices.map((invoice) => invoice.client_id)),
+        ])
+      : [];
+  const projectNames = new Map(
+    projects.map((project) => [project.id, project.name])
+  );
+  const clientNames = new Map(
+    clientProfiles.map((profile) => [profile.id, profile.full_name])
+  );
 
   const totalAmount = invoices.reduce(
     (sum, invoice) => sum + Number(invoice.amount),
@@ -240,6 +255,16 @@ export default async function InvoicesPage({
                       >
                         {invoice.invoice_number}
                       </Link>
+                      <p className="mt-1 text-xs text-gray-500">
+                        Project: {projectNames.get(invoice.project_id) ??
+                          "Project unavailable"}
+                      </p>
+                      <p className="mt-1 text-xs text-gray-500">
+                        Client: {userProfile?.role === "client"
+                          ? userProfile.full_name
+                          : clientNames.get(invoice.client_id) ??
+                            "Client unavailable"}
+                      </p>
                     </td>
 
                     <td className="px-4 py-4 text-gray-600">

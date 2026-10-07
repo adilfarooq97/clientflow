@@ -7,6 +7,7 @@ import { getInvoice } from "@/lib/supabase/invoices";
 import { getMemberProfiles } from "@/lib/supabase/users";
 import { getDisplayInvoiceStatus } from "@/lib/invoices";
 import StatusBadge from "@/components/ui/StatusBadge";
+import { getAccessibleProjects } from "@/lib/supabase/projects";
 
 export default async function InvoicePage({
   params,
@@ -15,9 +16,10 @@ export default async function InvoicePage({
 }) {
   const { id } = await params;
 
-  const [userProfile, invoice] = await Promise.all([
+  const [userProfile, invoice, projects] = await Promise.all([
     getCurrentUserProfile(),
     getInvoice(id),
+    getAccessibleProjects(),
   ]);
 
   if (!userProfile) {
@@ -32,6 +34,9 @@ export default async function InvoicePage({
     userProfile.role === "freelancer"
       ? (await getMemberProfiles([invoice.client_id]))[0]
       : userProfile;
+  const project = projects.find(
+    (item) => item.id === invoice.project_id
+  );
 
   const displayStatus = getDisplayInvoiceStatus(invoice);
 
@@ -112,6 +117,25 @@ export default async function InvoicePage({
             <p className="mt-1 text-sm font-medium text-gray-900">
               {clientProfile?.full_name ?? "Client name unavailable"}
             </p>
+          </div>
+
+          <div>
+            <p className="text-xs font-medium uppercase tracking-wide text-gray-500">
+              Project
+            </p>
+
+            {project ? (
+              <Link
+                href={`/projects/${project.id}`}
+                className="mt-1 inline-block text-sm font-medium text-gray-900 underline underline-offset-4 hover:text-gray-600"
+              >
+                {project.name}
+              </Link>
+            ) : (
+              <p className="mt-1 text-sm font-medium text-gray-900">
+                Project unavailable
+              </p>
+            )}
           </div>
         </div>
 

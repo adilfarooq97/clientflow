@@ -106,6 +106,7 @@ export default function MessageComposer({
   return (
     <div className="space-y-3">
       <textarea
+        aria-label="Write a message"
         value={content}
         onChange={(event) => {
           if (event.target.value.length <= MAX_LENGTH) {

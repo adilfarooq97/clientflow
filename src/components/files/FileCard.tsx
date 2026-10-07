@@ -1,14 +1,17 @@
 import type { ProjectFile } from "@/types";
 import DeleteFileButton from "@/components/files/DeleteFileButton";
 import FileTypeBadge from "@/components/files/FileTypeBadge";
+import { isExternalFileUrl } from "@/lib/files";
 
 type FileCardProps = {
   file: ProjectFile;
+  fileUrl: string | null;
   canManage?: boolean;
 };
 
 export default function FileCard({
   file,
+  fileUrl,
   canManage = true,
 }: FileCardProps) {
   return (
@@ -29,14 +32,22 @@ export default function FileCard({
       </div>
 
       <div className="mt-4 flex items-center gap-3">
-        <a
-          href={file.file_url}
-          target="_blank"
-          rel="noreferrer"
-          className="text-sm font-medium text-gray-900 underline"
-        >
-          Open file
-        </a>
+        {fileUrl ? (
+          <a
+            href={fileUrl}
+            target="_blank"
+            rel="noreferrer"
+            className="text-sm font-medium text-gray-900 underline"
+          >
+            {isExternalFileUrl(file.file_url)
+              ? "Open external link"
+              : "Open file"}
+          </a>
+        ) : (
+          <span className="text-sm text-danger" role="status">
+            File unavailable
+          </span>
+        )}
         {canManage && (
           <DeleteFileButton fileId={file.id} />
         )}

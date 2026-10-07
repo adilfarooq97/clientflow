@@ -52,17 +52,17 @@ export default async function FilesPage({
             error
           );
 
-          return null;
+          return {
+            file,
+            fileUrl: null,
+          };
         }
       })
     )
-  ).filter(
-    (
-      item
-    ): item is { file: (typeof files)[number]; fileUrl: string } =>
-      item !== null
   );
-  const unavailableFileCount = files.length - filesWithUrls.length;
+  const unavailableFileCount = filesWithUrls.filter(
+    ({ fileUrl }) => fileUrl === null
+  ).length;
 
   return (
     <div className="space-y-6">
@@ -91,18 +91,16 @@ export default async function FilesPage({
         />
       </div>
 
-      {filesWithUrls.length === 0 ? (
+      {files.length === 0 ? (
         <EmptyState
-          title={files.length === 0 ? "No files yet" : "Files are unavailable"}
+          title="No files yet"
           description={
-            files.length === 0
-              ? profile?.role === "freelancer"
-                ? "Add your first project file."
-                : "No project files have been uploaded yet."
-              : "Some project files could not be loaded. Please try again later."
+            profile?.role === "freelancer"
+              ? "Add your first project file."
+              : "No project files have been uploaded yet."
           }
           action={
-            profile?.role === "freelancer" && files.length === 0 ? (
+            profile?.role === "freelancer" ? (
               <Link
                 href={`/projects/${project.id}/files/new`}
                 className="text-sm font-medium text-primary underline underline-offset-4 hover:text-primary-hover"
@@ -128,10 +126,8 @@ export default async function FilesPage({
             {filesWithUrls.map(({ file, fileUrl }) => (
               <FileCard
                 key={file.id}
-                file={{
-                  ...file,
-                  file_url: fileUrl,
-                }}
+                file={file}
+                fileUrl={fileUrl}
                 canManage={profile?.role === "freelancer"}
               />
             ))}
