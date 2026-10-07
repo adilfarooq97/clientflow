@@ -71,6 +71,13 @@ export default async function ProjectPage({
     (task) => task.status === "Done"
   ).length;
   const remainingTasks = tasks.length - completedTasks;
+  const inProgressTasks = tasks.filter(
+    (task) => task.status === "In Progress",
+  ).length;
+
+  const reviewTasks = tasks.filter(
+    (task) => task.status === "Review",
+  ).length;
 
   const taskProgress =
     tasks.length > 0
@@ -354,6 +361,28 @@ export default async function ProjectPage({
             className="h-full rounded-full bg-gray-900 transition-all"
             style={{ width: `${taskProgress}%` }}
           />
+        </div>
+        <div className="mt-5 grid gap-3 sm:grid-cols-3">
+          <div className="rounded-lg bg-gray-50 px-4 py-3">
+            <p className="text-xs font-medium text-gray-500">In Progress</p>
+            <p className="mt-1 text-lg font-semibold text-gray-900">
+              {inProgressTasks}
+            </p>
+          </div>
+
+          <div className="rounded-lg bg-gray-50 px-4 py-3">
+            <p className="text-xs font-medium text-gray-500">In Review</p>
+            <p className="mt-1 text-lg font-semibold text-gray-900">
+              {reviewTasks}
+            </p>
+          </div>
+
+          <div className="rounded-lg bg-gray-50 px-4 py-3">
+            <p className="text-xs font-medium text-gray-500">Completed</p>
+            <p className="mt-1 text-lg font-semibold text-gray-900">
+              {completedTasks}
+            </p>
+          </div>
         </div>
       </div>
       <div className="mt-8">
