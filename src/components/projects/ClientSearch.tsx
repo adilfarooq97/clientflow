@@ -89,9 +89,11 @@ export default function ClientSearch({
       />
 
       {isLoading && (
-        <p className="text-sm text-gray-500">
-          Searching...
-        </p>
+        <div className="rounded-lg border border-gray-100 bg-gray-50 px-4 py-3">
+          <p className="text-sm text-gray-500">
+            Searching for clients...
+          </p>
+        </div>
       )}
 
       {!isLoading &&
