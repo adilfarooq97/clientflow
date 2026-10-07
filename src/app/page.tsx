@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import {
   ArrowDown,
@@ -13,6 +14,41 @@ import {
   UsersRound,
 } from "lucide-react";
 import ProductPreview from "@/components/marketing/ProductPreview";
+
+const description =
+  "Souqivo gives freelancers, agencies, and clients one workspace to manage projects, tasks, files, reviews, approvals, messages, and invoices from kickoff to delivery.";
+
+export const metadata: Metadata = {
+  title: {
+    absolute: "Souqivo — One workspace from kickoff to approval",
+  },
+  description,
+  alternates: {
+    canonical: "https://souqivo.com/",
+  },
+  openGraph: {
+    type: "website",
+    siteName: "Souqivo",
+    title: "Souqivo — One workspace from kickoff to approval",
+    description,
+    url: "https://souqivo.com/",
+    locale: "en_US",
+    images: [
+      {
+        url: "/opengraph-image",
+        width: 1200,
+        height: 630,
+        alt: "Souqivo: One workspace from kickoff to approval.",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Souqivo — One workspace from kickoff to approval",
+    description,
+    images: ["/twitter-image"],
+  },
+};
 
 const features = [
   {
@@ -120,8 +156,24 @@ function CheckList({ items }: { items: string[] }) {
 }
 
 export default function Home() {
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    name: "Souqivo",
+    applicationCategory: "BusinessApplication",
+    operatingSystem: "Web",
+    url: "https://souqivo.com",
+    description,
+  };
+
   return (
     <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(jsonLd).replace(/</g, "\\u003c"),
+        }}
+      />
       <header className="border-b border-border bg-surface">
         <nav
           aria-label="Main navigation"
@@ -206,8 +258,9 @@ export default function Home() {
               </h1>
 
               <p className="mt-6 max-w-lg text-base leading-7 text-muted-foreground sm:text-lg sm:leading-8">
-                Bring project plans, tasks, files, reviews, messages, and
-                invoices together for you and your clients.
+                Souqivo gives freelancers, agencies, and clients one workspace
+                to manage projects, tasks, files, reviews, approvals, messages,
+                and invoices together.
               </p>
 
               <div className="mt-8 flex flex-col gap-3 sm:flex-row">

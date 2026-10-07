@@ -15,11 +15,15 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   title: {
-    default: "Souqivo — One workspace from kickoff to approval",
+    default: "Souqivo — Client Collaboration Workspace",
     template: "%s | Souqivo",
   },
   description:
-    "Souqivo is a client collaboration workspace for freelancers, agencies, and their clients, bringing projects, tasks, reviews, files, messages, and invoices together.",
+    "Souqivo gives freelancers, agencies, and clients one workspace to manage projects, tasks, files, reviews, approvals, messages, and invoices from kickoff to delivery.",
+  metadataBase: new URL("https://souqivo.com"),
+  applicationName: "Souqivo",
+  referrer: "strict-origin-when-cross-origin",
+  category: "business",
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
