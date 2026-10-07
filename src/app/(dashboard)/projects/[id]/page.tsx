@@ -194,7 +194,11 @@ export default async function ProjectPage({
                 </span>
 
                 <span className="font-medium text-gray-900">
-                  {project.deadline}
+                  {deadlineDate?.toLocaleDateString("en-US", {
+                    month: "short",
+                    day: "numeric",
+                    year: "numeric",
+                  })}
                 </span>
 
                 {daysUntilDeadline !== null && (
