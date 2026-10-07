@@ -4,6 +4,7 @@ import Button from "@/components/ui/Button";
 import DeleteInvoiceButton from "@/components/invoices/DeleteInvoiceButton";
 import { getCurrentUserProfile } from "@/lib/supabase/auth";
 import { getInvoice } from "@/lib/supabase/invoices";
+import { getMemberProfiles } from "@/lib/supabase/users";
 import type { InvoiceStatus } from "@/types";
 import { getDisplayInvoiceStatus } from "@/lib/invoices";
 
@@ -33,6 +34,11 @@ export default async function InvoicePage({
   if (!invoice) {
     notFound();
   }
+
+  const clientProfile =
+    userProfile.role === "freelancer"
+      ? (await getMemberProfiles([invoice.client_id]))[0]
+      : userProfile;
 
   const displayStatus = getDisplayInvoiceStatus(invoice);
 
@@ -115,7 +121,7 @@ export default async function InvoicePage({
             </p>
 
             <p className="mt-1 text-sm font-medium text-gray-900">
-              Invoice recipient
+              {clientProfile?.full_name ?? "Client name unavailable"}
             </p>
           </div>
         </div>
