@@ -18,35 +18,65 @@ async function getInvoiceReadScope(
   data: InvoiceReadScope | null;
   error: unknown | null;
 }> {
-  const { data: ownedProjects, error: ownedProjectsError } =
-    await supabase
-      .from("projects")
-      .select("id")
-      .eq("owner_id", userId);
+  const { data: profile, error: profileError } = await supabase
+    .from("profiles")
+    .select("role")
+    .eq("id", userId)
+    .maybeSingle();
 
-  if (ownedProjectsError) {
-    return { data: null, error: ownedProjectsError };
+  if (profileError) {
+    return { data: null, error: profileError };
   }
 
-  const { data: clientMemberships, error: membershipsError } =
-    await supabase
-      .from("project_members")
-      .select("project_id")
-      .eq("user_id", userId)
-      .eq("role", "client");
+  if (profile?.role === "freelancer") {
+    const { data: ownedProjects, error: ownedProjectsError } =
+      await supabase
+        .from("projects")
+        .select("id")
+        .eq("owner_id", userId);
 
-  if (membershipsError) {
-    return { data: null, error: membershipsError };
+    if (ownedProjectsError) {
+      return { data: null, error: ownedProjectsError };
+    }
+
+    return {
+      data: {
+        ownedProjectIds: (ownedProjects ?? []).map(
+          (project) => project.id
+        ),
+        clientProjectIds: [],
+      },
+      error: null,
+    };
+  }
+
+  if (profile?.role === "client") {
+    const { data: clientMemberships, error: membershipsError } =
+      await supabase
+        .from("project_members")
+        .select("project_id")
+        .eq("user_id", userId)
+        .eq("role", "client");
+
+    if (membershipsError) {
+      return { data: null, error: membershipsError };
+    }
+
+    return {
+      data: {
+        ownedProjectIds: [],
+        clientProjectIds: (clientMemberships ?? []).map(
+          (membership) => membership.project_id
+        ),
+      },
+      error: null,
+    };
   }
 
   return {
     data: {
-      ownedProjectIds: (ownedProjects ?? []).map(
-        (project) => project.id
-      ),
-      clientProjectIds: (clientMemberships ?? []).map(
-        (membership) => membership.project_id
-      ),
+      ownedProjectIds: [],
+      clientProjectIds: [],
     },
     error: null,
   };
