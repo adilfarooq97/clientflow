@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import Button from "@/components/ui/Button";
 import AuthHeader from "@/components/auth/AuthHeader";
 import AuthCard from "@/components/auth/AuthCard";
@@ -10,11 +11,14 @@ import type { UserRole } from "@/types";
 import { supabase } from "@/lib/supabase/client";
 
 export default function SignupPage() {
+  const router = useRouter();
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [role, setRole] = useState<UserRole>("freelancer");
   const [loading, setLoading] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
+  const [successMessage, setSuccessMessage] = useState("");
 
   const handleSubmit = async (
     event: React.FormEvent<HTMLFormElement>
@@ -22,35 +26,46 @@ export default function SignupPage() {
     event.preventDefault();
 
     if (!name || !email || !password) {
+      setErrorMessage("Please complete all fields.");
       return;
     }
 
+    setErrorMessage("");
+    setSuccessMessage("");
     setLoading(true);
 
-    const { data, error } = await supabase.auth.signUp({
-      email,
-      password,
-      options: {
-        data: {
-          full_name: name,
-          role,
+    try {
+      const { data, error } = await supabase.auth.signUp({
+        email,
+        password,
+        options: {
+          data: {
+            full_name: name,
+            role,
+          },
         },
-      },
-    });
+      });
 
-    if (error) {
-      console.error("Signup error:", error);
+      if (error) {
+        setErrorMessage(error.message);
+        return;
+      }
+
+      if (data.session) {
+        router.push("/dashboard");
+        return;
+      }
+
+      setSuccessMessage(
+        "If your account can be created, a confirmation link will be sent to your email. Already registered? Sign in."
+      );
+    } catch {
+      setErrorMessage(
+        "Unable to create your account right now. Please try again."
+      );
+    } finally {
       setLoading(false);
-      return;
     }
-
-    console.log("Signup successful:", data);
-    console.log("User profile data:", {
-      name,
-      role,
-    });
-
-    setLoading(false);
   };
 
   return (
@@ -65,7 +80,23 @@ export default function SignupPage() {
           Create your ClientFlow account and get started.
         </p>
 
+        {errorMessage && (
+          <p
+            className="mt-5 rounded-lg bg-danger/10 p-3 text-sm text-danger"
+            role="alert"
+          >
+            {errorMessage}
+          </p>
+        )}
+
+        {successMessage && (
+          <div className="mt-6 rounded-lg bg-green-50 p-4" role="status">
+            <p className="text-sm text-green-800">{successMessage}</p>
+          </div>
+        )}
+
         <form
+          hidden={Boolean(successMessage)}
           onSubmit={handleSubmit}
           className="mt-7 space-y-5"
         >

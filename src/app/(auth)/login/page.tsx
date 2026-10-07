@@ -17,6 +17,7 @@ export default function LoginPage() {
   const [password, setPassword] = useState("");
   const [emailError, setEmailError] = useState("");
   const [passwordError, setPasswordError] = useState("");
+  const [authError, setAuthError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [rememberMe, setRememberMe] = useState(false);
 
@@ -27,6 +28,7 @@ export default function LoginPage() {
 
     setEmailError("");
     setPasswordError("");
+    setAuthError("");
 
     let hasError = false;
 
@@ -54,19 +56,23 @@ export default function LoginPage() {
 
     setIsLoading(true);
 
-    const { error } = await supabase.auth.signInWithPassword({
-      email,
-      password,
-    });
+    try {
+      const { error } = await supabase.auth.signInWithPassword({
+        email,
+        password,
+      });
 
-    setIsLoading(false);
+      if (error) {
+        setAuthError(error.message);
+        return;
+      }
 
-    if (error) {
-      console.error("Login error:", error);
-      return;
+      router.push("/dashboard");
+    } catch {
+      setAuthError("Unable to sign in right now. Please try again.");
+    } finally {
+      setIsLoading(false);
     }
-
-    router.push("/dashboard");
   };
   return (
     <div className="flex min-h-[calc(100vh-4rem)] items-center justify-center">
@@ -79,6 +85,15 @@ export default function LoginPage() {
         <p className="mt-2 text-sm text-gray-500">
           Sign in to continue to your ClientFlow workspace.
         </p>
+
+        {authError && (
+          <p
+            className="mt-5 rounded-lg bg-danger/10 p-3 text-sm text-danger"
+            role="alert"
+          >
+            {authError}
+          </p>
+        )}
 
         <form onSubmit={handleSubmit} className="mt-7 space-y-5">
           <FormField

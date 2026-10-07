@@ -6,6 +6,7 @@ import Button from "@/components/ui/Button";
 import AuthHeader from "@/components/auth/AuthHeader";
 import AuthCard from "@/components/auth/AuthCard";
 import FormField from "@/components/ui/FormField";
+import { supabase } from "@/lib/supabase/client";
 
 export default function ForgotPasswordPage() {
   const [email, setEmail] = useState("");
@@ -13,24 +14,39 @@ export default function ForgotPasswordPage() {
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
-  const handleSubmit = (
+  const handleSubmit = async (
     event: React.FormEvent<HTMLFormElement>
   ) => {
     event.preventDefault();
 
     setError("");
 
-    if (!email) {
+    const trimmedEmail = email.trim();
+    if (!trimmedEmail) {
       setError("Please enter your email address.");
       return;
     }
 
     setIsLoading(true);
 
-    setTimeout(() => {
-      setIsLoading(false);
+    try {
+      const { error: resetError } =
+        await supabase.auth.resetPasswordForEmail(trimmedEmail, {
+          redirectTo: `${window.location.origin}/reset-password`,
+        });
+
+      if (resetError) {
+        setError(resetError.message);
+        return;
+      }
+
+      setEmail(trimmedEmail);
       setIsSubmitted(true);
-    }, 1500);
+    } catch {
+      setError("Unable to send a reset link. Please try again.");
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -52,8 +68,8 @@ export default function ForgotPasswordPage() {
             </p>
 
             <p className="mt-1 text-sm text-green-700">
-              We&apos;ve sent a password reset link to{" "}
-              {email}.
+              If an account exists for {email}, a password reset link has
+              been sent.
             </p>
           </div>
         ) : (
