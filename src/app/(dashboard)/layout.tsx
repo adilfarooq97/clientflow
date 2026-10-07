@@ -2,30 +2,29 @@ import Sidebar from "@/components/layout/sidebar";
 import Navbar from "@/components/layout/Navbar";
 import { getCurrentUser } from "@/lib/supabase/auth";
 import { redirect } from "next/navigation";
-import LogoutButton from "@/components/auth/LogoutButton";
 
 export default async function DashboardLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
-    const user = await getCurrentUser();
+  const user = await getCurrentUser();
 
-if (!user) {
-  redirect("/login");
-}
+  if (!user) {
+    redirect("/login");
+  }
+
   return (
-    <div className="flex min-h-screen">
+    <div className="flex min-h-screen flex-col lg:flex-row">
       <Sidebar />
 
-    <div className="flex flex-1 flex-col">
-      <Navbar />
-      <LogoutButton />
+      <div className="flex min-w-0 flex-1 flex-col">
+        <Navbar />
 
-      <main className="flex-1">
-        {children}
-      </main>
-    </div>
+        <main className="min-w-0 flex-1">
+          {children}
+        </main>
+      </div>
     </div>
   );
 }

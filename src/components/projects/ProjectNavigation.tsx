@@ -35,7 +35,7 @@ export default function ProjectNavigation({
   const pathname = usePathname();
 
   return (
-    <nav className="border-b border-gray-200">
+    <nav aria-label="Project navigation" className="border-b border-border">
       <div className="flex gap-6 overflow-x-auto">
         {navigationItems.map((item) => {
           const href = `/projects/${projectId}${item.suffix}`;
@@ -52,10 +52,11 @@ export default function ProjectNavigation({
             <Link
               key={item.key}
               href={href}
-              className={`flex items-center gap-2 border-b-2 px-1 py-3 text-sm font-medium whitespace-nowrap transition ${
+              aria-current={isActive ? "page" : undefined}
+              className={`flex min-h-11 items-center gap-2 border-b-2 px-1 py-3 text-sm font-medium whitespace-nowrap transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-info ${
                 isActive
-                  ? "border-gray-900 text-gray-900"
-                  : "border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700"
+                  ? "border-primary text-foreground"
+                  : "border-transparent text-muted-foreground hover:border-slate-300 hover:text-foreground"
               }`}
             >
               {item.label}

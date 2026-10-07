@@ -8,7 +8,6 @@ import {
   closestCorners,
 } from "@dnd-kit/core";
 import type { Task, TaskStatus } from "@/types";
-import TaskCard from "@/components/tasks/TaskCard";
 import KanbanColumn from "@/components/tasks/KanbanColumn";
 import TaskBadge from "@/components/tasks/TaskBadge";
 
@@ -106,19 +105,23 @@ export default function KanbanBoard({
       }}
       onDragEnd={canManage ? handleDragEnd : undefined}
     >
-      <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
+      <div className="flex snap-x snap-mandatory gap-4 overflow-x-auto pb-3 md:grid md:grid-cols-2 md:overflow-visible md:pb-0 xl:grid-cols-4">
         {columns.map((column) => {
           const columnTasks = tasks.filter(
             (task) => task.status === column
           );
 
           return (
-            <KanbanColumn
+            <div
               key={column}
-              column={column}
-              tasks={columnTasks}
-              canManage={canManage}
-            />
+              className="w-[min(85vw,20rem)] shrink-0 snap-start md:w-auto"
+            >
+              <KanbanColumn
+                column={column}
+                tasks={columnTasks}
+                canManage={canManage}
+              />
+            </div>
           );
         })}
       </div>
